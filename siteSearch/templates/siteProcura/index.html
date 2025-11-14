@@ -1,0 +1,175 @@
+{% extends 'base.html' %} 
+
+{% block title %}Spotifind | Algoritmos de Busca em Música{% endblock %}
+
+{% block content %}
+    
+    <style>
+        /* Estilos Modernos e Robustos - FOCO em VERDE e PRETO */
+        
+        /* Cores Base */
+        body { background-color: #121212; color: #ffffff; } /* Fundo bem escuro, texto claro */
+        a { color: #00b409; text-decoration: none; } /* Links em verde Spotify */
+        a:hover { color: #1ed760; } /* Verde mais claro no hover */
+
+        /* Cabeçalho */
+        .main-header {
+            text-align: center;
+            padding: 50px 0;
+            background-color: #181818; /* Fundo do cabeçalho levemente mais claro que o body */
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6); /* Sombra mais intensa */
+            border: 1px solid #00b409; /* Borda verde destacada */
+        }
+        
+        .main-header h1 {
+            color: #00b409; /* Verde Spotify vibrante */
+            margin-bottom: 5px;
+            font-size: 2.8em; /* Fonte grande e impactante */
+            font-weight: 900; 
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px #000000; /* Sombra de texto verde sutil */
+        }
+
+        .main-header p {
+            font-size: 1.2em;
+            color: #b3b3b3; /* Cinza claro para texto secundário */
+            margin-top: 10px;
+        }
+        
+        /* Cartões Container */
+        .card-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px; 
+        }
+
+        /* Cartão Individual */
+        .card {
+            width: 300px; 
+            min-width: 250px;
+            background-color: #181818; /* Fundo do cartão */
+            border: 1px solid #282828; 
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px); /* Efeito de elevação mais pronunciado */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8); /* Sombra mais dramática no hover */
+            border-color: #1ed760; /* Borda verde mais clara no hover */
+        }
+        
+        .card-content {
+            padding: 25px;
+        }
+        
+        .card-content h3 {
+            color: #00b409; /* Títulos dos cartões em verde Spotify */
+            font-size: 1.6em; /* Títulos maiores */
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #282828; /* Linha divisória sutil */
+            padding-bottom: 8px;
+        }
+        
+        .card-content p {
+            font-size: 1em;
+            color: #e0e0e0; /* Texto claro para contraste */
+            margin-bottom: 20px;
+            line-height: 1.5; /* Melhor leitura */
+        }
+        
+        /* Botão de Link */
+        .btn-link {
+            display: block; 
+            background-color: #00b409;
+            color: #000000; /* Texto em preto para contraste máximo com o verde */
+            font-weight: bold;
+            text-align: center;
+            padding: 14px 15px; /* Botão mais robusto */
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase; /* Mais moderno */
+        }
+        
+        .btn-link:hover {
+            background-color: #79e200; /* Verde mais claro no hover */
+            color: #000000;
+        }
+        strong{
+            color: #00b409;
+        }
+        
+    </style>
+
+    <header class="main-header">
+    <h1>
+      🎧 SPOTIFIND: Algoritmos de Busca em Música
+    </h1>
+    <p>
+      Uma exploração interativa de Estruturas de Dados e Algoritmos de Busca.
+            Utilizando um <strong>Dataset Real do Spotify</strong>.
+    </p>
+  </header>
+
+  <div class="card-container">
+        
+        <div class="card">
+      <div class="card-content">
+        <h3>🗂️ Catálogo de Músicas</h3>
+        <p>
+          Explore e ordene a nossa vasta coleção do <strong>Dataset Spotify</strong>. Encontre os IDs para suas buscas!
+        </p>
+        <a href="{% url 'todas_as_musicas' %}" class="btn-link">
+          Navegar no Catálogo
+        </a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <h3>🔍 Busca Sequencial</h3>
+        <p>
+          A forma mais básica: busca linha por linha. Veja a complexidade <strong>O(N)</strong> em ação.
+        </p>
+        <a href="{% url 'busca_sequencial' %}" class="btn-link">
+          Testar O(N)
+        </a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <h3>📊 Busca Indexada</h3>
+        <p>
+          Otimize a busca com índices! Reduza o trabalho, focando apenas nos dados relevantes.
+        </p>
+        <a href="{% url 'busca_indexada' %}" class="btn-link">
+          Ver Demonstração
+        </a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <h3>⚡ Busca por Hash</h3>
+        <p>
+          Ultra-rápida! Encontre o que procura em tempo quase constante (Complexidade <strong>O(1)</strong>).
+        </p>
+        <a href="{% url 'busca_por_hashmap' %}" class="btn-link">
+          Testar O(1)
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+{% endblock content %}

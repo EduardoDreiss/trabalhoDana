@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Site Estrutura de Dados e Busca{% endblock %}</title>
+    <style>
+        /* Estilos básicos para o layout */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #121212; color: #f4f4f9; }
+        .navbar { 
+            background-color: #00b409; padding: 10px 20px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex;
+            justify-content: space-between; align-items: center;
+
+        }
+        .navbar a { 
+            color: #333; text-decoration: none; margin-left: 20px;
+            font-size: 1.1em; transition: color 0.3s;
+        }
+        .navbar a:hover { color: #f4f4f9; }
+        .container { padding: 30px; }
+        hr{
+            border: 0; height: 1px; background: #4d4d4d; margin: 20px 0;
+        }
+        footer {text-align: center; color: #f4f4f9; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><a href="{% url 'index' %}">Site de Buscas (AED)</a></div>
+        <div>
+            <a href="{% url 'todas_as_musicas' %}"> Lista de Músicas</a>
+            <a href="{% url 'busca_sequencial' %}">Sequencial</a>
+            <a href="{% url 'busca_indexada' %}">Indexada</a>
+            <a href="{% url 'busca_por_hashmap' %}">Hash</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+<footer>
+    <hr>
+    <p>
+        &copy; 2025 Site de Demonstração de Algoritmos de Busca. Todos os direitos reservados.
+    </p>
+</footer>
+</html>

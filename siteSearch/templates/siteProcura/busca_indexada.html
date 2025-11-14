@@ -1,0 +1,157 @@
+{% extends 'base.html' %} 
+
+{% block title %}Busca Indexada | Músicas Spotify{% endblock %}
+
+{% block content %}
+    <style>
+        strong{
+            color: #00b409;
+        }
+    </style>
+    
+    {{ dados_para_js|json_script:"spotify-data" }}
+    <h1 style="color: #FF8C00; border-bottom: 2px solid #ccc; padding-bottom: 10px;">
+        🔍 Busca Indexada - Dataset Spotify
+    </h1>
+    <p>
+        Objetivo: Demonstração da complexidade <strong>O(log N)</strong>, usando o algoritmo de <strong>Busca Binária</strong> para explorar o array de IDs de música que está <strong>ordenado</strong> pelo banco de dados (Estrutura Indexada).
+    </p>
+
+    <style>
+        .controls { margin-top: 20px; }
+        .result-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-top: 20px;
+            background-color: #fffaf0;
+        }
+        button {
+        background-color: #00b409;
+        color: black;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        }
+        .found { color: #FF8C00; font-weight: bold; }
+        .not-found { color: #f44336; font-weight: bold; }
+        .data-warning { color: #555; font-size: 0.9em; margin-top: 10px; }
+    </style>
+
+    <div class="controls">
+        <label for="target">Buscar Música por ID:</label>
+        <input type="text" id="target" value="" style="width: 250px;" placeholder="Ex: ID da Música">
+        <button onclick="startSearch()">Iniciar Busca</button>
+    </div>
+
+    <p id="totalRegistros">Carregando dados...</p>
+    <p class="data-warning">O array de busca é carregado ORDENADO pelo 'track_id' (Indexado).</p>
+    
+    <h2>Resultado da Busca Indexada:</h2>
+    <div id="resultBox" class="result-box">
+        <p id="status">Aguardando a busca...</p>
+    </div>
+
+    <script>
+        // rawData: Array de OBJETOS MUSICA (ordenado pelo track_id pelo Django)
+        const rawData = JSON.parse("{{ dados_para_js|escapejs }}");
+        
+        let isSearching = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+             document.getElementById('totalRegistros').textContent = `Total de Músicas no Banco (Ordenadas): ${rawData.length}`;
+             
+             // Define um ID de exemplo (pegando o primeiro elemento do array ordenado)
+             document.getElementById('target').value = rawData[0] ? rawData[0].track_id : 'ID de Exemplo';
+        });
+
+        // Funções de utilidade (Mantidas iguais à Sequencial)
+        function displayResult(statusText, comparacoes, success=true) {
+            const resultBox = document.getElementById('resultBox');
+            const statusElement = document.getElementById('status');
+            
+            statusElement.innerHTML = statusText + `<br>Total de Comparações (Passos): <strong>${comparacoes}</strong>`;
+            
+            resultBox.classList.remove('found', 'not-found');
+            if (success) {
+                resultBox.classList.add('found');
+            } else {
+                resultBox.classList.add('not-found');
+            }
+        }
+        
+        function resetSearch() {
+            isSearching = false;
+            document.getElementById('status').textContent = "Aguardando a busca...";
+            document.getElementById('resultBox').classList.remove('found', 'not-found');
+        }
+
+        /**
+         * Algoritmo de Busca Binária
+         * @param {Array<Object>} arr O array de objetos Musica, DEVE ESTAR ORDENADO por track_id.
+         * @param {string} targetId A chave (track_id) a ser procurada.
+         * @returns {Object|null} O objeto Musica encontrado ou null.
+         */
+        function binarySearch(arr, targetId) {
+            let left = 0;
+            let right = arr.length - 1;
+            let steps = 0;
+            let foundMusic = null;
+
+            while (left <= right) {
+                steps++;
+                let mid = Math.floor((left + right) / 2);
+                const currentId = arr[mid].track_id;
+
+
+                if (currentId === targetId) {
+                    foundMusic = arr[mid];
+                    break; 
+                }
+
+
+                else if (currentId < targetId) {
+                    left = mid + 1;
+                } 
+                else {
+                    right = mid - 1;
+                }
+            }
+            
+            return {
+                music: foundMusic,
+                steps: steps
+            };
+        }
+
+        async function startSearch() {
+            if (isSearching || rawData.length === 0) return;
+            
+            isSearching = true;
+            resetSearch();
+
+            const targetId = document.getElementById('target').value.trim();
+
+            document.getElementById('status').textContent = `Iniciando Busca Indexada (Binária) para ID: ${targetId}...`;
+
+            // Executa a busca
+            const { music, steps } = binarySearch(rawData, targetId);
+
+            if (music) {
+                const resultText = `
+                    ✅ Música ENCONTRADA! 
+                    <br>Nome: ${music.track_name}
+                    <br>Artista: ${music.track_artist}
+                    <br>Popularidade: ${music.track_popularity}
+                `;
+                displayResult(resultText, steps, true);
+            } else {
+                displayResult(`❌ Música com ID "${targetId}" NÃO ENCONTRADA.`, steps, false);
+            }
+
+            isSearching = false;
+        }
+
+    </script>
+
+{% endblock content %}
