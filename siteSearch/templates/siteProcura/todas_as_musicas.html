@@ -1,239 +1,361 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 
 {% block title %}Catálogo | Todas as Músicas Spotify{% endblock %}
 
 {% block content %}
 
-    
-    {{ dados_para_js|json_script:"spotify-data" }}
+{{ dados_para_js|json_script:"spotify-data" }}
 
-  <h1 style="color: #1DB954">
-    📚 Catálogo de Músicas (Dataset Spotify)
-    <hr>
-  </h1>
-  <p>
-    Visualize, ordene e utilize os <strong>IDs</strong> das músicas para as simulações de busca. Total de registros: <strong id="totalRegistros">Carregando...</strong>
-  </p>
+<h1 style="color: #00b409">
+     📚 Catálogo de Músicas (Dataset Spotify)
+    <hr style="border-color: #282828;">
+</h1>
+<p>
+     Visualize, ordene e utilize os <strong>IDs</strong> das músicas para as simulações de busca. Total de registros:
+    <strong id="totalRegistros">Carregando...</strong>
+</p>
 
-  <style>
-        /* Estilos base (Mantenha o estilo escuro do Spotify) */
-        body { background-color: #121212; color: #ffffff; }
-        a { color: #1DB954; }
-        
-        .container-main {
-            display: flex;
-            gap: 40px; 
-            margin-top: 30px;
-        }
+<style>
+    /* Estilos base (Mantenha o estilo escuro do Spotify) */
+    body {
+        background-color: #121212;
+        color: #ffffff;
+    }
 
-        strong{
+    a {
         color: #00b409;
-        }
+        text-decoration: none;
+    }
 
-        .column-left {
-            flex: 0 0 350px; /* Coluna de Controles */
-        }
+    a:hover {
+        color: #1ed760;
+    }
 
-        .column-right {
-            flex: 1; /* Coluna de Listagem (Janela) */
-        }
+    .container-main {
+        display: flex;
+        gap: 40px;
+        margin-top: 30px;
+    }
 
-        /* Estilo da "Janela" de Listagem */
-        .list-window {
-            height: 600px; /* Altura fixa para a janela de rolagem */
-            overflow-y: auto; /* Adiciona barra de rolagem vertical */
-            border: 1px solid #222222;
-            border-radius: 8px;
-            background-color: #1E1E1E; /* Fundo levemente mais claro que o body */
-            padding: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-        }
+    strong {
+        color: #00b409;
+        /* Seu verde de destaque */
+    }
 
-        /* Estilo da Tabela */
-        .song-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .song-table th {
-            background-color: #282828; 
-            color: #b3b3b3;
-            padding: 10px;
-            text-align: left;
-            position: sticky; /* Fixa o cabeçalho ao rolar */
-            top: 0;
-            z-index: 10;
-            cursor: pointer; /* Indica que é clicável para ordenar */
-        }
-        .song-table td {
-            padding: 10px;
-            border-bottom: 1px solid #333333;
-            vertical-align: middle;
-            font-size: 0.9em;
-        }
-        .song-table tr:hover {
-            background-color: #2a2a2a;
-        }
-        
-        /* Estilo para o ID da Música */
-        .track-id-cell {
-            font-family: monospace;
-            color: #b3b3b3;
-            font-size: 0.8em;
-        }
-        
-        /* Estilo dos botões de filtro */
-        .filter-buttons button {
-            background-color: #1DB954;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            margin-right: 10px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .filter-buttons button:hover {
-            background-color: #1ed760;
-        }
-  </style>
+    .column-left {
+        flex: 0 0 350px;
+        /* Coluna de Controles */
+    }
 
-    <div class="container-main">
+    .column-right {
+        flex: 1;
+        /* Coluna de Listagem (Janela) */
+    }
 
-        <div class="column-left">
-             <h2>Opções de Listagem:</h2>
-             <div class="filter-buttons">
-                           <button onclick="sortList('popularidade_desc')">🔥 Mais Populares</button>
-          <button onclick="sortList('popularidade_asc')">🧊 Menos Populares</button>
-                <button onclick="sortList('nome_asc')">Título (A-Z)</button>
-             </div>
-             <p style="margin-top: 20px; font-size: 0.9em; color: #b3b3b3;">
-                 Clique no cabeçalho da coluna "Popularidade" para inverter a ordenação.
-             </p>
+    /* Estilo da Caixa de Comandos (Coluna Esquerda) */
+    .command-box {
+        border: 1px solid #222222;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: #1a1a1a;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Estilo da "Janela" de Listagem */
+    .list-window {
+        height: 600px;
+        /* Altura fixa para a janela de rolagem */
+        overflow-y: auto;
+        /* Adiciona barra de rolagem vertical */
+        border: 1px solid #222222;
+        border-radius: 8px;
+        background-color: #1E1E1E;
+        /* Fundo levemente mais claro que o body */
+        padding: 0;
+        /* Remove padding interno para a tabela */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .list-window::-webkit-scrollbar {
+        width: 8px;
+        background-color: transparent;
+        /* Remove o fundo (a parte branca que você não gosta) */
+    }
+
+    .list-window::-webkit-scrollbar-thumb {
+        background-color: #555;
+        /* Cor cinza escuro para o scroll */
+        border-radius: 10px;
+        /* A borda abaixo é CRÍTICA para que o scroll não ocupe toda a largura do trilho transparente */
+        border: 2px solid #1E1E1E;
+    }
+
+    .list-window::-webkit-scrollbar-thumb:hover {
+        background-color: #777;
+    }
+
+    /* Suporte Firefox (Opcional, mas recomendado) */
+    .list-window {
+        scrollbar-width: thin;
+        scrollbar-color: #555 #1E1E1E;
+    }
+
+    /* Estilo da Tabela */
+    .song-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .song-table th {
+        background-color: #282828;
+        color: #b3b3b3;
+        padding: 10px;
+        text-align: left;
+        position: sticky;
+        /* Fixa o cabeçalho ao rolar */
+        top: 0;
+        z-index: 10;
+        cursor: pointer;
+    }
+
+    .song-table td {
+        padding: 10px;
+        border-bottom: 1px solid #333333;
+        vertical-align: middle;
+        font-size: 0.9em;
+    }
+
+    .song-table tr:hover {
+        background-color: #2a2a2a;
+    }
+
+    /* Estilo para o ID da Música */
+    .track-id-cell {
+        font-family: monospace;
+        color: #00b409;
+        /* ID em verde para destaque */
+        font-size: 0.8em;
+        cursor: copy;
+        /* Ícone de cópia */
+        transition: color 0.2s;
+    }
+
+    .track-id-cell:hover {
+        color: #1ed760;
+    }
+
+    /* MUDANÇA: Estilo dos botões de filtro */
+    .filter-buttons {
+        /* Define o container como flex e força o empilhamento vertical */
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        /* Espaço entre os botões */
+    }
+
+    .filter-buttons button {
+        background-color: #00b409;
+        color: black;
+        /* Texto preto para alto contraste */
+        border: none;
+        padding: 10px 15px;
+        margin: 0;
+        /* Remove margens que podem afetar o layout de coluna */
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        width: 100%;
+        /* Garante que todos ocupem a largura máxima da coluna */
+        text-align: left;
+        /* Alinha o texto à esquerda para um visual mais limpo */
+    }
+
+    .filter-buttons button:hover {
+        background-color: #1ed760;
+    }
+
+    /* Estilo para o botão ativo/selecionado */
+    .filter-buttons button.active {
+        background-color: #1ed760;
+        border: 2px solid #00b409;
+        box-shadow: 0 0 8px rgba(0, 180, 9, 0.7);
+    }
+</style>
+
+<div class="container-main">
+
+    <div class="column-left">
+        <div class="command-box">
+            <h2>Opções de Listagem:</h2>
+            <div class="filter-buttons">
+                <button id="original-btn" onclick="sortList('original_order', this)">Ordem Padrão (BD)</button>
+
+                <button id="pop-desc-btn" onclick="sortList('popularidade_desc', this)">🔥 Mais Populares</button>
+                <button id="pop-asc-btn" onclick="sortList('popularidade_asc', this)">🧊 Menos Populares</button>
+                <button id="nome-asc-btn" onclick="sortList('nome_asc', this)">Título (A-Z)</button>
+            </div>
+            <p style="margin-top: 20px; font-size: 0.9em; color: #b3b3b3;">
+                 Clique no cabeçalho da coluna "Popularidade" para inverter rapidamente a ordenação.
+            </p>
         </div>
-
-
-        <div class="column-right">
-             <h2>Lista de Músicas:</h2>
-             
-             <div class="list-window">
-                 <table class="song-table">
-                     <thead>
-                         <tr>
-                             <th>Nome da Música</th>
-                             <th>Artista</th>
-                             <th id="popularidade-header">Popularidade (↓)</th>
-                             <th>ID da Música</th>
-                         </tr>
-                     </thead>
-                     <tbody id="music-list-body">
-                         <tr><td colspan="4" style="text-align: center;">Carregando dados...</td></tr>
-                     </tbody>
-                 </table>
-             </div>
-        </div>
-
     </div>
 
-  <script>
-        // LEITURA DE DADOS SEGURA
-        let rawData = [];
-        let currentSortOrder = 'popularidade_desc'; // Estado inicial de ordenação
 
-        const scriptElement = document.getElementById('spotify-data');
-        if (scriptElement && scriptElement.textContent.trim().length > 0) {
-            try {
-                rawData = JSON.parse(scriptElement.textContent);
-            } catch (e) {
-                console.error("Erro fatal: Não foi possível processar os dados do servidor.", e);
-            }
+    <div class="column-right">
+        <h2>Lista de Músicas:</h2>
+
+        <div class="list-window">
+            <table class="song-table">
+                <thead>
+                    <tr>
+                        <th>Nome da Música</th>
+                        <th>Artista</th>
+                        <th id="popularidade-header">Popularidade</th>
+                        <th>ID da Música</th>
+                    </tr>
+                </thead>
+                <tbody id="music-list-body">
+                    <tr>
+                        <td colspan="4" style="text-align: center;">Carregando dados...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Variáveis Globais e Leitura de Dados
+    let rawData = [];
+    // Define a ordem inicial como a 'original_order'
+    let currentSortOrder = 'original_order';
+
+    const scriptElement = document.getElementById('spotify-data');
+    if (scriptElement && scriptElement.textContent.trim().length > 0) {
+        try {
+            rawData = JSON.parse(scriptElement.textContent);
+        } catch (e) {
+            console.error("Erro fatal: Não foi possível processar os dados do servidor.", e);
         }
-    
-        document.addEventListener('DOMContentLoaded', () => {
-             // 1. Atualiza o contador de registros
-      document.getElementById('totalRegistros').textContent = rawData.length;
-            
-            // 2. Renderiza a lista inicial (ordenada por popularidade descendente)
-            renderList(rawData, currentSortOrder);
-            
-            // 3. Adiciona evento de clique ao cabeçalho da popularidade
-            document.getElementById('popularidade-header').addEventListener('click', togglePopularitySort);
-        });
+    }
 
-        /**
-         * Renderiza a tabela com o array de músicas fornecido.
-         */
-        function renderList(musicArray, sortOrder) {
-            const tbody = document.getElementById('music-list-body');
-            let htmlContent = '';
-            
-            // 1. Ordena o Array
-            const sortedArray = [...musicArray]; // Clona para não modificar o original
-            
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Atualiza o contador de registros
+        document.getElementById('totalRegistros').textContent = rawData.length;
+
+        // 2. Renderiza a lista inicial com a Ordem Padrão do BD
+        renderList(rawData, currentSortOrder);
+
+        // 3. Define o botão 'Ordem Padrão (BD)' como ativo
+        document.getElementById('original-btn').classList.add('active'); // Botão inicial
+
+        // 4. Adiciona evento de clique ao cabeçalho da popularidade
+        document.getElementById('popularidade-header').addEventListener('click', togglePopularitySort);
+    });
+
+    /**
+    * Renderiza a tabela com o array de músicas fornecido.
+    */
+    function renderList(musicArray, sortOrder) {
+        const tbody = document.getElementById('music-list-body');
+        let htmlContent = '';
+
+        // 1. Ordena o Array - CLONA para não modificar o array original
+        const sortedArray = [...musicArray];
+
+        // Se for 'original_order', não reordena.
+        if (sortOrder !== 'original_order') {
             sortedArray.sort((a, b) => {
-                // Converte Popularidade para número para garantir ordenação correta
                 const popA = parseInt(a.track_popularity);
                 const popB = parseInt(b.track_popularity);
 
                 if (sortOrder === 'popularidade_desc') {
-                    return popB - popA; // Maior para o menor
+                    return popB - popA;
                 } else if (sortOrder === 'popularidade_asc') {
-                    return popA - popB; // Menor para o maior
+                    return popA - popB;
                 } else if (sortOrder === 'nome_asc') {
-                    // Ordenação por nome (string)
                     return a.track_name.localeCompare(b.track_name);
                 }
-                return 0; // Se for o mesmo
+                return 0;
             });
+        }
 
-            // 2. Gera o HTML das linhas
-            sortedArray.forEach(musica => {
-                htmlContent += `
-                    <tr>
-                        <td>${musica.track_name}</td>
-                        <td>${musica.track_artist}</td>
-                        <td>${musica.track_popularity}</td>
-                        <td class="track-id-cell" title="Clique para copiar o ID: ${musica.track_id}" onclick="copyToClipboard('${musica.track_id}')">${musica.track_id}</td>
-                    </tr>
-                `;
-            });
+        // 2. Gera o HTML das linhas
+        sortedArray.forEach(musica => {
+            htmlContent += `
+  <tr>
+   <td>${musica.track_name}</td>
+   <td>${musica.track_artist}</td>
+   <td>${musica.track_popularity}</td>
+   <td class="track-id-cell" title="Clique para copiar o ID: ${musica.track_id}" onclick="copyToClipboard('${musica.track_id}')">${musica.track_id}</td>
+  </tr>
+  `;
+        });
 
-            tbody.innerHTML = htmlContent;
-            
-            // 3. Atualiza o ícone de ordenação no cabeçalho
-            const header = document.getElementById('popularidade-header');
+        tbody.innerHTML = htmlContent;
+
+        // 3. Atualiza o ícone de ordenação no cabeçalho
+        const header = document.getElementById('popularidade-header');
+
+        if (sortOrder.startsWith('popularidade')) {
             header.innerHTML = `Popularidade (${sortOrder === 'popularidade_desc' ? '↓' : '↑'})`;
+        } else {
+            header.innerHTML = `Popularidade`;
         }
-        
-        /**
-         * Alterna a ordenação de popularidade entre ascendente e descendente.
-         */
-        function togglePopularitySort() {
-            if (currentSortOrder === 'popularidade_desc') {
-                currentSortOrder = 'popularidade_asc';
-            } else {
-                currentSortOrder = 'popularidade_desc';
-            }
-            renderList(rawData, currentSortOrder);
-        }
+    }
 
-        /**
-         * Função de ordenação genérica (usada pelos botões)
-         */
-        function sortList(criteria) {
-            currentSortOrder = criteria;
-            renderList(rawData, currentSortOrder);
+    /**
+    * Alterna a ordenação de popularidade entre ascendente e descendente (usado pelo TH).
+    */
+    function togglePopularitySort() {
+        let targetButton;
+
+        if (currentSortOrder === 'popularidade_desc') {
+            currentSortOrder = 'popularidade_asc';
+            targetButton = document.getElementById('pop-asc-btn');
+        } else {
+            currentSortOrder = 'popularidade_desc';
+            targetButton = document.getElementById('pop-desc-btn');
         }
-        
-        /**
-         * Função utilitária para copiar o ID.
-         */
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert("ID copiado: " + text);
-            }, (err) => {
-                console.error('Erro ao copiar: ', err);
-            });
+        renderList(rawData, currentSortOrder);
+        setActiveButton(targetButton);
+    }
+
+    /**
+    * Função de ordenação genérica (usada pelos botões)
+    */
+    function sortList(criteria, buttonElement) {
+        currentSortOrder = criteria;
+        renderList(rawData, currentSortOrder);
+        setActiveButton(buttonElement);
+    }
+
+    /**
+    * Gerencia o estado "ativo" dos botões.
+    */
+    function setActiveButton(activeButton) {
+        const buttons = document.querySelectorAll('.filter-buttons button');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        if (activeButton) {
+            activeButton.classList.add('active');
         }
-    </script>
+    }
+
+    /**
+    * Função utilitária para copiar o ID.
+    */
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert("ID copiado para a área de transferência: " + text);
+        }, (err) => {
+            console.error('Erro ao copiar: ', err);
+            // Fallback para navegadores mais antigos
+            prompt("Copie manualmente o ID:", text);
+        });
+    }
+</script>
 
 {% endblock content %}

@@ -1,168 +1,261 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 
 {% block title %}Busca por Hash Map | Músicas Spotify{% endblock %}
 
 {% block content %}
-    
-    {{ dados_para_js|json_script:"spotify-data" }}
-    
-    <h1 style="color: #673AB7; border-bottom: 2px solid #ccc; padding-bottom: 10px;">
-    ⚡ Busca por Hash Map (Dataset Spotify)
-  </h1>
-  <p>
-    Objetivo: Demonstração da complexidade <strong>O(1)</strong> (tempo constante). Os dados são pré-processados em um Mapa Hash (dicionário), permitindo acesso instantâneo pela chave (ID da Música).
-  </p>
 
-  <style>
-    .controls { margin-top: 20px; }
-    .result-box {
-      border: 1px solid #ccc;
-      padding: 15px;
-      margin-top: 20px;
-      background-color: #f3e5f5; /* Cor para Hash Map */
-    }
-    strong{
-      color: #00b409;
-    }
-    .found { color: #673AB7; font-weight: bold; }
-    .not-found { color: #f44336; font-weight: bold; }
-    .data-warning { color: #555; font-size: 0.9em; margin-top: 10px; }
-    button {
-      background-color: #00b409;
-      color: black;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
+{{ dados_para_js|json_script:"spotify-data" }}
 
-  <div class="controls">
-    <label for="target">Buscar Música por ID:</label>
-    <input type="text" id="target" value="" style="width: 250px;" placeholder="Ex: ID da Música">
-    <button id="startButton">Iniciar Busca</button>
+<h1 style="color: #00b409">
+  ⚡ Busca por Hash (O(1)) no Dataset Spotify
+  <hr style="border-color: #282828;">
+</h1>
+<p>
+  Objetivo: Demonstração da complexidade ideal <strong>O(1)</strong> (tempo constante). A busca é instantânea após o
+  <strong>pré-processamento</strong> dos dados em um Mapa Hash.
+</p>
+
+<style>
+  .container-main {
+    display: flex;
+    gap: 40px;
+    margin-top: 30px;
+  }
+
+  .column-left {
+    flex: 0 0 350px;
+  }
+
+  .column-right {
+    flex: 1;
+  }
+
+
+  .command-box {
+    border: 1px solid #222222;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #1a1a1a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Controles (Input e Botão) */
+  .controls {
+    margin-bottom: 20px;
+  }
+
+  strong {
+    color: #00b409;
+  }
+
+  button {
+    background-color: #00b409;
+    color: black;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #1ed760;
+  }
+
+  /* Resultado (Coluna Direita) */
+  .result-box {
+    border: 1px solid #222222;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #121212;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    margin-top: 15px;
+  }
+
+  /* Cores de Status */
+  .found {
+    border-color: #00b409;
+  }
+
+  /* Borda verde para sucesso */
+  .not-found {
+    border-color: #f44336;
+  }
+
+  /* Estilos de Informação da Música */
+  .result-title {
+    color: #00b409;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .track-details p {
+    margin: 5px 0;
+    line-height: 1.4;
+  }
+
+  .data-warning {
+    color: #b3b3b3;
+    font-size: 0.9em;
+    margin-top: 10px;
+  }
+</style>
+
+<div class="container-main">
+
+  <div class="column-left">
+    <div class="command-box">
+      <p style="margin-top: 0; font-weight: bold;">**Configuração O(1)**</p>
+      <div class="controls">
+        <label for="target">Buscar Música por ID:</label>
+        <input type="text" id="target" value="" style="width: 300px; padding: 5px;" placeholder="Ex: ID da Música">
+        <button id="startButton">Iniciar Busca Instantânea</button>
+      </div>
+    </div>
+
+    <p id="totalRegistros">Carregando dados...</p>
+    <p id="buildTime" class="data-warning">Construindo Hash Map...</p>
   </div>
 
-  <p id="totalRegistros">Carregando dados...</p>
-  <p id="buildTime" class="data-warning">Construindo Hash Map...</p>
-  
-  <h2>Resultado da Busca por Hash:</h2>
-  <div id="resultBox" class="result-box">
-    <p id="status">Aguardando a busca...</p>
+
+  <div class="column-right">
+    <h2>Resultado da Busca:</h2>
+    <p id="time-elapsed">Tempo de Busca: <strong>0 ms</strong></p>
+    <p id="status-steps">Passos de Comparação: <strong>1</strong> (O(1) ideal)</p>
+
+    <div id="resultBox" class="result-box">
+      <p id="status">Aguardando a busca...</p>
+    </div>
   </div>
 
-  <script>
+</div>
 
-        // VARIÁVEIS DE ESCOPO GLOBAL
-        let rawData = [];
-        let musicHashMap = {};
-        let isSearching = false;
+<script>
 
-        // 2. LEITURA DE DADOS (Lendo da tag <script> com o ID "spotify-data")
-        const scriptElement = document.getElementById('spotify-data');
-        if (scriptElement && scriptElement.textContent.trim().length > 0) {
-            try {
-                // O .textContent já contém o JSON validado e escapado pelo Django
-                rawData = JSON.parse(scriptElement.textContent);
-            } catch (e) {
-                console.error("Erro fatal: Não foi possível processar os dados do servidor. Verifique o console.", e);
-            }
-        }
+  // VARIÁVEIS DE ESCOPO GLOBAL
+  let rawData = [];
+  let musicHashMap = {};
+  let isSearching = false;
 
-    /**
-    * Constrói o Hash Map a partir do array de objetos.
-    */
-    function buildHashMap() {
-      if (rawData.length === 0) {
-        document.getElementById('buildTime').textContent = "Hash Map não construído: dados ausentes.";
-        return;
-      }
-      const startTime = performance.now();
-      
-      rawData.forEach(musica => {
-        // A chave (key) do mapa é o track_id
-        musicHashMap[musica.track_id] = musica; 
-      });
-      
-      const endTime = performance.now();
-      const buildDuration = (endTime - startTime).toFixed(2);
-
-      document.getElementById('buildTime').innerHTML = 
-        `Hash Map Construído. Tempo de pré-processamento: **${buildDuration} ms**`;
+  // 2. LEITURA DE DADOS (Lendo da tag <script> com o ID "spotify-data")
+  const scriptElement = document.getElementById('spotify-data');
+  if (scriptElement && scriptElement.textContent.trim().length > 0) {
+    try {
+      rawData = JSON.parse(scriptElement.textContent);
+    } catch (e) {
+      console.error("Erro fatal: Não foi possível processar os dados do servidor. Verifique o console.", e);
     }
+  }
 
-    // Funções de utilidade (Agora dentro do <script>)
-    function displayResult(statusText, comparacoes, success=true) {
-      const resultBox = document.getElementById('resultBox');
-      const statusElement = document.getElementById('status');
-      
-      statusElement.innerHTML = statusText + `<br>Total de Comparações (Passos): <strong>${comparacoes}</strong>`;
-      
-      resultBox.classList.remove('found', 'not-found');
-      if (success) {
-        resultBox.classList.add('found');
-      } else {
-        resultBox.classList.add('not-found');
-      }
+  /**
+  * Constrói o Hash Map a partir do array de objetos e mede o tempo.
+  */
+  function buildHashMap() {
+    if (rawData.length === 0) {
+      document.getElementById('buildTime').innerHTML = "Hash Map não construído: dados ausentes.";
+      return;
     }
-    
-    function resetSearch() {
-      isSearching = false;
-      document.getElementById('status').textContent = "Aguardando a busca...";
-      document.getElementById('resultBox').classList.remove('found', 'not-found');
-    }
+    const startTime = performance.now();
 
-    function startSearch() {
-      if (isSearching) return;
-      
-      isSearching = true;
-      resetSearch();
-
-      const targetId = document.getElementById('target').value.trim();
-      const steps = 1; // CRÍTICO: O(1)
-
-      document.getElementById('status').textContent = `Iniciando Busca por Hash para ID: ${targetId}...`;
-
-      // BUSCA HASH: Acessa o objeto diretamente pela chave (ID)
-      const music = musicHashMap[targetId];
-
-      if (music) {
-        const resultText = `
-          ✅ Música ENCONTRADA! 
-          <br>Nome: ${music.track_name}
-          <br>Artista: ${music.track_artist}
-          <br>Popularidade: ${music.track_popularity}
-        `;
-        displayResult(resultText, steps, true);
-      } else {
-        displayResult(`❌ Música com ID "${targetId}" NÃO ENCONTRADA.`, steps, false);
-      }
-
-      isSearching = false;
-    }
-
-
-    // 3. EVENTO DE CARREGAMENTO DA PÁGINA
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('totalRegistros').textContent = `Total de Músicas no Banco: ${rawData.length}`;
-      
-      // Constrói o mapa ao carregar
-      buildHashMap();
-
-      // Define um ID de exemplo
-      if (rawData.length > 0) {
-        document.getElementById('target').value = rawData[0].track_id;
-      } else {
-        document.getElementById('target').value = 'Verifique a View/População';
-      }
-
-      // Anexa a função startSearch() ao clique do botão
-      const startButton = document.getElementById('startButton');
-      if (startButton) {
-        startButton.addEventListener('click', startSearch);
-      }
+    rawData.forEach(musica => {
+      musicHashMap[musica.track_id] = musica;
     });
 
-  </script>
+    const endTime = performance.now();
+    const buildDuration = (endTime - startTime).toFixed(3); // 3 casas decimais
+
+    document.getElementById('buildTime').innerHTML =
+      `Pré-processamento concluído. Tempo para construir o Hash Map: <strong>${buildDuration} ms</strong>`;
+  }
+
+  /**
+  * Atualiza o box de resultado com a informação formatada.
+  */
+  function displayResult(statusText, success = true, musica = null, duration = 0) {
+    const resultBox = document.getElementById('resultBox');
+    const timeElapsed = document.getElementById('time-elapsed');
+
+    timeElapsed.innerHTML = `Tempo de Busca: <strong>${duration.toFixed(6)} ms</strong>`; // Alta precisão para O(1)
+
+    let htmlContent = '';
+
+    if (success && musica) {
+      htmlContent = `
+      <p class="result-title">✅ Música ENCONTRADA!</p>
+      <div class="track-details">
+        <p><strong>Título:</strong> ${musica.track_name}</p>
+        <p><strong>Artista:</strong> ${musica.track_artist}</p>
+        <p><strong>Popularidade:</strong> ${musica.track_popularity}</p>
+                <p style="font-size: 0.8em; color: #b3b3b3;">ID: ${musica.track_id}</p>
+      </div>
+    `;
+    } else {
+      htmlContent = `<p class="not-found">❌ ${statusText}</p>`;
+    }
+
+    resultBox.innerHTML = htmlContent;
+
+    // Aplica classes de estilo
+    resultBox.classList.remove('found', 'not-found');
+    resultBox.classList.add(success ? 'found' : 'not-found');
+  }
+
+  function resetSearch() {
+    isSearching = false;
+    document.getElementById('time-elapsed').innerHTML = `Tempo de Busca: <strong>0 ms</strong>`;
+    document.getElementById('status-steps').innerHTML = `Passos de Comparação: <strong>1</strong> (O(1) ideal)`;
+    document.getElementById('resultBox').innerHTML = '<p id="status">Aguardando a busca...</p>';
+    document.getElementById('resultBox').classList.remove('found', 'not-found');
+  }
+
+  function startSearch() {
+    if (isSearching) return;
+
+    isSearching = true;
+    resetSearch();
+
+    const targetId = document.getElementById('target').value.trim();
+
+    const startTime = performance.now();
+    // BUSCA HASH: Acesso direto
+    const music = musicHashMap[targetId];
+    const endTime = performance.now();
+    const duration = endTime - startTime;
+
+    if (music) {
+      displayResult(`Música ENCONTRADA!`, true, music, duration);
+    } else {
+      displayResult(`Música com ID "${targetId}" NÃO ENCONTRADA.`, false, null, duration);
+    }
+
+    isSearching = false;
+  }
+
+
+  // 3. EVENTO DE CARREGAMENTO DA PÁGINA
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('totalRegistros').textContent = `Total de Músicas no Banco: ${rawData.length}`;
+
+    // Constrói o mapa ao carregar
+    buildHashMap();
+
+    // Define um ID de exemplo
+    if (rawData.length > 0) {
+      document.getElementById('target').value = rawData[0].track_id;
+    } else {
+      document.getElementById('target').value = 'Verifique a View/População';
+    }
+
+    // Anexa a função startSearch() ao clique do botão
+    const startButton = document.getElementById('startButton');
+    if (startButton) {
+      startButton.addEventListener('click', startSearch);
+    }
+  });
+
+</script>
 
 {% endblock content %}
