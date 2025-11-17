@@ -6,51 +6,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Site Estrutura de Dados e Busca{% endblock %}</title>
     <style>
-        /* Estilos básicos para o layout */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background-color: #121212;
-            color: #f4f4f9;
-        }
+    /* Estilos básicos para o layout */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        background-color: #121212;
+        color: #f4f4f9;
+    }
 
-        .navbar {
-            background-color: #00b409;
-            padding: 10px 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+    /* --- ESTILOS DA NAVBAR APRIMORADOS --- */
+    .navbar {
+        /* Fundo escuro para a navbar, dando mais profundidade */
+        background-color: #1a1a1a; /* Escuro, mas diferente do body */
+        border-bottom: 3px solid #00b409; /* Linha de destaque verde */
+        padding: 12px 40px; /* Mais altura e padding horizontal */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Sombra mais intensa */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky; /* Fixa a navbar no topo da página */
+        top: 0;
+        z-index: 1000;
+    }
 
-        }
+    /* Estilo do link HOME (Logo) */
+    .navbar .logo a {
+        color: #f4f4f9; /* Texto claro para destaque */
+        font-weight: 700;
+        font-size: 1.4em; /* Maior que os demais links */
+        margin-left: 0;
+        transition: color 0.3s;
+    }
+    
+    .navbar .logo a:hover {
+        color: #1ed760; /* Verde claro ao passar o mouse */
+    }
 
-        .navbar a {
-            color: #333;
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 1.1em;
-            transition: color 0.3s;
-        }
+    /* Estilo dos links de navegação */
+    .navbar div a {
+        color: #b3b3b3; /* Cor cinza sutil para links normais */
+        text-decoration: none;
+        margin-left: 30px; /* Mais espaçamento entre os links */
+        font-size: 1.0em;
+        padding: 5px 0; /* Ajuda na área de clique e hover */
+        border-bottom: 2px solid transparent; /* Base para o efeito de hover */
+        transition: color 0.3s, border-bottom-color 0.3s;
+        font-weight: 600;
+    }
 
-        .navbar a:hover {
-            color: #f4f4f9;
-        }
+    /* Efeito de HOVER (Passar o mouse) */
+    .navbar div a:hover {
+        color: #ffffff; /* Texto branco puro no hover */
+        border-bottom-color: #00b409; /* Linha verde suave por baixo */
+    }
 
-        .container {
-            padding: 30px;
-        }
+    /* Efeito para o link ATIVO (Opcional: se o Django suportar) */
+    /* Exemplo, você pode adicionar a classe 'active' dinamicamente no Django template */
+    .navbar div a.active {
+        color: #1ed760; /* Verde brilhante para o link ativo */
+        border-bottom-color: #1ed760;
+    }
+    /* --- FIM DOS ESTILOS DA NAVBAR APRIMORADOS --- */
 
-        hr {
-            border: 0;
-            height: 1px;
-            background: #4d4d4d;
-            margin: 20px 0;
-        }
+    .container {
+        padding: 30px;
+    }
 
-        footer {
-            text-align: center;
-            color: #f4f4f9;
-        }
+    hr {
+        border: 0;
+        height: 1px;
+        background: #4d4d4d;
+        margin: 20px 0;
+    }
+
+    footer {
+        text-align: center;
+        color: #f4f4f9;
+        padding: 20px;
+    }
     </style>
 </head>
 

@@ -5,61 +5,45 @@
 {% block content %}
 
 <style>
-  /* Estilos Modernos e Robustos - FOCO em VERDE e PRETO */
-
-  /* Cores Base */
   body {
     background-color: #121212;
     color: #ffffff;
   }
 
-  /* Fundo bem escuro, texto claro */
   a {
     color: #00b409;
     text-decoration: none;
   }
 
-  /* Links em verde Spotify */
   a:hover {
     color: #1ed760;
   }
 
-  /* Verde mais claro no hover */
-
-  /* Cabeçalho */
   .main-header {
     text-align: center;
     padding: 50px 0;
     background-color: #181818;
-    /* Fundo do cabeçalho levemente mais claro que o body */
     border-radius: 12px;
     margin-bottom: 40px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-    /* Sombra mais intensa */
     border: 1px solid #00b409;
-    /* Borda verde destacada */
   }
 
   .main-header h1 {
     color: #00b409;
-    /* Verde Spotify vibrante */
     margin-bottom: 5px;
     font-size: 2.8em;
-    /* Fonte grande e impactante */
     font-weight: 900;
     letter-spacing: 1px;
     text-shadow: 0 0 10px #000000;
-    /* Sombra de texto verde sutil */
   }
 
   .main-header p {
     font-size: 1.2em;
     color: #b3b3b3;
-    /* Cinza claro para texto secundário */
     margin-top: 10px;
   }
 
-  /* Cartões Container */
   .card-container {
     display: flex;
     justify-content: center;
@@ -67,12 +51,10 @@
     gap: 30px;
   }
 
-  /* Cartão Individual */
   .card {
     width: 300px;
     min-width: 250px;
     background-color: #181818;
-    /* Fundo do cartão */
     border: 1px solid #282828;
     border-radius: 10px;
     overflow: hidden;
@@ -83,11 +65,8 @@
 
   .card:hover {
     transform: translateY(-10px);
-    /* Efeito de elevação mais pronunciado */
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
-    /* Sombra mais dramática no hover */
     border-color: #1ed760;
-    /* Borda verde mais clara no hover */
   }
 
   .card-content {
@@ -96,23 +75,18 @@
 
   .card-content h3 {
     color: #00b409;
-    /* Títulos dos cartões em verde Spotify */
     font-size: 1.6em;
-    /* Títulos maiores */
     margin-top: 0;
     margin-bottom: 15px;
     border-bottom: 2px solid #282828;
-    /* Linha divisória sutil */
     padding-bottom: 8px;
   }
 
   .card-content p {
     font-size: 1em;
     color: #e0e0e0;
-    /* Texto claro para contraste */
     margin-bottom: 20px;
     line-height: 1.5;
-    /* Melhor leitura */
   }
 
   /* Botão de Link */
@@ -120,17 +94,14 @@
     display: block;
     background-color: #00b409;
     color: #000000;
-    /* Texto em preto para contraste máximo com o verde */
     font-weight: bold;
     text-align: center;
     padding: 14px 15px;
-    /* Botão mais robusto */
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s ease, color 0.3s ease;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    /* Mais moderno */
   }
 
   .link_unico {
@@ -180,7 +151,7 @@
         A forma mais básica: busca linha por linha. Veja a complexidade <strong>O(N)</strong> em ação.
       </p>
       <a href="{% url 'busca_sequencial' %}" class="btn-link">
-        Testar O(N)
+        Ver Demonstração
       </a>
     </div>
   </div>
@@ -204,7 +175,7 @@
         Ultra-rápida! Encontre o que procura em tempo quase constante (Complexidade <strong>O(1)</strong>).
       </p>
       <a href="{% url 'busca_por_hashmap' %}" class="btn-link">
-        Testar O(1)
+        Ver Demonstração
       </a>
     </div>
   </div>
