@@ -1,9 +1,70 @@
 {% extends 'base.html' %} 
 
-{% block title %}Informações sobre o site | Músicas Spotify{% endblock %}
+{% block title %}Sobre o Projeto: | Músicas Spotify{% endblock %}
 
 {% block content %}
-    <h1>Objetivo Principal:</h1>
+    <style>
+        .highlight {
+            color: #1ed760;
+        }
+        strong{
+            color: #00b409
+        }
+        
+        .section-title {
+            color: #00b409;
+            font-size: 1.8em;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+        }
+
+        .list-item {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+    </style>
+
+    <h1 style="color: #f4f4f9; border-bottom: 2px solid #00b409; padding-bottom: 10px;">
+        📚 Sobre o Projeto: Demonstração de Algoritmos de Busca
+    </h1>
+    
+    <h3>
+        Este projeto foi desenvolvido com o objetivo de demonstrar, de forma prática e visual, o impacto da escolha da estrutura de dados e do algoritmo de busca na <strong>eficiência</strong> e <strong>performance</strong> de uma aplicação em grande escala.
+    </h3>
+
+    <hr style="border-color: #282828;">
+
+    <h2 class="section-title">O Dataset Spotify e o Desafio</h2>
     <hr>
+    <p>
+        Para simular um ambiente de aplicação real, utilizamos um dataset com aproximadamente <strong>28.352 músicas</strong> do Spotify. Este volume de dados é crucial para ilustrar como a complexidade temporal (<strong>O(N)</strong>, <strong>O(log N)</strong>, <strong>O(1)</strong>) se comporta diante de um catálogo extenso, refletindo os desafios enfrentados por plataformas de streaming.
+    </p>
+
+    <hr style="border-color: #282828;">
+
+    <h2 class="section-title">Análise dos Algoritmos de Busca Implementados</h2>
+
+    <ul style="list-style-type: '⚡ '; padding-left: 20px;">
+        <li class="list-item">
+            <strong>Busca Sequencial (Linear):</strong>
+            <br>Metodologia <strong>O(N)</strong>. A busca é feita item por item. Ideal para arrays não ordenados e pequenos volumes, mas sua eficiência cai drasticamente em um dataset de 28 mil itens.
+        </li>
+        <li class="list-item">
+            <strong>Busca Indexada (Binária):</strong>
+            <br>Metodologia <strong>O(log N)</strong>. Requer que o array esteja previamente <strong>ordenado</strong> (indexado) pelo <strong>track_id</strong>. Demonstra um salto de performance significativo ao dividir o espaço de busca pela metade em cada iteração.
+        </li>
+        <li class="list-item">
+            <strong>Busca por Hash Map (Dicionário):</strong>
+            <br>Metodologia <strong>O(1)</strong> (Tempo Constante). Representa a forma mais rápida de busca, pois o acesso ao dado é feito diretamente através de um mapeamento de chave (ID) para valor. É a solução mais utilizada em sistemas que exigem recuperação instantânea de dados.
+        </li>
+    </ul>
+
+    <hr style="border-color: #282828;">
+
+    <h2 class="section-title">Conclusão</h2>
+    <p>
+        O objetivo final é permitir que o usuário <strong>compare diretamente</strong> o tempo de execução e o número de passos de cada algoritmo, validando a teoria da Complexidade de Algoritmos na prática.
+    </p>
 
 {% endblock content %}
