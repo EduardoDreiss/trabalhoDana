@@ -1,108 +1,130 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %} {% block title %}Sobre o Projeto: | Músicas Spotify{%
+endblock %} {% block content %}
+<style>
+  .highlight {
+    color: #1ed760;
+  }
+  strong {
+    color: #00b409;
+  }
 
-{% block title %}Sobre o Projeto: | Músicas Spotify{% endblock %}
+  .section-title {
+    color: #00b409;
+    font-size: 1.8em;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+  }
 
-{% block content %}
-    <style>
-        .highlight {
-            color: #1ed760;
-        }
-        strong{
-            color: #00b409
-        }
-        
-        .section-title {
-            color: #00b409;
-            font-size: 1.8em;
-            margin-top: 30px;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-        }
+  .list-item {
+    margin-bottom: 15px;
+    line-height: 1.6;
+  }
 
-        .list-item {
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-    
-    /* ----------------------------------------------- */
-/* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
-/* ----------------------------------------------- */
+  /* ----------------------------------------------- */
+  /* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
+  /* ----------------------------------------------- */
 
-@media (max-width: 768px) {
-    
+  @media (max-width: 768px) {
     /* 1. Ajustes de Título Principal */
     h1 {
-        font-size: 1.5em; /* Reduz o tamanho da fonte do título principal */
-        padding-bottom: 20px !important; /* Reduz o padding inferior */
-        margin-top: 10px;
+      font-size: 1.5em; /* Reduz o tamanho da fonte do título principal */
+      padding-bottom: 20px !important; /* Reduz o padding inferior */
+      margin-top: 10px;
     }
-    
+
     /* 2. Subtítulos e Títulos de Seção */
     h3 {
-        font-size: 1em; /* Reduz a fonte do h3 */
+      font-size: 1em; /* Reduz a fonte do h3 */
     }
     .section-title {
-        font-size: 1.4em; /* Reduz o tamanho dos títulos de seção */
-        margin-top: 20px;
+      font-size: 1.4em; /* Reduz o tamanho dos títulos de seção */
+      margin-top: 20px;
     }
 
     /* 3. Listas e Pargráfos */
-    p, .list-item {
-        font-size: 0.95em; /* Garante que o texto seja legível, mas economiza espaço */
+    p,
+    .list-item {
+      font-size: 0.95em; /* Garante que o texto seja legível, mas economiza espaço */
     }
 
     /* 4. Itens da Lista de Algoritmos */
     .list-item {
-        margin-bottom: 20px; /* Aumenta um pouco a margem para melhor separação visual */
-        padding-left: 0; /* Remove padding desnecessário em mobile */
+      margin-bottom: 20px; /* Aumenta um pouco a margem para melhor separação visual */
+      padding-left: 0; /* Remove padding desnecessário em mobile */
     }
-    
+
     /* Ajusta a margem do <ul> para não grudar nas laterais */
     ul {
-        padding-left: 20px;
+      padding-left: 20px;
     }
-}
-        
-    </style>
+  }
+</style>
 
-    <h1 style="color: #f4f4f9; border-bottom: 2px solid #00b409; padding-bottom: 50px; text-align: center">
-        Sobre o Projeto: Demonstração de Algoritmos de Busca
-    </h1>
-    
-    <h3>
-        Este projeto foi desenvolvido com o objetivo de demonstrar, de forma prática e visual, o impacto da escolha da estrutura de dados e do algoritmo de busca na <strong>eficiência</strong> e <strong>performance</strong> de uma aplicação em grande escala.
-    </h3>
+<h1
+  style="
+    color: #f4f4f9;
+    border-bottom: 2px solid #00b409;
+    padding-bottom: 50px;
+    text-align: center;
+  "
+>
+  Sobre o Projeto: Demonstração de Algoritmos de Busca
+</h1>
 
-    <hr style="border-color: #282828;">
+<h3>
+  Este projeto foi desenvolvido com o objetivo de demonstrar, de forma prática e
+  visual, o impacto da escolha da estrutura de dados e do algoritmo de busca na
+  <strong>eficiência</strong> e <strong>performance</strong> de uma aplicação em
+  grande escala.
+</h3>
 
-    <h2 class="section-title">O Dataset Spotify e o Desafio</h2>
-    <hr>
-    <p>
-        Para simular um ambiente de aplicação real, foi utilizado um dataset com aproximadamente <strong>28.000 músicas</strong> do Spotify. Este volume de dados é crucial para ilustrar como a complexidade temporal (<strong>O(N)</strong>, <strong>O(log N)</strong>, <strong>O(1)</strong>) se comporta diante de um catálogo extenso, refletindo os desafios enfrentados por plataformas de streaming.
-    </p>
+<hr style="border-color: #282828" />
 
-    <hr style="border-color: #282828;">
+<h2 class="section-title">O Dataset Spotify e o Desafio</h2>
+<hr />
+<p>
+  Para simular um ambiente de aplicação real, foi utilizado um dataset com
+  aproximadamente <strong>28.000 músicas</strong> do Spotify. Este volume de
+  dados é crucial para ilustrar como a complexidade temporal
+  (<strong>O(N)</strong>, <strong>O(log N)</strong>, <strong>O(1)</strong>) se
+  comporta diante de um catálogo extenso, refletindo os desafios enfrentados por
+  plataformas de streaming.
+</p>
 
-    <h2 class="section-title">Análise dos Algoritmos de Busca Implementados</h2>
+<hr style="border-color: #282828" />
 
-    <ul>
-        <li class="list-item">
-            <strong>Busca Sequencial (Linear):</strong>
-            <br>Metodologia <strong>O(N)</strong>. A busca é feita item por item. Ideal para arrays não ordenados e pequenos volumes, mas sua eficiência cai drasticamente em um dataset de 28 mil itens.
-        </li>
-        <li class="list-item">
-            <strong>Busca Indexada (Binária):</strong>
-            <br>Metodologia <strong>O(log N)</strong>. Requer que o array esteja previamente <strong>ordenado</strong> (indexado) pelo <strong>track_id</strong>. Demonstra um salto de performance significativo ao dividir o espaço de busca pela metade em cada iteração.
-        </li>
-        <li class="list-item">
-            <strong>Busca por Hash Map (Dicionário):</strong>
-            <br>Metodologia <strong>O(1)</strong> (Tempo Constante). Representa a forma mais rápida de busca, pois o acesso ao dado é feito diretamente através de um mapeamento de chave (ID) para valor. É a solução mais utilizada em sistemas que exigem recuperação instantânea de dados.
-        </li>
-    </ul>
+<h2 class="section-title">Análise dos Algoritmos de Busca Implementados</h2>
 
-    <hr style="border-color: #282828;">
-    <p>
-        O objetivo final é permitir que o usuário <strong>compare diretamente</strong> o tempo de execução e o número de passos de cada algoritmo, validando a teoria da Complexidade de Algoritmos na prática.
-    </p>
+<ul>
+  <li class="list-item">
+    <strong>Busca Sequencial (Linear):</strong>
+    <br />Metodologia <strong>O(N)</strong>. A busca é feita item por item.
+    Ideal para arrays não ordenados e pequenos volumes, mas sua eficiência cai
+    drasticamente em um dataset de 28 mil itens.
+  </li>
+  <li class="list-item">
+    <strong>Busca Indexada (Binária):</strong>
+    <br />Metodologia <strong>O(log N)</strong>. Requer que o array esteja
+    previamente <strong>ordenado</strong> (indexado) pelo
+    <strong>track_id</strong>. Demonstra um salto de performance significativo
+    ao dividir o espaço de busca pela metade em cada iteração.
+  </li>
+  <li class="list-item">
+    <strong>Busca por Hash Map (Dicionário):</strong>
+    <br />Metodologia <strong>O(1)</strong> (Tempo Constante). Representa a
+    forma mais rápida de busca, pois o acesso ao dado é feito diretamente
+    através de um mapeamento de chave (ID) para valor. É a solução mais
+    utilizada em sistemas que exigem recuperação instantânea de dados.
+  </li>
+</ul>
+
+<hr style="border-color: #282828" />
+<p>
+  O objetivo final é permitir que o usuário
+  <strong>compare diretamente</strong> o tempo de execução e o número de passos
+  de cada algoritmo, validando a teoria da Complexidade de Algoritmos na
+  prática.
+</p>
 
 {% endblock content %}

@@ -1,8 +1,5 @@
-{% extends 'base.html' %}
-
-{% block title %}Spotifind | Algoritmos de Busca em Música{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}Spotifind | Algoritmos de Busca em
+Música{% endblock %} {% block content %}
 
 <style>
   body {
@@ -59,7 +56,8 @@
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease,
+      border-color 0.3s ease;
     position: relative;
   }
 
@@ -119,86 +117,92 @@
   }
 
   /* ----------------------------------------------- */
-/* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
-/* ----------------------------------------------- */
+  /* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
+  /* ----------------------------------------------- */
 
-@media (max-width: 768px) {
-    
+  @media (max-width: 768px) {
     /* 1. Cabeçalho Principal */
     .main-header {
-        padding: 30px 15px; /* Reduz o padding */
-        margin-bottom: 20px;
-        /* Remove a borda forte para um visual mais limpo em telas menores */
-        border: none; 
-        box-shadow: none;
-        background-color: transparent; /* Fica no fundo do body */
+      padding: 30px 15px; /* Reduz o padding */
+      margin-bottom: 20px;
+      /* Remove a borda forte para um visual mais limpo em telas menores */
+      border: none;
+      box-shadow: none;
+      background-color: transparent; /* Fica no fundo do body */
     }
 
     .main-header h1 {
-        font-size: 1.8em; /* Reduz o tamanho do título principal */
+      font-size: 1.8em; /* Reduz o tamanho do título principal */
     }
 
     .main-header p {
-        font-size: 1em; /* Reduz a fonte do subtítulo */
-        padding: 0 5px;
+      font-size: 1em; /* Reduz a fonte do subtítulo */
+      padding: 0 5px;
     }
-    
+
     /* 2. Contêiner de Cartões */
     .card-container {
-        /* Os cartões já estão configurados com flex-wrap: wrap,
+      /* Os cartões já estão configurados com flex-wrap: wrap,
            mas vamos centralizar o conteúdo quando houver quebra */
-        gap: 20px; /* Reduz o espaçamento entre os cartões */
+      gap: 20px; /* Reduz o espaçamento entre os cartões */
     }
 
     /* 3. Cartões Individuais */
     .card {
-        /* Ocupa a largura máxima para se destacar na tela mobile */
-        width: 100%; 
-        max-width: 400px; /* Limita a largura em telas muito grandes (como tablets em portrait) */
-        min-width: 100%; /* Garante que ocupe a largura total */
-        margin: 0 auto; /* Centraliza o cartão se for menor que 100% (ex: max-width) */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Sombra mais sutil */
+      /* Ocupa a largura máxima para se destacar na tela mobile */
+      width: 100%;
+      max-width: 400px; /* Limita a largura em telas muito grandes (como tablets em portrait) */
+      min-width: 100%; /* Garante que ocupe a largura total */
+      margin: 0 auto; /* Centraliza o cartão se for menor que 100% (ex: max-width) */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Sombra mais sutil */
     }
 
     .card:hover {
-        /* Mantém o hover, mas reduz o efeito de movimento */
-        transform: translateY(-5px);
+      /* Mantém o hover, mas reduz o efeito de movimento */
+      transform: translateY(-5px);
     }
-    
+
     .card-content h3 {
-        font-size: 1.4em; /* Reduz o tamanho dos títulos dos cartões */
-        margin-bottom: 10px;
+      font-size: 1.4em; /* Reduz o tamanho dos títulos dos cartões */
+      margin-bottom: 10px;
     }
-    
+
     .card-content {
-        padding: 20px; /* Ajusta o padding interno do cartão */
+      padding: 20px; /* Ajusta o padding interno do cartão */
     }
 
     .btn-link {
-        padding: 12px 15px; /* Ajusta o padding do botão */
-        font-size: 0.9em;
+      padding: 12px 15px; /* Ajusta o padding do botão */
+      font-size: 0.9em;
     }
-}
+  }
 </style>
 
 <header class="main-header">
-  <h1>
-    🎧 SPOTIFIND: Algoritmos de Busca em Música
-  </h1>
+  <h1>🎧 SPOTIFIND: Algoritmos de Busca em Música</h1>
   <p>
     Uma exploração interativa de Estruturas de Dados e Algoritmos de Busca.
-    Utilizando um <a href="https://www.kaggle.com/datasets/joebeachcapital/30000-spotify-songs/" , class="link_unico" ,
-      target="_blank" , rel="noopener noreferrer"><strong>Dataset Real do Spotify</strong></a>.
+    Utilizando um
+    <a
+      href="https://www.kaggle.com/datasets/joebeachcapital/30000-spotify-songs/"
+      ,
+      class="link_unico"
+      ,
+      target="_blank"
+      ,
+      rel="noopener noreferrer"
+      ><strong>Dataset Real do Spotify</strong></a
+    >.
   </p>
 </header>
 
 <div class="card-container">
-
   <div class="card">
     <div class="card-content">
       <h3>🗂️ Catálogo de Músicas</h3>
       <p>
-        Explore e ordene a nossa vasta coleção do <strong>Dataset Spotify</strong>. Encontre os IDs para suas buscas!
+        Explore e ordene a nossa vasta coleção do
+        <strong>Dataset Spotify</strong>. Encontre os IDs para suas buscas!
       </p>
       <a href="{% url 'todas_as_musicas' %}" class="btn-link">
         Navegar no Catálogo
@@ -210,7 +214,8 @@
     <div class="card-content">
       <h3>🔍 Busca Sequencial</h3>
       <p>
-        A forma mais básica: busca linha por linha. Veja a complexidade <strong>O(N)</strong> em ação.
+        A forma mais básica: busca linha por linha. Veja a complexidade
+        <strong>O(N)</strong> em ação.
       </p>
       <a href="{% url 'busca_sequencial' %}" class="btn-link">
         Ver Demonstração
@@ -222,7 +227,8 @@
     <div class="card-content">
       <h3>📊 Busca Indexada</h3>
       <p>
-        Otimize a busca com índices! Reduza o trabalho, focando apenas nos dados relevantes.
+        Otimize a busca com índices! Reduza o trabalho, focando apenas nos dados
+        relevantes.
       </p>
       <a href="{% url 'busca_indexada' %}" class="btn-link">
         Ver Demonstração
@@ -234,14 +240,14 @@
     <div class="card-content">
       <h3>⚡ Busca por Hash</h3>
       <p>
-        Ultra-rápida! Encontre o que procura em tempo quase constante (Complexidade <strong>O(1)</strong>).
+        Ultra-rápida! Encontre o que procura em tempo quase constante
+        (Complexidade <strong>O(1)</strong>).
       </p>
       <a href="{% url 'busca_por_hashmap' %}" class="btn-link">
         Ver Demonstração
       </a>
     </div>
   </div>
-
 </div>
 
 {% endblock content %}

@@ -40,7 +40,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
  }
 
- /* Controles (Input e Botão) */
  .controls {
   margin-bottom: 20px;
  }
@@ -66,7 +65,6 @@
   background-color: #1ed760;
  }
 
- /* Resultado (Coluna Direita) */
  .result-box {
   border: 1px solid #222222;
   border-radius: 8px;
@@ -74,20 +72,17 @@
   background-color: #121212;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   margin-top: 15px;
-  margin-bottom: 30px; /* Espaço para o visualizador */
+  margin-bottom: 30px;
  }
 
- /* Cores de Status */
  .found {
   border-color: #00b409;
  }
 
- /* Borda verde para sucesso */
  .not-found {
   border-color: #f44336;
  }
 
- /* Estilos de Informação da Música */
  .result-title {
   color: #00b409;
   font-size: 1.3em;
@@ -106,7 +101,6 @@
   margin-top: 10px;
  }
 
- /* --- NOVO CSS PARA VISUALIZADOR HASH --- */
  .hash-visualizer {
   display: flex;
   align-items: center;
@@ -157,71 +151,64 @@
  .animate-hash {
   animation: flash-green 0.15s ease-out;
  }
- /* ----------------------------------------------- */
-/* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
-/* ----------------------------------------------- */
+/*responsividade*/
 
 @media (max-width: 768px) {
     
-    /* 1. Layout Principal (Colunas -> Linha Única) */
+    
     .container-main {
-        flex-direction: column; /* Empilha as colunas */
+        flex-direction: column; 
         gap: 20px;
         margin-top: 15px;
     }
 
-    /* 2. Colunas */
     .column-left,
     .column-right {
-        flex: 1 1 auto; /* Ocupam a largura total */
+        flex: 1 1 auto; 
         min-width: 100%;
     }
 
-    /* 3. Controles (Input e Botão) */
+  
     .controls {
         display: flex;
-        flex-direction: column; /* Empilha label, input e button */
+        flex-direction: column; 
     }
     
     .controls label {
         margin-bottom: 5px;
     }
     
-    /* Input ocupa a largura total */
     .controls input#target {
         width: 100% !important; 
         box-sizing: border-box;
     }
 
-    /* Botão ocupa a largura total */
     #startButton {
         width: 100%;
         margin-top: 15px; 
     }
     
-    /* 4. Visualizador de Hash (O(1)) */
+   
     .hash-visualizer {
-        flex-direction: column; /* Empilha os blocos de Hash */
-        gap: 10px; /* Reduz o espaçamento entre os blocos */
+        flex-direction: column; 
+        gap: 10px; 
         padding: 15px 10px;
     }
     
     /* Blocos de Hash */
     .hash-box {
-        min-width: 100%; /* Ocupa a largura total */
+        min-width: 100%; 
         padding: 15px 10px;
-        font-size: 1em; /* Ajusta o tamanho da fonte */
+        font-size: 1em; 
     }
     
-    /* Símbolos de Seta */
     #arrow-symbol, #arrow-symbol-2 {
-        display: block; /* Garante que a seta ocupe uma linha */
-        font-size: 1.5em; /* Reduz o tamanho da seta */
-        transform: rotate(90deg); /* Gira a seta para apontar para baixo */
+        display: block; 
+        font-size: 1.5em;
+        transform: rotate(90deg); 
         margin: 5px 0;
     }
     
-    /* Informações de Status */
     #buildTime, .data-warning {
         font-size: 0.85em;
     }
@@ -274,12 +261,10 @@
 
 <script>
 
- // VARIÁVEIS DE ESCOPO GLOBAL
  let rawData = [];
  let musicHashMap = {};
  let isSearching = false;
 
- // Referências aos novos elementos
  const inputKeyElement = document.getElementById('input-key');
  const hashFunctionElement = document.getElementById('hash-function');
  const outputResultElement = document.getElementById('output-result');
@@ -287,7 +272,6 @@
  const arrowSymbol2 = document.getElementById('arrow-symbol-2');
 
 
- // 2. LEITURA DE DADOS (Lendo da tag <script> com o ID "spotify-data")
  const scriptElement = document.getElementById('spotify-data');
  if (scriptElement && scriptElement.textContent.trim().length > 0) {
   try {
@@ -297,9 +281,6 @@
   }
  }
 
- /**
- * Constrói o Hash Map a partir do array de objetos e mede o tempo.
- */
  function buildHashMap() {
   if (rawData.length === 0) {
    document.getElementById('buildTime').innerHTML = "Hash Map não construído: dados ausentes.";
@@ -312,20 +293,17 @@
   });
 
   const endTime = performance.now();
-  const buildDuration = (endTime - startTime).toFixed(3); // 3 casas decimais
+  const buildDuration = (endTime - startTime).toFixed(3); 
 
   document.getElementById('buildTime').innerHTML =
    `Pré-processamento concluído. Tempo para construir o Hash Map: <strong>${buildDuration} ms</strong>`;
  }
 
- /**
- * Atualiza o box de resultado com a informação formatada.
- */
  function displayResult(statusText, success = true, musica = null, duration = 0) {
   const resultBox = document.getElementById('resultBox');
   const timeElapsed = document.getElementById('time-elapsed');
 
-  timeElapsed.innerHTML = `Tempo de Busca: <strong>${duration.toFixed(6)} ms</strong>`; // Alta precisão para O(1)
+  timeElapsed.innerHTML = `Tempo de Busca: <strong>${duration.toFixed(6)} ms</strong>`; 
 
   let htmlContent = '';
 
@@ -345,17 +323,14 @@
 
   resultBox.innerHTML = htmlContent;
 
-  // Aplica classes de estilo
   resultBox.classList.remove('found', 'not-found');
   resultBox.classList.add(success ? 'found' : 'not-found');
  }
 
  function resetVisualizer() {
-  // Remove animações
   hashFunctionElement.classList.remove('animate-hash');
   outputResultElement.classList.remove('animate-hash');
 
-  // Reset texto do visualizador
   inputKeyElement.textContent = "ID da Música";
   outputResultElement.textContent = "Resultado: Música";
   hashFunctionElement.textContent = "FUNÇÃO HASH";
@@ -372,21 +347,16 @@
  }
  
  
- /**
-  * NOVO: Função para executar a animação O(1)
-  */
  async function animateHash(found) {
-  // 1. Animação da Função Hash
   hashFunctionElement.classList.add('animate-hash');
-  await new Promise(resolve => setTimeout(resolve, 150)); // Tempo da animação CSS
+  await new Promise(resolve => setTimeout(resolve, 150)); 
 
-  // 2. Animação do Resultado
   hashFunctionElement.classList.remove('animate-hash');
   outputResultElement.classList.add('animate-hash');
   outputResultElement.style.borderColor = found ? '#1ed760' : '#f44336';
   await new Promise(resolve => setTimeout(resolve, 150));
   outputResultElement.classList.remove('animate-hash');
-  outputResultElement.style.borderColor = '#00b409'; // Volta ao normal
+  outputResultElement.style.borderColor = '#00b409'; 
  }
 
  async function startSearch() {
@@ -397,20 +367,16 @@
 
   const targetId = document.getElementById('target').value.trim();
 
-  // Atualiza o visualizador
   inputKeyElement.textContent = `Chave: ${targetId}`;
   outputResultElement.textContent = "Buscando...";
 
-  // Pequeno delay visual antes da busca
   await new Promise(resolve => setTimeout(resolve, 100));
 
   const startTime = performance.now();
-  // BUSCA HASH: Acesso direto
   const music = musicHashMap[targetId];
   const endTime = performance.now();
   const duration = endTime - startTime;
 
-  // Executa a animação de mapeamento
   await animateHash(!!music);
 
   if (music) {
@@ -425,21 +391,17 @@
  }
 
 
- // 3. EVENTO DE CARREGAMENTO DA PÁGINA
  document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('totalRegistros').textContent = `Total de Músicas no Banco: ${rawData.length}`;
 
-  // Constrói o mapa ao carregar
   buildHashMap();
 
-  // Define um ID de exemplo
   if (rawData.length > 0) {
    document.getElementById('target').value = rawData[0].track_id;
   } else {
    document.getElementById('target').value = 'Verifique a View/População';
   }
 
-  // Anexa a função startSearch() ao clique do botão
   const startButton = document.getElementById('startButton');
   if (startButton) {
    startButton.addEventListener('click', startSearch);
