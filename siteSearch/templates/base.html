@@ -2,114 +2,221 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Site Estrutura de Dados e Busca{% endblock %}</title>
-    <style>
-    /* Estilos básicos para o layout */
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        background-color: #121212;
-        color: #f4f4f9;
-    }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Site Estrutura de Dados e Busca{% endblock %}</title>
+  <style>
+  /* Estilos básicos para o layout */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background-color: #121212;
+    color: #f4f4f9;
+  }
 
-    /* --- ESTILOS DA NAVBAR APRIMORADOS --- */
-    .navbar {
-        /* Fundo escuro para a navbar, dando mais profundidade */
-        background-color: #1a1a1a; /* Escuro, mas diferente do body */
-        border-bottom: 3px solid #00b409; /* Linha de destaque verde */
-        padding: 12px 40px; /* Mais altura e padding horizontal */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Sombra mais intensa */
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: sticky; /* Fixa a navbar no topo da página */
-        top: 0;
-        z-index: 1000;
-    }
+  /* --- ESTILOS DA NAVBAR --- */
+  .navbar {
+    background-color: #1a1a1a;
+    border-bottom: 3px solid #00b409;
+    padding: 12px 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
 
-    /* Estilo do link HOME (Logo) */
-    .navbar .logo a {
-        color: #f4f4f9; /* Texto claro para destaque */
-        font-weight: 700;
-        font-size: 1.4em; /* Maior que os demais links */
-        margin-left: 0;
-        transition: color 0.3s;
+  /* Estilo do link HOME (Logo) */
+  .navbar .logo a {
+    color: #f4f4f9;
+    font-weight: 700;
+    font-size: 1.4em;
+    margin-left: 0;
+    transition: color 0.3s;
+    flex-shrink: 0;
+  }
+  
+  .navbar .logo a:hover {
+    color: #1ed760;
+  }
+
+    /* Contêiner dos links (para centralizar na versão desktop) */
+    .navbar .nav-links-container { 
+        flex-grow: 1;
+        text-align: center;
+        padding-right: 15%; 
     }
     
-    .navbar .logo a:hover {
-        color: #1ed760; /* Verde claro ao passar o mouse */
-    }
+  /* Estilo dos links de navegação */
+  .navbar .nav-links-container a {
+    color: #b3b3b3;
+    text-decoration: none;
+    margin-left: 30px;
+    font-size: 1.0em;
+    padding: 5px 0;
+    border-bottom: 2px solid transparent;
+    transition: color 0.3s, border-bottom-color 0.3s;
+    font-weight: 600;
+        display: inline-block;
+  }
 
-    /* Estilo dos links de navegação */
-    .navbar div a {
-        color: #b3b3b3; /* Cor cinza sutil para links normais */
-        text-decoration: none;
-        margin-left: 30px; /* Mais espaçamento entre os links */
-        font-size: 1.0em;
-        padding: 5px 0; /* Ajuda na área de clique e hover */
-        border-bottom: 2px solid transparent; /* Base para o efeito de hover */
-        transition: color 0.3s, border-bottom-color 0.3s;
-        font-weight: 600;
-    }
+  /* Efeito de HOVER (Passar o mouse) */
+  .navbar .nav-links-container a:hover {
+    color: #ffffff;
+    border-bottom-color: #00b409;
+  }
 
-    /* Efeito de HOVER (Passar o mouse) */
-    .navbar div a:hover {
-        color: #ffffff; /* Texto branco puro no hover */
-        border-bottom-color: #00b409; /* Linha verde suave por baixo */
-    }
+  /* Efeito para o link ATIVO */
+  .navbar .nav-links-container a.active {
+    color: #1ed760;
+    border-bottom-color: #1ed760;
+  }
 
-    /* Efeito para o link ATIVO (Opcional: se o Django suportar) */
-    /* Exemplo, você pode adicionar a classe 'active' dinamicamente no Django template */
-    .navbar div a.active {
-        color: #1ed760; /* Verde brilhante para o link ativo */
-        border-bottom-color: #1ed760;
-    }
-    /* --- FIM DOS ESTILOS DA NAVBAR APRIMORADOS --- */
-
-    .container {
-        padding: 30px;
-    }
-
-    hr {
-        border: 0;
-        height: 1px;
-        background: #4d4d4d;
-        margin: 20px 0;
-    }
-
-    footer {
-        text-align: center;
+    /* 🎯 Novo Estilo: Botão Hambúrguer */
+    .nav-toggle {
+        display: none; /* Escondido por padrão na versão desktop */
+        background: none;
+        border: none;
         color: #f4f4f9;
-        padding: 20px;
+        font-size: 2em;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        margin-left: 20px;
+        z-index: 1001; /* Garante que fique acima de outros elementos */
     }
-    </style>
+    
+  /* --- FIM DOS ESTILOS DA NAVBAR --- */
+
+  .container {
+    padding: 30px;
+  }
+
+  hr {
+    border: 0;
+    height: 1px;
+    background: #4d4d4d;
+    margin: 20px 0;
+  }
+
+  footer {
+    text-align: center;
+    color: #f4f4f9;
+    padding: 20px;
+  }
+    
+    /* ----------------------------------------------- */
+    /* --- MEDIA QUERY PARA MOBILE (MAX-WIDTH: 768PX) --- */
+    /* ----------------------------------------------- */
+    @media (max-width: 768px) {
+        
+        /* Mostra o botão hambúrguer */
+        .nav-toggle {
+            display: block;
+        }
+        
+        .navbar {
+            /* Retorna o justify-content para deixar o logo e o botão em pontas opostas */
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            flex-wrap: wrap; /* Permite que os links quebrem a linha */
+        }
+        
+        /* 🎯 Esconde o contêiner de links por padrão (estado FECHADO) */
+        .navbar .nav-links-container {
+            display: none; 
+            flex-grow: 1;
+            /* Ocupa a largura total para aparecer abaixo do logo e botão */
+            width: 100%; 
+            padding-right: 0; 
+            text-align: left;
+            flex-basis: 100%; /* Força a quebra de linha */
+            border-top: 1px solid #282828;
+            margin-top: 10px;
+        }
+
+        /* 🎯 Classe para ABRIR o menu (Adicionada via JS) */
+        .navbar .nav-links-container.open {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Ajuste de Links no Mobile */
+        .navbar .nav-links-container a {
+            margin: 0;
+            padding: 10px 0;
+            width: 100%;
+            border-bottom: 1px solid #282828; 
+        }
+
+        .container {
+            padding: 15px;
+        }
+    }
+  </style>
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="logo"><a href="{% url 'index' %}">Home &#8962;</a></div>
-        <div>
-            <a href="{% url 'info' %}">Sobre</a>
-            <a href="{% url 'todas_as_musicas' %}"> Lista de Músicas</a>
-            <a href="{% url 'busca_sequencial' %}">Sequencial</a>
-            <a href="{% url 'busca_indexada' %}">Indexada</a>
-            <a href="{% url 'busca_por_hashmap' %}">Hash</a>
-        </div>
-    </nav>
+  <nav class="navbar">
+    <div class="logo"><a href="{% url 'index' %}">Home &#8962;</a></div>
+        
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+            &#9776; </button>
 
-    <div class="container">
-        {% block content %}
-        {% endblock %}
+        <div class="nav-links-container" id="nav-links"> 
+      <a href="{% url 'info' %}">Sobre</a>
+      <a href="{% url 'todas_as_musicas' %}"> Lista de Músicas</a>
+      <a href="{% url 'busca_sequencial' %}">Sequencial</a>
+      <a href="{% url 'busca_indexada' %}">Indexada</a>
+      <a href="{% url 'busca_por_hashmap' %}">Hash</a>
     </div>
+  </nav>
+
+  <div class="container">
+    {% block content %}
+    {% endblock %}
+  </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navToggle = document.getElementById('nav-toggle');
+            const navLinks = document.getElementById('nav-links');
+            
+            navToggle.addEventListener('click', () => {
+                // Adiciona ou remove a classe 'open' para mostrar/esconder o menu
+                navLinks.classList.toggle('open');
+                
+                // Opcional: Altera o ícone (por exemplo, de hambúrguer para X)
+                if (navLinks.classList.contains('open')) {
+                    navToggle.innerHTML = '&times;'; // Símbolo X
+                    navToggle.setAttribute('aria-expanded', 'true');
+                } else {
+                    navToggle.innerHTML = '&#9776;'; // Símbolo Hambúrguer
+                    navToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            // Garante que se a tela for redimensionada para desktop, o menu é exibido
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768) {
+                    navLinks.classList.remove('open');
+                    navToggle.innerHTML = '&#9776;';
+                    navToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
+    
 
 </body>
 <footer>
-    <hr>
-    <p>
-        <strong>&copy;</strong> 2025 Site de Demonstração de Algoritmos de Busca. Todos os direitos reservados.
-    </p>
+  <hr>
+  <p>
+    <strong>&copy;</strong> 2025 Site de Demonstração de Algoritmos de Busca. Todos os direitos reservados.
+  </p>
 </footer>
 
 </html>
