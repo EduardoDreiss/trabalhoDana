@@ -7,264 +7,354 @@
 {{ dados_para_js|json_script:"spotify-data" }}
 
 <h1 style="color: #00b409">
-  🎵 Busca Sequencial (Dataset Spotify)
-  <hr>
+ 🎵 Busca Sequencial (Dataset Spotify)
+ <hr style="border-color: #282828;">
 </h1>
 <p>Objetivo: Demonstração da complexidade <strong>O(N)</strong>, onde o sistema busca pelo <strong>ID da Música</strong>
-  sequencialmente. Agora com medição de tempo.</p>
+ sequencialmente. Agora com medição de tempo.</p>
 
 <style>
-  /* Novo CSS para o layout de duas colunas (inspirado no Spotify) */
-  .container-main {
-    display: flex;
-    gap: 40px;
-    /* Espaço entre as colunas */
-    margin-top: 30px;
-  }
+ .container-main {
+  display: flex;
+  gap: 40px;
+  margin-top: 30px;
+ }
 
-  .column-left {
-    flex: 0 0 350px;
-    /* Coluna de largura fixa para os controles */
-  }
+ .column-left {
+  flex: 0 0 350px;
+ }
 
-  .column-right {
-    flex: 1;
-    /* Coluna de resultados ocupa o espaço restante */
-  }
+ .column-right {
+  flex: 1;
+ }
 
-  .controls {
-    margin-bottom: 20px;
-  }
+ .controls {
+  margin-bottom: 20px;
+ }
 
-  /* NOVO ESTILO PARA A CAIXA DE COMANDOS */
-  .command-box {
-    border: 1px solid #222222;
-    border-radius: 8px;
-    padding: 20px;
-    /* Aumentado um pouco o padding interno */
-    margin-bottom: 20px;
-    background-color: #1a1a1a;
-    /* Fundo escuro sutilmente diferente */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
+ /* NOVO ESTILO PARA A CAIXA DE COMANDOS */
+ .command-box {
+  border: 1px solid #222222;
+  border-radius: 8px;
+  padding: 20px;
+  /* Aumentado um pouco o padding interno */
+  margin-bottom: 20px;
+  background-color: #1a1a1a;
+  /* Fundo escuro sutilmente diferente */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+ }
 
-  strong {
-    color: #00b409;
-  }
+ strong {
+  color: #00b409;
+ }
 
-  button {
-    background-color: #00b409;
-    color: black;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    border: 1px solid #000000;
-    transition: background-color 0.3s;
-    margin-top: 10px;
-  }
-  button:hover {
-    background-color: #1ed760;
-  }
+ button {
+  background-color: #00b409;
+  color: black;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid #000000;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+ }
+ button:hover {
+  background-color: #1ed760;
+ }
 
-  .result-box {
-    /* Adaptação da caixa de resultado para o estilo de item de lista */
-    border: 1px solid #222222;
-    border-radius: 8px;
-    padding: 15px;
-    background-color: #121212;
-    /* Fundo escuro */
-    color: #ffffff;
-    /* Texto claro */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  }
+ .result-box {
+  /* Adaptação da caixa de resultado para o estilo de item de lista */
+  border: 1px solid #222222;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #121212;
+  /* Fundo escuro */
+  color: #ffffff;
+  /* Texto claro */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  margin-bottom: 20px; /* Adiciona espaço antes do visualizador */
+ }
 
-  .found {
-    border-color: #1DB954;
-  }
+ .found {
+  border-color: #1DB954;
+ }
 
-  /* Borda verde do Spotify */
-  .not-found {
-    border-color: #f44336;
-  }
+ /* Borda verde do Spotify */
+ .not-found {
+  border-color: #f44336;
+ }
 
-  /* Estilo para simular o item da playlist */
-  .song-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
+ /* Estilo para simular o item da playlist */
+ .song-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+ }
 
-  .track-number {
-    font-weight: bold;
-    font-size: 1.5em;
-    color: #1DB954;
-    /* Cor verde para destaque */
-  }
+ .track-number {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: #00b409;
+  /* Cor verde para destaque */
+ }
 
-  .track-details p {
-    margin: 0;
-    line-height: 1.4;
-  }
+ .track-details p {
+  margin: 0;
+  line-height: 1.4;
+ }
 
-  .track-details .artist-name {
-    color: #b3b3b3;
-    /* Cor cinza para o artista */
-    font-size: 0.9em;
-  }
+ .track-details .artist-name {
+  color: #b3b3b3;
+  /* Cor cinza para o artista */
+  font-size: 0.9em;
+ }
 
-  .result-title {
-    color: #1DB954;
-    font-size: 1.1em;
-    margin-bottom: 10px;
-  }
+ .result-title {
+  color: #00b409;
+  font-size: 1.1em;
+  margin-bottom: 10px;
+ }
 
-  /* Novo estilo para o tempo e passos */
-  #status-steps strong,
-  #time-elapsed strong {
-    color: #00b409;
-  }
+ /* Novo estilo para o tempo e passos */
+ #status-steps strong,
+ #time-elapsed strong {
+  color: #00b409;
+ }
+
+ /* --- CSS PARA A BARRA DE PROGRESSO VISUAL --- */
+ .progress-visualizer {
+  width: 100%;
+  background-color: #282828; /* Fundo escuro */
+  border-radius: 4px;
+  overflow: hidden;
+  height: 25px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+ }
+
+ .progress-bar {
+  height: 100%;
+  width: 0; /* Começa zerada */
+  background-color: #00b409; /* Verde Spotify */
+  transition: width 0.8s ease-out; /* Transição suave para o preenchimento */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+ }
+
+ .progress-text {
+  color: black;
+  font-weight: bold;
+  font-size: 0.9em;
+  padding: 0 10px;
+  /* Texto dentro da barra */
+ }
+
+ /* --- CSS PARA O DISPLAY DE MÚSICA ATUAL --- */
+ #current-track-display {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #1a1a1a;
+  border: 1px solid #222222;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #e0e0e0;
+  min-height: 20px;
+ }
 </style>
 
 <div class="container-main">
 
-  <div class="column-left">
-    <div class="command-box">
-      <p style="margin-top: 0;"><strong>Comandos de Busca</strong></p>
-      <div class="controls">
-        <label for="target">Buscar Música por ID:</label>
-        <input type="text" id="target" value="4pX3S4W9Hl1S2wz8X5c84J" style="width: 300px; padding: 5px;"
-          placeholder="Ex: ID da Música">
-        <button onclick="startSearch()">Iniciar Busca</button>
-      </div>
-    </div>
-
-    <p id="totalRegistros">Carregando dados...</p>
+ <div class="column-left">
+  <div class="command-box">
+   <p style="margin-top: 0;"><strong>Comandos de Busca</strong></p>
+   <div class="controls">
+    <label for="target">Buscar Música por ID:</label>
+    <input type="text" id="target" value="4pX3S4W9Hl1S2wz8X5c84J" style="width: 300px; padding: 5px;"
+     placeholder="Ex: ID da Música">
+    <button onclick="startSearch()">Iniciar Busca</button>
+   </div>
   </div>
 
+  <p id="totalRegistros">Carregando dados...</p>
+ </div>
 
-  <div class="column-right">
-    <h2>Resultado da Busca:</h2>
-    <p id="status-steps">Aguardando a busca...</p>
-    <p id="time-elapsed">Tempo de Busca: <strong>0 ms</strong></p>
 
-    <div id="resultBox" class="result-box">
-      <p id="status">Aguardando a busca...</p>
-    </div>
+ <div class="column-right">
+  <h2>Resultado da Busca:</h2>
+  <p id="status-steps">Aguardando a busca...</p>
+  <p id="time-elapsed">Tempo de Busca: <strong>0 ms</strong></p>
+
+  <div id="resultBox" class="result-box">
+   <p id="status">Aguardando a busca...</p>
   </div>
+    
+    <h3>Representação Visual (O(N)):</h3>
+    <p style="color: #b3b3b3; font-size: 0.9em;">A barra indica o percentual do catálogo que precisou ser varrido.</p>
+    <div class="progress-visualizer">
+        <div id="progressBar" class="progress-bar">
+            <span id="progressText" class="progress-text">0%</span>
+        </div>
+    </div>
+    
+    <p style="margin-top: 20px;">**Música sendo Verificada (Passo a Passo):**</p>
+    <div id="current-track-display">
+        Pronto para buscar...
+    </div>
+ </div>
 
 </div>
 <script>
-  // LEITURA DE DADOS SEGURA
-  let rawData = [];
-  const scriptElement = document.getElementById('spotify-data');
+ // LEITURA DE DADOS SEGURA
+ let rawData = [];
+ const scriptElement = document.getElementById('spotify-data');
 
-  if (scriptElement && scriptElement.textContent.trim().length > 0) {
-    try {
-      rawData = JSON.parse(scriptElement.textContent);
-    } catch (e) {
-      console.error("Erro fatal: Não foi possível processar os dados do servidor.", e);
-    }
+ if (scriptElement && scriptElement.textContent.trim().length > 0) {
+  try {
+   rawData = JSON.parse(scriptElement.textContent);
+  } catch (e) {
+   console.error("Erro fatal: Não foi possível processar os dados do servidor.", e);
+  }
+ }
+
+ let isSearching = false;
+
+ // Referência para o novo elemento
+ const currentTrackDisplay = document.getElementById('current-track-display');
+
+ document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('totalRegistros').textContent = `Total de Músicas no Banco: ${rawData.length}`;
+
+  if (rawData.length > 0) {
+   document.getElementById('target').value = rawData[0].track_id;
+  } else {
+   document.getElementById('target').value = 'ERRO: Sem dados';
+  }
+ });
+
+ // Funções de utilidade
+ function displayResult(statusText, comparacoes, success = true, musica = null, duration = 0) {
+  const resultBox = document.getElementById('resultBox');
+  const statusSteps = document.getElementById('status-steps');
+  const timeElapsed = document.getElementById('time-elapsed');
+
+  statusSteps.innerHTML = `Total de Comparações (Passos): <strong>${comparacoes}</strong>`;
+  timeElapsed.innerHTML = `Tempo de Busca: <strong>${duration.toFixed(3)} ms</strong>`;
+
+  let htmlContent = '';
+
+  if (success && musica) {
+   htmlContent = `
+     <p class="result-title">✅ Música ENCONTRADA!</p>
+     <div class="song-info">
+      <span class="track-number">1</span>
+      <div class="track-details">
+       <p><strong>${musica.track_name}</strong></p>
+       <p class="artist-name">${musica.track_artist} | Pop: ${musica.track_popularity}</p>
+      </div>
+     </div>
+    `;
+  } else {
+   htmlContent = `<p class="not-found">❌ ${statusText}</p>`;
   }
 
-  let isSearching = false;
+  resultBox.innerHTML = htmlContent;
 
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('totalRegistros').textContent = `Total de Músicas no Banco: ${rawData.length}`;
+  resultBox.classList.remove('found', 'not-found');
+  if (success) {
+   resultBox.classList.add('found');
+  } else {
+   resultBox.classList.add('not-found');
+  }
+ }
 
-    if (rawData.length > 0) {
-      document.getElementById('target').value = rawData[0].track_id;
-    } else {
-      document.getElementById('target').value = 'ERRO: Sem dados';
-    }
-  });
+ function updateProgressBar(steps, total) {
+  const progressBar = document.getElementById('progressBar');
+  const progressText = document.getElementById('progressText');
+  
+  let percentage = total === 0 ? 0 : (steps / total) * 100;
+  
+  if (steps === total && !document.getElementById('resultBox').classList.contains('found')) {
+   percentage = 100;
+  }
+  
+  percentage = Math.min(100, percentage);
+  
+  progressBar.style.width = `${percentage.toFixed(2)}%`;
+  progressText.textContent = `${percentage.toFixed(0)}%`;
+ }
 
-  // Funções de utilidade
-  function displayResult(statusText, comparacoes, success = true, musica = null, duration = 0) {
-    const resultBox = document.getElementById('resultBox');
-    const statusSteps = document.getElementById('status-steps');
-    const timeElapsed = document.getElementById('time-elapsed'); // Novo elemento
+ function resetSearch() {
+  isSearching = false;
+  document.getElementById('status-steps').textContent = "Aguardando a busca...";
+  document.getElementById('time-elapsed').innerHTML = `Tempo de Busca: <strong>0 ms</strong>`;
+  document.getElementById('resultBox').innerHTML = '<p id="status">Aguardando a busca...</p>';
+  document.getElementById('resultBox').classList.remove('found', 'not-found');
+  
+  updateProgressBar(0, 1);
+  currentTrackDisplay.innerHTML = "Pronto para buscar..."; // Reset do display de música
+ }
 
-    statusSteps.innerHTML = `Total de Comparações (Passos): <strong>${comparacoes}</strong>`;
-    timeElapsed.innerHTML = `Tempo de Busca: <strong>${duration.toFixed(3)} ms</strong>`; // Exibe o tempo
+ async function startSearch() {
+  if (isSearching || rawData.length === 0) return;
 
-    let htmlContent = '';
+  isSearching = true;
+  resetSearch();
 
-    if (success && musica) {
-      // Monta o layout de resultado no estilo Spotify
-      htmlContent = `
-          <p class="result-title">✅ Música ENCONTRADA!</p>
-          <div class="song-info">
-            <span class="track-number">1</span>
-            <div class="track-details">
-              <p><strong>${musica.track_name}</strong></p>
-              <p class="artist-name">${musica.track_artist} | Pop: ${musica.track_popularity}</p>
-            </div>
-          </div>
-        `;
-    } else {
-      htmlContent = `<p class="not-found">❌ ${statusText}</p>`;
-    }
+  const targetId = document.getElementById('target').value.trim();
+  const totalData = rawData.length;
+  let found = false;
+  let steps = 0;
+  const startTime = performance.now();
+  let endTime = 0;
+  
+  currentTrackDisplay.innerHTML = "Iniciando varredura...";
 
-    resultBox.innerHTML = htmlContent;
+  for (let i = 0; i < totalData; i++) {
+   steps++;
+      
+      // NOVO: Atualiza a música atual e a barra mais frequentemente
+   if (steps % 100 === 0 || i === 0) { 
+    const currentMusic = rawData[i];
+    
+    // Formata a linha de varredura
+    currentTrackDisplay.innerHTML = 
+     `Verificando #${i}: <strong>${currentMusic.track_name}</strong> por ${currentMusic.track_artist}`;
+    
+    // Atualização da barra e do status em tempo real
+    document.getElementById('status-steps').textContent = `Passo ${steps}: Verificando...`;
+    updateProgressBar(steps, totalData); 
+    
+    // Pequeno atraso para visualização (você pode ajustar este valor)
+    // Usamos um atraso muito pequeno (5ms) para manter a performance, mas permitir a visualização
+    await new Promise(resolve => setTimeout(resolve, 5)); 
+   }
 
-    // Limpa e aplica a classe de cor
-    resultBox.classList.remove('found', 'not-found');
-    if (success) {
-      resultBox.classList.add('found');
-    } else {
-      resultBox.classList.add('not-found');
-    }
+
+   if (rawData[i].track_id === targetId) {
+    endTime = performance.now();
+    const musica = rawData[i];
+    const duration = endTime - startTime;
+
+    displayResult(`Música ENCONTRADA! (no índice ${i})`, steps, true, musica, duration);
+    currentTrackDisplay.innerHTML = `✅ ENCONTRADO em ${steps} passos: <strong>${musica.track_name}</strong>`;
+    found = true;
+    break;
+   }
   }
 
-  function resetSearch() {
-    isSearching = false;
-    document.getElementById('status-steps').textContent = "Aguardando a busca...";
-    document.getElementById('time-elapsed').innerHTML = `Tempo de Busca: <strong>0 ms</strong>`;
-    document.getElementById('resultBox').innerHTML = '<p id="status">Aguardando a busca...</p>';
-    document.getElementById('resultBox').classList.remove('found', 'not-found');
+  if (!found) {
+   endTime = performance.now();
+   const duration = endTime - startTime;
+   displayResult(`Música com ID "${targetId}" NÃO ENCONTRADA.`, steps, false, null, duration);
+   currentTrackDisplay.innerHTML = `❌ Varredura Completa: Música não encontrada após ${steps} passos.`;
   }
 
-  async function startSearch() {
-    if (isSearching || rawData.length === 0) return;
+  updateProgressBar(steps, totalData); 
 
-    isSearching = true;
-    resetSearch();
-
-    const targetId = document.getElementById('target').value.trim();
-    let found = false;
-    let steps = 0;
-    const startTime = performance.now(); // Inicia a contagem de tempo
-    let endTime = 0;
-
-    for (let i = 0; i < rawData.length; i++) {
-      steps++;
-
-      if (rawData[i].track_id === targetId) {
-        endTime = performance.now(); // Marca o fim ao encontrar
-        const musica = rawData[i];
-        const duration = endTime - startTime;
-
-        displayResult(`Música ENCONTRADA! (no índice ${i})`, steps, true, musica, duration);
-        found = true;
-        break;
-      }
-
-      // Atualização de status em tempo real
-      if (steps % 1000 === 0) {
-        document.getElementById('status-steps').textContent = `Passo ${steps}: Verificando...`;
-        await new Promise(resolve => setTimeout(resolve, 0));
-      }
-    }
-
-    if (!found) {
-      endTime = performance.now(); // Marca o fim se não encontrar
-      const duration = endTime - startTime;
-      displayResult(`Música com ID "${targetId}" NÃO ENCONTRADA.`, steps, false, null, duration);
-    }
-
-    isSearching = false;
-  }
+  isSearching = false;
+}
 
 </script>
 

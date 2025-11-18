@@ -7,280 +7,434 @@
 {{ dados_para_js|json_script:"spotify-data" }}
 
 <h1 style="color: #00b409">
-  📊 Busca Indexada (O(log N)) - Dataset Spotify
-  <hr style="border-color: #282828;">
+ 📊 Busca Indexada (O(log N)) - Dataset Spotify
+ <hr style="border-color: #282828;">
 </h1>
 <p>
-  Objetivo: Demonstração da otimização <strong>O(log N)</strong>, utilizando o algoritmo de <strong>Busca
-    Binária</strong>. A eficiência depende do array de IDs de música estar <strong>ordenado</strong> (Estrutura
-  Indexada).
+ Objetivo: Demonstração da otimização <strong>O(log N)</strong>, utilizando o algoritmo de <strong>Busca
+  Binária</strong>. A eficiência depende do array de IDs de música estar <strong>ordenado</strong> (Estrutura
+ Indexada).
 </p>
 
 <style>
-  /* Estilos do Template - Foco em Preto e seu Verde #00b409 */
+ /* Estilos do Template - Foco em Preto e seu Verde #00b409 */
 
-  /* Layout de Duas Colunas */
-  .container-main {
-    display: flex;
-    gap: 40px;
-    margin-top: 30px;
-  }
+ /* Layout de Duas Colunas */
+ .container-main {
+  display: flex;
+  gap: 40px;
+  margin-top: 30px;
+ }
 
-  .column-left {
-    flex: 0 0 350px;
-    /* Coluna de largura fixa para os controles */
-  }
+ .column-left {
+  flex: 0 0 350px;
+  /* Coluna de largura fixa para os controles */
+ }
 
-  .column-right {
-    flex: 1;
-    /* Coluna de resultados */
-  }
+ .column-right {
+  flex: 1;
+  /* Coluna de resultados */
+ }
 
-  /* Caixa de Comandos (Coluna Esquerda) */
-  .command-box {
-    border: 1px solid #222222;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    background-color: #1a1a1a;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
+ /* Caixa de Comandos (Coluna Esquerda) */
+ .command-box {
+  border: 1px solid #222222;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #1a1a1a;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+ }
 
-  /* Controles (Input e Botão) */
-  .controls {
-    margin-bottom: 20px;
-  }
+ /* Controles (Input e Botão) */
+ .controls {
+  margin-bottom: 20px;
+ }
 
-  strong {
-    color: #00b409;
-  }
+ strong {
+  color: #00b409;
+ }
 
-  button {
-    background-color: #00b409;
-    color: black;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
+ button {
+  background-color: #00b409;
+  color: black;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  border: 1px solid #000000;
+ }
 
-  button:hover {
-    background-color: #1ed760;
-  }
+ button:hover {
+  background-color: #1ed760;
+ }
 
-  /* Resultado (Coluna Direita) */
-  .result-box {
-    border: 1px solid #222222;
-    border-radius: 8px;
-    padding: 20px;
-    background-color: #121212;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    margin-top: 15px;
-  }
+ /* Resultado (Coluna Direita) */
+ .result-box {
+  border: 1px solid #222222;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #121212;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  margin-top: 15px;
+ }
 
-  /* Cores de Status */
-  .found {
-    border-color: #00b409;
-  }
+ /* Cores de Status */
+ .found {
+  border-color: #00b409;
+ }
 
-  .not-found {
-    border-color: #f44336;
-  }
+ .not-found {
+  border-color: #f44336;
+ }
 
-  /* Estilos de Informação da Música */
-  .result-title {
-    color: #00b409;
-    font-size: 1.3em;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
+ /* Estilos de Informação da Música */
+ .result-title {
+  color: #00b409;
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 10px;
+ }
 
-  .track-details p {
-    margin: 5px 0;
-    line-height: 1.4;
-  }
+ .track-details p {
+  margin: 5px 0;
+  line-height: 1.4;
+ }
 
-  .data-warning {
-    color: #b3b3b3;
-    font-size: 0.9em;
-    margin-top: 10px;
-  }
+ .data-warning {
+  color: #b3b3b3;
+  font-size: 0.9em;
+  margin-top: 10px;
+ }
+
+ /* --- NOVO CSS PARA VISUALIZADOR DE BUSCA BINÁRIA --- */
+
+ #search-range-display {
+  margin-top: 20px;
+  background-color: #1a1a1a;
+  border: 1px solid #222222;
+  border-radius: 8px;
+  padding: 15px;
+ }
+
+ .range-bar {
+  height: 20px;
+  background-color: #282828;
+  border-radius: 2px;
+  position: relative;
+  margin-bottom: 15px;
+  overflow: hidden;
+ }
+
+ #current-range {
+  position: absolute;
+  height: 100%;
+  background-color: #00b409; /* Cor verde para o intervalo ativo */
+  transition: left 0.5s ease-out, width 0.5s ease-out;
+  opacity: 0.6;
+ }
+
+ .range-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8em;
+  color: #b3b3b3;
+ }
+
+ #mid-point-marker {
+  position: absolute;
+  top: -5px;
+  width: 4px;
+  height: 30px;
+  background-color: #f44336; /* Marcador vermelho para o ponto médio */
+  border-radius: 2px;
+  transition: left 0.5s ease-out;
+ }
+
+ #mid-point-text {
+  position: absolute;
+  top: 30px;
+  color: #f44336;
+  font-size: 0.7em;
+  font-weight: bold;
+  transition: left 0.5s ease-out;
+  transform: translateX(-50%);
+ }
+
+ #step-info {
+  margin-top: 10px;
+  color: #f4f4f9;
+  font-weight: bold;
+  font-size: 1em;
+ }
 </style>
 
 <div class="container-main">
 
-  <div class="column-left">
-    <div class="command-box">
-      <p style="margin-top: 0; font-weight: bold;">**Configuração O(log N)**</p>
-      <div class="controls">
-        <label for="target">Buscar Música por ID:</label>
-        <input type="text" id="target" value="" style="width: 300px; padding: 5px;"
-          placeholder="Ex: ID da Música">
-        <button id="startButton">Iniciar Busca Binária</button>
-      </div>
-    </div>
-
-    <p id="totalRegistros">Carregando dados...</p>
-    <p id="data-status" class="data-warning">O array de busca é carregado <strong>ORDENADO</strong> pelo 'track_id'
-      (requisito para a Busca Binária).</p>
+ <div class="column-left">
+  <div class="command-box">
+   <p style="margin-top: 0; font-weight: bold;">**Configuração O(log N)**</p>
+   <div class="controls">
+    <label for="target">Buscar Música por ID:</label>
+    <input type="text" id="target" value="" style="width: 300px; padding: 5px;"
+     placeholder="Ex: ID da Música">
+    <button id="startButton">Iniciar Busca Binária</button>
+   </div>
   </div>
 
+  <p id="totalRegistros">Carregando dados...</p>
+  <p id="data-status" class="data-warning">O array de busca é carregado <strong>ORDENADO</strong> pelo 'track_id'
+   (requisito para a Busca Binária).</p>
+ </div>
 
-  <div class="column-right">
-    <h2>Resultado da Busca:</h2>
-    <p id="time-elapsed">Tempo de Busca: <strong>0 ms</strong></p>
-    <p id="status-steps">Passos de Comparação: <strong>0</strong> (Logarítmico)</p>
 
-    <div id="resultBox" class="result-box">
-      <p id="status">Aguardando a busca...</p>
-    </div>
+ <div class="column-right">
+  <h2>Resultado da Busca:</h2>
+  <p id="time-elapsed">Tempo de Busca: <strong>0 ms</strong></p>
+  <p id="status-steps">Passos de Comparação: <strong>0</strong> (Logarítmico)</p>
+
+  <div id="resultBox" class="result-box">
+   <p id="status">Aguardando a busca...</p>
   </div>
+
+  <h3>Representação Visual (O(log N)):</h3>
+  <p style="color: #b3b3b3; font-size: 0.9em;">A barra mostra como o algoritmo elimina metade do espaço de busca a cada passo.</p>
+
+  <div id="search-range-display">
+   <div class="range-bar">
+    <div id="current-range"></div>
+    <div id="mid-point-marker"></div>
+    <div id="mid-point-text"></div>
+   </div>
+   <div class="range-label">
+    <span id="start-index">Início (0)</span>
+    <span id="end-index">Fim (N-1)</span>
+   </div>
+   <div id="step-info">Aguardando...</div>
+  </div>
+ </div>
 
 </div>
 
 <script>
-  // VARIÁVEIS DE ESCOPO GLOBAL
-  let rawData = [];
-  let isSearching = false;
+ // VARIÁVEIS DE ESCOPO GLOBAL
+ let rawData = [];
+ let isSearching = false;
 
-  // 1. LEITURA DE DADOS (Lendo da tag <script> com o ID "spotify-data")
-  const scriptElement = document.getElementById('spotify-data');
-  if (scriptElement && scriptElement.textContent.trim().length > 0) {
-    try {
-      rawData = JSON.parse(scriptElement.textContent);
-    } catch (e) {
-      console.error("Erro fatal: Não foi possível processar os dados do servidor.", e);
-    }
+ // Referências dos elementos visuais
+ const currentRangeElement = document.getElementById('current-range');
+ const midPointMarker = document.getElementById('mid-point-marker');
+ const midPointText = document.getElementById('mid-point-text');
+ const stepInfo = document.getElementById('step-info');
+ const startIndexDisplay = document.getElementById('start-index');
+ const endIndexDisplay = document.getElementById('end-index');
+
+
+ // 1. LEITURA DE DADOS
+ const scriptElement = document.getElementById('spotify-data');
+ if (scriptElement && scriptElement.textContent.trim().length > 0) {
+  try {
+   rawData = JSON.parse(scriptElement.textContent);
+  } catch (e) {
+   console.error("Erro fatal: Não foi possível processar os dados do servidor.", e);
+  }
+ }
+
+ /**
+ * Atualiza o box de resultado com a informação formatada.
+ */
+ function displayResult(statusText, steps, success = true, music = null, duration = 0) {
+  const resultBox = document.getElementById('resultBox');
+  const timeElapsed = document.getElementById('time-elapsed');
+  const statusSteps = document.getElementById('status-steps');
+
+  timeElapsed.innerHTML = `Tempo de Busca: <strong>${duration.toFixed(3)} ms</strong>`;
+  statusSteps.innerHTML = `Passos de Comparação: <strong>${steps}</strong>`;
+
+  let htmlContent = '';
+
+  if (success && music) {
+   htmlContent = `
+  <p class="result-title">✅ Música ENCONTRADA!</p>
+  <div class="track-details">
+   <p><strong>Título:</strong> ${music.track_name}</p>
+   <p><strong>Artista:</strong> ${music.track_artist}</p>
+   <p><strong>Popularidade:</strong> ${music.track_popularity}</p>
+      <p style="font-size: 0.8em; color: #b3b3b3;">ID: ${music.track_id}</p>
+  </div>
+  `;
+  } else {
+   htmlContent = `<p class="not-found">❌ ${statusText}</p>`;
   }
 
-  /**
-  * Atualiza o box de resultado com a informação formatada.
-  */
-  function displayResult(statusText, steps, success = true, music = null, duration = 0) {
-    const resultBox = document.getElementById('resultBox');
-    const timeElapsed = document.getElementById('time-elapsed');
-    const statusSteps = document.getElementById('status-steps');
+  resultBox.innerHTML = htmlContent;
 
-    timeElapsed.innerHTML = `Tempo de Busca: <strong>${duration.toFixed(3)} ms</strong>`;
-    statusSteps.innerHTML = `Passos de Comparação: <strong>${steps}</strong>`;
+  resultBox.classList.remove('found', 'not-found');
+  resultBox.classList.add(success ? 'found' : 'not-found');
+ }
 
-    let htmlContent = '';
+ function resetSearch() {
+  isSearching = false;
+  document.getElementById('time-elapsed').innerHTML = `Tempo de Busca: <strong>0 ms</strong>`;
+  document.getElementById('status-steps').innerHTML = `Passos de Comparação: <strong>0</strong> (Logarítmico)`;
+  document.getElementById('resultBox').innerHTML = '<p id="status">Aguardando a busca...</p>';
+  document.getElementById('resultBox').classList.remove('found', 'not-found');
+  
+  // Reset visualizador
+  currentRangeElement.style.width = '100%';
+  currentRangeElement.style.left = '0%';
+  midPointMarker.style.left = '-5%'; // Esconde o marcador
+  midPointText.textContent = '';
+  stepInfo.textContent = 'Pronto para buscar...';
+  startIndexDisplay.textContent = `Início (0)`;
+  endIndexDisplay.textContent = `Fim (${rawData.length - 1})`;
+ }
 
-    if (success && music) {
-      htmlContent = `
-     <p class="result-title">✅ Música ENCONTRADA!</p>
-     <div class="track-details">
-      <p><strong>Título:</strong> ${music.track_name}</p>
-      <p><strong>Artista:</strong> ${music.track_artist}</p>
-      <p><strong>Popularidade:</strong> ${music.track_popularity}</p>
-            <p style="font-size: 0.8em; color: #b3b3b3;">ID: ${music.track_id}</p>
-     </div>
-    `;
-    } else {
-      htmlContent = `<p class="not-found">❌ ${statusText}</p>`;
-    }
+ /**
+ * FUNÇÃO DE ATUALIZAÇÃO VISUAL (Chamada a cada passo do loop)
+ */
+ async function updateBinaryVisual(left, right, mid, currentId, targetId, totalSize, steps) {
+  const rangeLength = right - left + 1;
+  const totalLength = totalSize;
 
-    resultBox.innerHTML = htmlContent;
+  // Calcula a posição e largura do intervalo atual em porcentagem
+  const rangeWidth = (rangeLength / totalLength) * 100;
+  const rangeLeft = (left / totalLength) * 100;
+  
+  // Calcula a posição do ponto médio em porcentagem (mid / totalLength)
+  const midPosition = (mid / totalLength) * 100;
 
-    resultBox.classList.remove('found', 'not-found');
-    resultBox.classList.add(success ? 'found' : 'not-found');
+  currentRangeElement.style.width = `${rangeWidth}%`;
+  currentRangeElement.style.left = `${rangeLeft}%`;
+  midPointMarker.style.left = `${midPosition}%`;
+  midPointText.style.left = `${midPosition}%`;
+  
+  startIndexDisplay.textContent = `Início (${left})`;
+  endIndexDisplay.textContent = `Fim (${right})`;
+
+  // Adiciona feedback sobre a comparação
+  let comparisonText = '';
+  const comparison = currentId.localeCompare(targetId);
+
+  if (comparison === 0) {
+   comparisonText = `ENCONTRADO!`;
+  } else if (comparison < 0) {
+   comparisonText = `Música atual (${currentId}) < Alvo. Buscando à DIREITA.`;
+  } else {
+   comparisonText = `Música atual (${currentId}) > Alvo. Buscando à ESQUERDA.`;
   }
 
-  function resetSearch() {
-    isSearching = false;
-    document.getElementById('time-elapsed').innerHTML = `Tempo de Busca: <strong>0 ms</strong>`;
-    document.getElementById('status-steps').innerHTML = `Passos de Comparação: <strong>0</strong> (Logarítmico)`;
-    document.getElementById('resultBox').innerHTML = '<p id="status">Aguardando a busca...</p>';
-    document.getElementById('resultBox').classList.remove('found', 'not-found');
+  stepInfo.innerHTML = `**Passo ${steps}:** Comparando Índice ${mid}. ${comparisonText}`;
+  midPointText.textContent = `MID: ${mid}`;
+
+  // Pequeno atraso para visualização
+  await new Promise(resolve => setTimeout(resolve, 500)); 
+ }
+
+ /**
+ * Algoritmo de Busca Binária (com visualização)
+ */
+ async function binarySearchVisual(arr, targetId) {
+  let left = 0;
+  let right = arr.length - 1;
+  let steps = 0;
+  let foundMusic = null;
+
+  while (left <= right) {
+   steps++;
+   let mid = Math.floor((left + right) / 2);
+   const currentId = arr[mid].track_id;
+
+   // Visualiza o passo atual
+   await updateBinaryVisual(left, right, mid, currentId, targetId, arr.length, steps);
+
+   // Comparação de strings (IDs) usando localeCompare
+   const comparison = currentId.localeCompare(targetId);
+
+   if (comparison === 0) { // IDs são iguais
+    foundMusic = arr[mid];
+    break;
+   } else if (comparison < 0) { // O ID atual é menor (vem antes), então a busca vai para a direita
+    left = mid + 1;
+   } else { // O ID atual é maior (vem depois), então a busca vai para a esquerda
+    right = mid - 1;
+   }
+  }
+  
+  // Ajuste final do visual caso não encontre
+  if (!foundMusic) {
+   stepInfo.innerHTML = `**Busca Finalizada:** Música não encontrada em ${steps} passos.`;
+   currentRangeElement.style.width = '0%';
+   midPointMarker.style.left = '-5%'; // Esconde
+   midPointText.textContent = '';
   }
 
-  /**
-  * Algoritmo de Busca Binária
-  */
-  function binarySearch(arr, targetId) {
-    let left = 0;
-    let right = arr.length - 1;
-    let steps = 0;
-    let foundMusic = null;
+  return {
+   music: foundMusic,
+   steps: steps
+  };
+ }
 
-    while (left <= right) {
-      steps++;
-      let mid = Math.floor((left + right) / 2);
-      const currentId = arr[mid].track_id;
+ async function startSearch() {
+  if (isSearching || rawData.length === 0) return;
 
-      // Comparação de strings (IDs) usando localeCompare
-      const comparison = currentId.localeCompare(targetId);
+  isSearching = true;
+  resetSearch();
 
-      if (comparison === 0) { // IDs são iguais
-        foundMusic = arr[mid];
-        break;
-      } else if (comparison < 0) { // O ID atual é menor (vem antes), então a busca vai para a direita
-        left = mid + 1;
-      } else { // O ID atual é maior (vem depois), então a busca vai para a esquerda
-        right = mid - 1;
-      }
-    }
+  const targetId = document.getElementById('target').value.trim();
 
-    return {
-      music: foundMusic,
-      steps: steps
-    };
+  document.getElementById('status').textContent = `Iniciando Busca Indexada (Binária) para ID: ${targetId}...`;
+
+  const startTime = performance.now();
+  
+  // Executa a busca com visualização
+  const { music, steps } = await binarySearchVisual(rawData, targetId);
+  
+  const endTime = performance.now();
+  const duration = endTime - startTime;
+
+
+  if (music) {
+   displayResult(`Música ENCONTRADA!`, steps, true, music, duration);
+  } else {
+   displayResult(`Música com ID "${targetId}" NÃO ENCONTRADA.`, steps, false, null, duration);
   }
 
-  function startSearch() {
-    if (isSearching || rawData.length === 0) return;
-
-    isSearching = true;
-    resetSearch();
-
-    const targetId = document.getElementById('target').value.trim();
-
-    document.getElementById('status').textContent = `Iniciando Busca Indexada (Binária) para ID: ${targetId}...`;
-
-    const startTime = performance.now();
-    // Executa a busca
-    const { music, steps } = binarySearch(rawData, targetId);
-    const endTime = performance.now();
-    const duration = endTime - startTime;
+  isSearching = false;
+ }
 
 
-    if (music) {
-      displayResult(`Música ENCONTRADA!`, steps, true, music, duration);
-    } else {
-      displayResult(`Música com ID "${targetId}" NÃO ENCONTRADA.`, steps, false, null, duration);
-    }
+ // 2. EVENTO DE CARREGAMENTO DA PÁGINA
+ document.addEventListener('DOMContentLoaded', () => {
+  
+  // --- PASSO CRÍTICO: ORDENAÇÃO DO ARRAY ---
+  if (rawData.length > 0) {
+   // Ordena o array por track_id usando localeCompare para strings
+   rawData.sort((a, b) => a.track_id.localeCompare(b.track_id));
+  }
+  // ---------------------------------------------
+  
+  document.getElementById('totalRegistros').textContent = `Total de Músicas no Banco (Estrutura Ordenada): ${rawData.length}`;
 
-    isSearching = false;
+  // Define um ID de exemplo (o primeiro ID após a ordenação)
+  if (rawData.length > 0) {
+   document.getElementById('target').value = rawData[Math.floor(rawData.length * 0.75)].track_id; // Exemplo no meio-direito
+   startIndexDisplay.textContent = `Início (0)`;
+   endIndexDisplay.textContent = `Fim (${rawData.length - 1})`;
+  } else {
+   document.getElementById('target').value = 'Verifique a View/População';
   }
 
-
-  // 2. EVENTO DE CARREGAMENTO DA PÁGINA
-  document.addEventListener('DOMContentLoaded', () => {
-    
-    // --- PASSO CRÍTICO ADICIONADO: ORDENAÇÃO DO ARRAY ---
-    if (rawData.length > 0) {
-      // Ordena o array por track_id usando localeCompare para strings
-      rawData.sort((a, b) => a.track_id.localeCompare(b.track_id));
-    }
-    // ---------------------------------------------
-    
-    document.getElementById('totalRegistros').textContent = `Total de Músicas no Banco (Estrutura Ordenada): ${rawData.length}`;
-
-    // Define um ID de exemplo (o primeiro ID após a ordenação)
-    if (rawData.length > 0) {
-      document.getElementById('target').value = rawData[0].track_id;
-    } else {
-      document.getElementById('target').value = 'Verifique a View/População';
-    }
-
-    // Anexa a função startSearch() ao clique do botão
-    const startButton = document.getElementById('startButton');
-    if (startButton) {
-      startButton.addEventListener('click', startSearch);
-    }
-  });
+  // Anexa a função startSearch() ao clique do botão
+  const startButton = document.getElementById('startButton');
+  if (startButton) {
+   startButton.addEventListener('click', startSearch);
+  }
+  
+  resetSearch(); // Inicializa o visualizador no DOMContentLoaded
+ });
 </script>
 
 {% endblock content %}
