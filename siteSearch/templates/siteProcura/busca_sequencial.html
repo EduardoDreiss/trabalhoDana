@@ -162,6 +162,57 @@
   color: #e0e0e0;
   min-height: 20px;
  }
+
+ @media (max-width: 768px) {
+    
+    /* 1. Layout Principal (Colunas -> Linha Única) */
+    .container-main {
+        flex-direction: column; /* Empilha as colunas */
+        gap: 20px; /* Reduz o espaçamento vertical */
+        margin-top: 15px;
+    }
+
+    /* 2. Coluna da Esquerda (Comandos) */
+    .column-left {
+        /* Remove o tamanho fixo, permitindo que ocupe a largura total */
+        flex: 1 1 auto; 
+        min-width: 100%;
+    }
+
+    /* 3. Campo de Busca e Botão */
+    .controls {
+        display: flex;
+        flex-direction: column; /* Empilha label, input e button */
+    }
+
+    .controls label {
+        margin-bottom: 5px;
+    }
+    
+    /* Input ocupa a largura total para melhor toque */
+    .controls input#target {
+        width: 100% !important; 
+        box-sizing: border-box; /* Inclui padding e border na largura total */
+    }
+
+    /* Botão ocupa a largura total e tem margem para separar */
+    .controls button {
+        width: 100%;
+        margin-top: 15px; 
+    }
+
+    /* 4. Coluna da Direita (Resultados e Visualizador) */
+    .column-right {
+        /* Ocupa a largura total */
+        flex: 1 1 auto;
+    }
+    
+    /* Ajuste para o rodapé (herdado do base.html, mas útil como lembrete) */
+    footer {
+        padding: 15px;
+        font-size: 0.9em;
+    }
+}
 </style>
 
 <div class="container-main">

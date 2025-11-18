@@ -23,6 +23,45 @@
             margin-bottom: 15px;
             line-height: 1.6;
         }
+    
+    /* ----------------------------------------------- */
+/* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
+/* ----------------------------------------------- */
+
+@media (max-width: 768px) {
+    
+    /* 1. Ajustes de Título Principal */
+    h1 {
+        font-size: 1.5em; /* Reduz o tamanho da fonte do título principal */
+        padding-bottom: 20px !important; /* Reduz o padding inferior */
+        margin-top: 10px;
+    }
+    
+    /* 2. Subtítulos e Títulos de Seção */
+    h3 {
+        font-size: 1em; /* Reduz a fonte do h3 */
+    }
+    .section-title {
+        font-size: 1.4em; /* Reduz o tamanho dos títulos de seção */
+        margin-top: 20px;
+    }
+
+    /* 3. Listas e Pargráfos */
+    p, .list-item {
+        font-size: 0.95em; /* Garante que o texto seja legível, mas economiza espaço */
+    }
+
+    /* 4. Itens da Lista de Algoritmos */
+    .list-item {
+        margin-bottom: 20px; /* Aumenta um pouco a margem para melhor separação visual */
+        padding-left: 0; /* Remove padding desnecessário em mobile */
+    }
+    
+    /* Ajusta a margem do <ul> para não grudar nas laterais */
+    ul {
+        padding-left: 20px;
+    }
+}
         
     </style>
 

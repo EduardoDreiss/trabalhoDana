@@ -117,6 +117,68 @@
   strong {
     color: #00b409;
   }
+
+  /* ----------------------------------------------- */
+/* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
+/* ----------------------------------------------- */
+
+@media (max-width: 768px) {
+    
+    /* 1. Cabeçalho Principal */
+    .main-header {
+        padding: 30px 15px; /* Reduz o padding */
+        margin-bottom: 20px;
+        /* Remove a borda forte para um visual mais limpo em telas menores */
+        border: none; 
+        box-shadow: none;
+        background-color: transparent; /* Fica no fundo do body */
+    }
+
+    .main-header h1 {
+        font-size: 1.8em; /* Reduz o tamanho do título principal */
+    }
+
+    .main-header p {
+        font-size: 1em; /* Reduz a fonte do subtítulo */
+        padding: 0 5px;
+    }
+    
+    /* 2. Contêiner de Cartões */
+    .card-container {
+        /* Os cartões já estão configurados com flex-wrap: wrap,
+           mas vamos centralizar o conteúdo quando houver quebra */
+        gap: 20px; /* Reduz o espaçamento entre os cartões */
+    }
+
+    /* 3. Cartões Individuais */
+    .card {
+        /* Ocupa a largura máxima para se destacar na tela mobile */
+        width: 100%; 
+        max-width: 400px; /* Limita a largura em telas muito grandes (como tablets em portrait) */
+        min-width: 100%; /* Garante que ocupe a largura total */
+        margin: 0 auto; /* Centraliza o cartão se for menor que 100% (ex: max-width) */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Sombra mais sutil */
+    }
+
+    .card:hover {
+        /* Mantém o hover, mas reduz o efeito de movimento */
+        transform: translateY(-5px);
+    }
+    
+    .card-content h3 {
+        font-size: 1.4em; /* Reduz o tamanho dos títulos dos cartões */
+        margin-bottom: 10px;
+    }
+    
+    .card-content {
+        padding: 20px; /* Ajusta o padding interno do cartão */
+    }
+
+    .btn-link {
+        padding: 12px 15px; /* Ajusta o padding do botão */
+        font-size: 0.9em;
+    }
+}
 </style>
 
 <header class="main-header">

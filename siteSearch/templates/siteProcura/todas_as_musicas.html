@@ -182,6 +182,78 @@
         border: 2px solid #00b409;
         box-shadow: 0 0 8px rgba(0, 180, 9, 0.7);
     }
+
+/* ----------------------------------------------- */
+/* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
+/* ----------------------------------------------- */
+
+@media (max-width: 768px) {
+    
+    /* 1. Layout Principal (Colunas -> Linha Única) */
+    .container-main {
+        flex-direction: column; /* Empilha a coluna de comandos e a lista */
+        gap: 20px;
+        margin-top: 15px;
+    }
+
+    /* 2. Colunas */
+    .column-left,
+    .column-right {
+        flex: 1 1 auto; /* Ocupam a largura total */
+        min-width: 100%;
+    }
+    
+    /* Remove a altura fixa da janela em mobile (ou reduz bastante) */
+    .list-window {
+        height: auto; /* A altura se ajusta ao conteúdo */
+        max-height: 500px; /* Define uma altura máxima razoável para rolagem */
+        overflow-y: auto;
+    }
+    
+    /* 3. Tabela (Ajustes para Mobile) */
+    .song-table,
+    .song-table tbody,
+    .song-table tr,
+    .song-table td {
+        display: block; /* Transforma a tabela em um elemento de bloco */
+    }
+
+    .song-table th {
+        /* Cabeçalhos são importantes, mas manteremos o display 'table-cell' no desktop */
+        position: static;
+        display: table-cell; /* Garante que o cabeçalho se mantenha na horizontal */
+    }
+
+    /* Rola apenas o conteúdo da tabela para evitar scroll horizontal da página inteira */
+    .column-right .list-window {
+        overflow-x: auto; 
+    }
+
+    /* Garante que a tabela não transborde */
+    .song-table {
+        min-width: 600px; /* Garante que a tabela mantenha uma largura mínima legível */
+    }
+
+    /* 4. Estilo de Célula (Alternativa a display: block) */
+    /* Para uma tabela grande, a melhor solução é forçar a rolagem horizontal interna,
+       como feito acima no .column-right .list-window */
+
+    .song-table th,
+    .song-table td {
+        padding: 8px 5px; /* Reduz o padding para ganhar espaço */
+        font-size: 0.85em; /* Reduz a fonte */
+    }
+
+    /* Reduz a largura da coluna de ID (a mais longa) */
+    .song-table th:last-child,
+    .song-table td:last-child {
+        width: 120px; /* Largura mínima para o ID */
+    }
+    
+    .track-id-cell {
+        word-break: break-all; /* Quebra palavras longas (IDs) se necessário */
+    }
+}
 </style>
 
 <div class="container-main">

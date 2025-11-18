@@ -157,6 +157,75 @@
  .animate-hash {
   animation: flash-green 0.15s ease-out;
  }
+ /* ----------------------------------------------- */
+/* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
+/* ----------------------------------------------- */
+
+@media (max-width: 768px) {
+    
+    /* 1. Layout Principal (Colunas -> Linha Única) */
+    .container-main {
+        flex-direction: column; /* Empilha as colunas */
+        gap: 20px;
+        margin-top: 15px;
+    }
+
+    /* 2. Colunas */
+    .column-left,
+    .column-right {
+        flex: 1 1 auto; /* Ocupam a largura total */
+        min-width: 100%;
+    }
+
+    /* 3. Controles (Input e Botão) */
+    .controls {
+        display: flex;
+        flex-direction: column; /* Empilha label, input e button */
+    }
+    
+    .controls label {
+        margin-bottom: 5px;
+    }
+    
+    /* Input ocupa a largura total */
+    .controls input#target {
+        width: 100% !important; 
+        box-sizing: border-box;
+    }
+
+    /* Botão ocupa a largura total */
+    #startButton {
+        width: 100%;
+        margin-top: 15px; 
+    }
+    
+    /* 4. Visualizador de Hash (O(1)) */
+    .hash-visualizer {
+        flex-direction: column; /* Empilha os blocos de Hash */
+        gap: 10px; /* Reduz o espaçamento entre os blocos */
+        padding: 15px 10px;
+    }
+    
+    /* Blocos de Hash */
+    .hash-box {
+        min-width: 100%; /* Ocupa a largura total */
+        padding: 15px 10px;
+        font-size: 1em; /* Ajusta o tamanho da fonte */
+    }
+    
+    /* Símbolos de Seta */
+    #arrow-symbol, #arrow-symbol-2 {
+        display: block; /* Garante que a seta ocupe uma linha */
+        font-size: 1.5em; /* Reduz o tamanho da seta */
+        transform: rotate(90deg); /* Gira a seta para apontar para baixo */
+        margin: 5px 0;
+    }
+    
+    /* Informações de Status */
+    #buildTime, .data-warning {
+        font-size: 0.85em;
+    }
+}
 </style>
 
 <div class="container-main">
