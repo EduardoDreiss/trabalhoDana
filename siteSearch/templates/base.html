@@ -1,218 +1,222 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      {% block title %}Site Estrutura de Dados e Busca{% endblock %}
-    </title>
-    <style>
-      /* Estilos básicos para o layout */
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        background-color: #121212;
-        color: #f4f4f9;
-      }
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+   {% block title %}Site Estrutura de Dados e Busca{% endblock %}
+  </title>
+  <style>
+   /* --- TIPOGRAFIA E CORES GERAIS --- */
+   body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais moderna */
+    margin: 0;
+    background-color: #121212; /* Fundo escuro mantido */
+    color: #e0e0e0; /* Cor de texto padrão ligeiramente mais suave */
+    line-height: 1.6;
+   }
 
-      /* --- ESTILOS DA NAVBAR --- */
-      .navbar {
-        background-color: #1a1a1a;
-        border-bottom: 3px solid #00b409;
-        padding: 12px 40px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-      }
+   a {
+    text-decoration: none;
+   }
 
-      /* Estilo do link HOME (Logo) */
-      .navbar .logo a {
-        color: #f4f4f9;
-        font-weight: 700;
-        font-size: 1.4em;
-        margin-left: 0;
-        transition: color 0.3s;
-        flex-shrink: 0;
-      }
+   h1, h2, h3 {
+    color: #f4f4f9; /* Títulos em branco puro para alto contraste */
+    font-weight: 700;
+   }
+   
+   /* OBRIGATÓRIO: Cor de destaque verde mantida */
+   strong, .highlight-green {
+    color: #00b409 !important; 
+   }
 
-      .navbar .logo a:hover {
-        color: #1ed760;
-      }
+   /* --- ESTILOS DA NAVBAR --- */
+   .navbar {
+    background-color: #1a1a1a;
+    border-bottom: 3px solid #00b409;
+    padding: 15px 40px; /* Mais preenchimento vertical */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7); /* Sombra mais forte */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+   }
 
-      /* Contêiner dos links (para centralizar na versão desktop) */
-      .navbar .nav-links-container {
-        flex-grow: 1;
-        text-align: center;
-        padding-right: 15%;
-      }
+   .navbar .logo a {
+    color: #f4f4f9;
+    font-weight: 800; /* Mais negrito */
+    font-size: 1.6em;
+    transition: color 0.3s;
+   }
 
-      /* Estilo dos links de navegação */
-      .navbar .nav-links-container a {
-        color: #b3b3b3;
-        text-decoration: none;
-        margin-left: 30px;
-        font-size: 1em;
-        padding: 5px 0;
-        border-bottom: 2px solid transparent;
-        transition: color 0.3s, border-bottom-color 0.3s;
-        font-weight: 600;
-        display: inline-block;
-      }
+   .navbar .logo a:hover {
+    color: #1ed760;
+   }
 
-      /* Efeito de HOVER (Passar o mouse) */
-      .navbar .nav-links-container a:hover {
-        color: #ffffff;
-        border-bottom-color: #00b409;
-      }
+   .navbar .nav-links-container {
+    flex-grow: 1;
+    text-align: right; /* Links à direita no desktop */
+    padding-right: 0; 
+   }
 
-      /* Efeito para o link ATIVO */
-      .navbar .nav-links-container a.active {
-        color: #1ed760;
-        border-bottom-color: #1ed760;
-      }
+   .navbar .nav-links-container a {
+    color: #b3b3b3;
+    margin-left: 25px; /* Menor espaçamento */
+    font-size: 1em;
+    padding: 5px 0;
+    border-bottom: 2px solid transparent;
+    transition: color 0.3s, border-bottom-color 0.3s;
+    font-weight: 600;
+    letter-spacing: 0.5px; /* Leve espaçamento entre letras */
+   }
 
-      /* 🎯 Novo Estilo: Botão Hambúrguer */
-      .nav-toggle {
-        display: none; /* Escondido por padrão na versão desktop */
-        background: none;
-        border: none;
-        color: #f4f4f9;
-        font-size: 2em;
-        cursor: pointer;
-        padding: 0;
-        line-height: 1;
-        margin-left: 20px;
-        z-index: 1001; /* Garante que fique acima de outros elementos */
-      }
+   .navbar .nav-links-container a:hover {
+    color: #ffffff;
+    border-bottom-color: #1ed760; /* Verde mais claro no hover */
+   }
 
-      /* --- FIM DOS ESTILOS DA NAVBAR --- */
+   .navbar .nav-links-container a.active {
+    color: #1ed760;
+    border-bottom-color: #1ed760;
+    font-weight: 700;
+   }
 
-      .container {
-        padding: 30px;
-      }
+   /* Botão Hambúrguer */
+   .nav-toggle {
+    display: none;
+    color: #f4f4f9;
+    font-size: 2em;
+    transition: transform 0.3s;
+   }
 
-      hr {
-        border: 0;
-        height: 1px;
-        background: #4d4d4d;
-        margin: 20px 0;
-      }
+   .container {
+    padding: 40px; /* Mais preenchimento geral */
+    max-width: 1200px;
+    margin: 0 auto;
+   }
 
-      footer {
-        text-align: center;
-        color: #f4f4f9;
-        padding: 20px;
-      }
+   hr {
+    border: 0;
+    height: 1px;
+    background: #333333; /* Cinza mais escuro */
+    margin: 25px 0;
+   }
 
-      /* ----------------------------------------------- */
-      /* --- MEDIA QUERY PARA MOBILE (MAX-WIDTH: 768PX) --- */
-      /* ----------------------------------------------- */
-      @media (max-width: 768px) {
-        /* Mostra o botão hambúrguer */
-        .nav-toggle {
-          display: block;
-        }
+   footer {
+    background-color: #1a1a1a;
+    text-align: center;
+    color: #999999; /* Texto do footer mais suave */
+    padding: 30px;
+    font-size: 0.9em;
+   }
 
-        .navbar {
-          /* Retorna o justify-content para deixar o logo e o botão em pontas opostas */
-          justify-content: space-between;
-          align-items: center;
-          padding: 12px 20px;
-          flex-wrap: wrap; /* Permite que os links quebrem a linha */
-        }
+   /* ----------------------------------------------- */
+   /* --- MEDIA QUERY PARA MOBILE (MAX-WIDTH: 768PX) --- */
+   /* ----------------------------------------------- */
+   @media (max-width: 768px) {
+    .nav-toggle {
+     display: block;
+    }
 
-        /* 🎯 Esconde o contêiner de links por padrão (estado FECHADO) */
-        .navbar .nav-links-container {
-          display: none;
-          flex-grow: 1;
-          /* Ocupa a largura total para aparecer abaixo do logo e botão */
-          width: 100%;
-          padding-right: 0;
-          text-align: left;
-          flex-basis: 100%; /* Força a quebra de linha */
-          border-top: 1px solid #282828;
-          margin-top: 10px;
-        }
+    .navbar {
+     padding: 15px 20px;
+    }
 
-        /* 🎯 Classe para ABRIR o menu (Adicionada via JS) */
-        .navbar .nav-links-container.open {
-          display: flex;
-          flex-direction: column;
-        }
+    .navbar .nav-links-container {
+     display: none;
+     width: 100%;
+     text-align: left;
+     flex-basis: 100%;
+     border-top: 1px solid #282828;
+     margin-top: 15px;
+    }
 
-        /* Ajuste de Links no Mobile */
-        .navbar .nav-links-container a {
-          margin: 0;
-          padding: 10px 0;
-          width: 100%;
-          border-bottom: 1px solid #282828;
-        }
+    .navbar .nav-links-container.open {
+     display: flex;
+     flex-direction: column;
+    }
 
-        .container {
-          padding: 15px;
-        }
-      }
-    </style>
-  </head>
+    .navbar .nav-links-container a {
+     margin: 0;
+     padding: 12px 0;
+     width: 100%;
+     border-bottom: 1px solid #282828;
+    }
+    .navbar .nav-links-container a:last-child {
+     border-bottom: none;
+    }
 
-  <body>
-    <nav class="navbar">
-      <div class="logo"><a href="{% url 'index' %}">Home &#8962;</a></div>
+    .container {
+     padding: 20px;
+    }
+   }
+  </style>
+ </head>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
-        &#9776;
-      </button>
+ <body>
+  <nav class="navbar">
+   <div class="logo"><a href="{% url 'index' %}">Finder</a></div>
 
-      <div class="nav-links-container" id="nav-links">
-        <a href="{% url 'info' %}">Sobre</a>
-        <a href="{% url 'todas_as_musicas' %}"> Lista de Músicas</a>
-        <a href="{% url 'busca_sequencial' %}">Sequencial</a>
-        <a href="{% url 'busca_indexada' %}">Indexada</a>
-        <a href="{% url 'busca_por_hashmap' %}">Hash</a>
-      </div>
-    </nav>
+   <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+    &#9776;
+   </button>
 
-    <div class="container">{% block content %} {% endblock %}</div>
+   <div class="nav-links-container" id="nav-links">
+    <a href="{% url 'info' %}">Sobre o Projeto</a>
+    <a href="{% url 'todas_as_musicas' %}"> Catálogo Completo</a>
+    <a href="{% url 'busca_sequencial' %}" class="active">Busca Sequencial</a>
+    <a href="{% url 'busca_indexada' %}">Busca Indexada</a>
+    <a href="{% url 'busca_por_hashmap' %}">Busca Hash</a>
+   </div>
+  </nav>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const navToggle = document.getElementById("nav-toggle");
-        const navLinks = document.getElementById("nav-links");
+  <div class="container">{% block content %} {% endblock %}</div>
 
-        navToggle.addEventListener("click", () => {
-          // Adiciona ou remove a classe 'open' para mostrar/esconder o menu
-          navLinks.classList.toggle("open");
+  <script>
+   document.addEventListener("DOMContentLoaded", () => {
+    const navToggle = document.getElementById("nav-toggle");
+    const navLinks = document.getElementById("nav-links");
 
-          // Opcional: Altera o ícone (por exemplo, de hambúrguer para X)
-          if (navLinks.classList.contains("open")) {
-            navToggle.innerHTML = "&times;"; // Símbolo X
-            navToggle.setAttribute("aria-expanded", "true");
-          } else {
-            navToggle.innerHTML = "&#9776;"; // Símbolo Hambúrguer
-            navToggle.setAttribute("aria-expanded", "false");
-          }
-        });
+    navToggle.addEventListener("click", () => {
+     navLinks.classList.toggle("open");
 
-        // Garante que se a tela for redimensionada para desktop, o menu é exibido
-        window.addEventListener("resize", () => {
-          if (window.innerWidth > 768) {
-            navLinks.classList.remove("open");
-            navToggle.innerHTML = "&#9776;";
-            navToggle.setAttribute("aria-expanded", "false");
-          }
-        });
-      });
-    </script>
-  </body>
-  <footer>
-    <hr />
-    <p>
-      <strong>&copy;</strong> 2025 Site de Demonstração de Algoritmos de Busca.
-      Todos os direitos reservados.
-    </p>
-  </footer>
+     if (navLinks.classList.contains("open")) {
+      navToggle.innerHTML = "&times;";
+      navToggle.setAttribute("aria-expanded", "true");
+     } else {
+      navToggle.innerHTML = "&#9776;";
+      navToggle.setAttribute("aria-expanded", "false");
+     }
+    });
+
+    window.addEventListener("resize", () => {
+     if (window.innerWidth > 768) {
+      navLinks.classList.remove("open");
+      navToggle.innerHTML = "&#9776;";
+      navToggle.setAttribute("aria-expanded", "false");
+     }
+    });
+
+    // Novo: Adiciona a classe 'active' dinamicamente (baseado na URL)
+    const currentPath = window.location.pathname;
+    const navLinksList = navLinks.querySelectorAll('a');
+    
+    navLinksList.forEach(link => {
+     link.classList.remove('active'); // Remove a classe 'active' do Django se houver
+     if (currentPath.includes(link.getAttribute('href').replace(/\//g, ''))) {
+      link.classList.add('active');
+     }
+    });
+   });
+  </script>
+ </body>
+ <footer>
+  <hr style="background: #282828;" />
+  <p>
+   <strong>&copy;</strong> 2025 Site de Demonstração de Algoritmos de Busca.
+   Desenvolvido para Estudos em Estrutura de Dados.
+  </p>
+ </footer>
 </html>

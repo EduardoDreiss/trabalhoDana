@@ -32,26 +32,26 @@ def busca_sequencial(request):
   
   return render(request, 'siteProcura/busca_sequencial.html', context)
 
+# views.py (CORRIGIDO)
+
 def busca_indexada(request):
-    # Se você usar |json_script no template, remova o json.dumps
-    # Se usar o método antigo (|escapejs), mantenha o json.dumps
+    # Adicionando 'playlist_genre' e 'track_popularity'
+    data_queryset = Musica.objects.all().values(
+        'track_id', 
+        'track_name', 
+        'track_artist', 
+        'playlist_genre', # ADICIONADO: Essencial para indexação de Gênero
+        'track_popularity'  # ADICIONADO: Essencial para exibir a Pop.
+    ).order_by('track_id')
     
-    data_queryset = Musica.objects.all().values('track_id', 'track_name', 'track_artist').order_by('track_id')
     data_list = list(data_queryset) 
     
-    # Opção RECOMENDADA (para usar |json_script no HTML)
-    data_json = data_list 
-
-    # Opção Antiga (se usar |escapejs, que pode falhar)
-    # data_json = json.dumps(data_list) 
-
     context = {
-        'dados_para_js': data_json,
+        'dados_para_js': data_list,  # Lista Python pura
         'total_registros': len(data_list)
     }
-    # O nome do template é busca_indexada.html
+    
     return render(request, 'siteProcura/busca_indexada.html', context)
-
 
 def busca_por_hashmap(request):
     """ Envia o dataset de músicas (desordenado) como lista Python pura. """
