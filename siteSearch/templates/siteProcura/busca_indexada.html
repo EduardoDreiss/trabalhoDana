@@ -1,5 +1,8 @@
-{% extends 'base.html' %} {% block title %}Busca Indexada | Músicas Spotify{%
-endblock %} {% block content %} {{ dados_para_js|json_script:"spotify-data" }}
+{% extends 'base.html' %}
+
+{% block title %}Busca Indexada | Músicas Spotify{%endblock %} 
+
+{% block content %} {{ dados_para_js|json_script:"spotify-data" }}
 
 <h1 style="color: #00b409">
   📊 Busca Indexada (O(log N)) - Dataset Spotify

@@ -1,5 +1,10 @@
-{% extends 'base.html' %} {% block title %}Busca Sequencial | Músicas Spotify{%
-endblock %} {% block content %} {{ dados_para_js|json_script:"spotify-data" }}
+{% extends 'base.html' %} 
+
+{% block title %}Busca Sequencial por Nome/Artista | Músicas Spotify{%endblock %} 
+
+{% block content %} 
+
+{{dados_para_js|json_script:"spotify-data" }}
 
 <h1 style="color: #00b409">
    🎵 Busca Sequencial (Dataset Spotify)
@@ -7,8 +12,9 @@ endblock %} {% block content %} {{ dados_para_js|json_script:"spotify-data" }}
 </h1>
 <p>
   Objetivo: Demonstração da complexidade <strong>O(N)</strong>, onde o sistema
-  busca pelo <strong>ID da Música</strong>  sequencialmente. Agora com medição
-  de tempo e **filtro em tempo real**.
+  busca sequencialmente pelo <strong>Nome da Música</strong> ou
+  <strong>Nome do Artista</strong>. A busca é interrompida no primeiro resultado
+  encontrado.
 </p>
 
 <style>
@@ -19,7 +25,7 @@ endblock %} {% block content %} {{ dados_para_js|json_script:"spotify-data" }}
   }
 
   .column-left {
-    flex: 0 0 350px;
+    flex: 0 0 400px; /* Aumentado para melhor visualização */
   }
 
   .column-right {
@@ -149,46 +155,6 @@ endblock %} {% block content %} {{ dados_para_js|json_script:"spotify-data" }}
     min-height: 20px;
   }
 
-  .realtime-search-box {
-    border: 1px solid #222222;
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 30px;
-    background-color: #1a1a1a;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
-
-  .realtime-results-list {
-    max-height: 400px;
-    overflow-y: auto;
-    margin-top: 15px;
-    border: 1px solid #333;
-    border-radius: 4px;
-    padding: 0;
-  }
-
-  .realtime-results-list div {
-    padding: 10px;
-    border-bottom: 1px solid #282828;
-    font-size: 0.9em;
-    cursor: pointer;
-  }
-
-  .realtime-results-list div:hover {
-    background-color: #2a2a2a;
-  }
-
-  .realtime-results-list .track-id {
-    color: #00b409;
-    font-family: monospace;
-    font-size: 0.8em;
-    margin-left: 10px;
-  }
-
-  .realtime-results-list .artist {
-    color: #b3b3b3;
-  }
-
   /* responsividade */
   @media (max-width: 768px) {
     .container-main {
@@ -231,47 +197,26 @@ endblock %} {% block content %} {{ dados_para_js|json_script:"spotify-data" }}
   <div class="column-left">
     <div class="command-box">
       <p style="margin-top: 0">
-        <strong>Busca Sequencial por ID (O(N))</strong>
+        <strong>Busca Sequencial por Nome/Artista (O(N))</strong>
       </p>
       <div class="controls">
-        <label for="target">Buscar Música por ID:</label>
+        <label for="target">Buscar por Nome da Música ou Artista:</label>
         <input
           type="text"
           id="target"
-          value="4pX3S4W9Hl1S2wz8X5c84J"
-          style="width: 300px; padding: 5px"
-          placeholder="Ex: ID da Música"
+          value=""
+          style="width: 380px; padding: 5px"
+          placeholder="Ex: nome da música ou artista"
         />
-        <button onclick="startSearch()">Iniciar Busca por ID</button>
+        <button onclick="startSearch()">Iniciar Busca Sequencial</button>
       </div>
     </div>
 
-    <div class="realtime-search-box">
-      <p style="margin-top: 0">
-        <strong>Filtro em Tempo Real (O(N) a cada tecla)</strong>
-      </p>
-      <div class="controls">
-        <label for="filter-input">Buscar por Nome/Artista (Substring):</label>
-        <input
-          type="text"
-          id="filter-input"
-          style="width: 300px; padding: 5px"
-          onkeyup="filterByNameOrArtist()"
-          placeholder="Digite parte do nome da música ou artista"
-        />
-      </div>
-      <p style="font-size: 0.9em; color: #b3b3b3">
-        Resultados encontrados: <strong id="filter-count">0</strong>
-      </p>
-      <div id="realtime-results" class="realtime-results-list">
-        <div>Aguardando entrada...</div>
-      </div>
-    </div>
     <p id="totalRegistros" style="margin-top: 20px">Carregando dados...</p>
   </div>
 
   <div class="column-right">
-    <h2>Resultado da Busca por ID:</h2>
+    <h2>Resultado da Busca:</h2>
     <p id="status-steps">Aguardando a busca...</p>
     <p id="time-elapsed">Tempo de Busca: <strong>0 ms</strong></p>
 
@@ -315,75 +260,24 @@ endblock %} {% block content %} {{ dados_para_js|json_script:"spotify-data" }}
 
   // Referências
   const currentTrackDisplay = document.getElementById("current-track-display");
-  const realtimeResultsContainer = document.getElementById("realtime-results");
-  const filterCountDisplay = document.getElementById("filter-count");
 
   document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(
       "totalRegistros"
     ).textContent = `Total de Músicas no Banco: ${rawData.length}`;
 
+    // Sugere um valor inicial para teste
     if (rawData.length > 0) {
-      document.getElementById("target").value = rawData[0].track_id;
+      document.getElementById("target").value = rawData[0].track_artist;
     } else {
       document.getElementById("target").value = "ERRO: Sem dados";
     }
   });
 
   // ----------------------------------------------------------------------------------
-  // 1. LÓGICA DE FILTRAGEM EM TEMPO REAL (O(N) por varredura)
+  // FUNÇÕES DE DISPLAY
   // ----------------------------------------------------------------------------------
 
-  function filterByNameOrArtist() {
-    const query = document
-      .getElementById("filter-input")
-      .value.trim()
-      .toLowerCase();
-    let resultsHtml = "";
-    const maxResults = 20; // Limita o número de resultados para performance do DOM
-    let foundCount = 0;
-
-    if (query.length < 2) {
-      filterCountDisplay.textContent = "0";
-      realtimeResultsContainer.innerHTML =
-        "<div>Continue digitando (mínimo 2 letras)...</div>";
-      return;
-    }
-
-    const startTime = performance.now();
-
-    // Itera por TODO o array (Busca Sequencial/Filtragem)
-    rawData.forEach((musica) => {
-      if (foundCount >= maxResults) return; // Limite de resultados atingido
-
-      // Normaliza e verifica se a query é uma substring do nome da música ou artista
-      const trackName = musica.track_name.toLowerCase();
-      const artistName = musica.track_artist.toLowerCase();
-
-      if (trackName.includes(query) || artistName.includes(query)) {
-        foundCount++;
-        resultsHtml += `
-    <div onclick="document.getElementById('target').value='${
-      musica.track_id
-    }'; startSearch();">
-     <strong>${musica.track_name}</strong>
-     <span class="artist">por ${musica.track_artist}</span>
-     <span class="track-id">ID: ${musica.track_id.substring(0, 10)}...</span>
-    </div>
-    `;
-      }
-    });
-
-    const endTime = performance.now();
-    const duration = (endTime - startTime).toFixed(3);
-
-    // Atualiza o DOM
-    realtimeResultsContainer.innerHTML =
-      resultsHtml || "<div>Nenhuma música ou artista encontrado.</div>";
-    filterCountDisplay.textContent = `${foundCount} (em ${duration} ms)`;
-  }
-
-  /*busca pelo ID.*/
   function displayResult(
     statusText,
     comparacoes,
@@ -402,17 +296,46 @@ endblock %} {% block content %} {{ dados_para_js|json_script:"spotify-data" }}
 
     let htmlContent = "";
 
-    if (success && musica) {
+    if (!musica) {
+      // Tratamento de Música Não Encontrada
+      resultBox.innerHTML = `<p class="not-found">❌ ${statusText}</p>`;
+      resultBox.classList.remove("found");
+      resultBox.classList.add("not-found");
+      return;
+    }
+
+    // Extrair campos corrigidos
+    const genero = musica.playlist_genre || "N/A";
+    const popularidade = musica.track_popularity || "N/A";
+
+    // NOVO: Lógica para formatar Duração (duration_ms) para MM:SS
+    const duracaoMs = musica.duration_ms || 0;
+    let duracaoFormatada = "N/A";
+
+    if (duracaoMs > 0) {
+      const minutos = Math.floor(duracaoMs / 60000);
+      const segundos = Math.round((duracaoMs % 60000) / 1000);
+      // Garante formato MM:SS
+      duracaoFormatada = minutos + ":" + (segundos < 10 ? "0" : "") + segundos;
+    }
+
+    // Construir o HTML com todos os detalhes
+    if (success) {
       htmlContent = `
-  <p class="result-title">✅ Música ENCONTRADA!</p>
-  <div class="song-info">
-   <span class="track-number">1</span>
-   <div class="track-details">
-   <p><strong>${musica.track_name}</strong></p>
-   <p class="artist-name">${musica.track_artist} | Pop: ${musica.track_popularity}</p>
-   </div>
-  </div>
-  `;
+<p class="result-title">✅ Música ENCONTRADA!</p>
+<div class="song-info">
+<span class="track-number">1</span>
+<div class="track-details">
+<p><strong>${musica.track_name}</strong></p>
+<p class="artist-name">${musica.track_artist}</p>
+<p class="artist-name">
+        Gênero: <strong>${genero}</strong> | 
+        Pop: ${popularidade} | 
+        Duração: ${duracaoFormatada} 
+    </p>
+</div>
+</div>
+`;
     } else {
       htmlContent = `<p class="not-found">❌ ${statusText}</p>`;
     }
@@ -461,27 +384,47 @@ endblock %} {% block content %} {{ dados_para_js|json_script:"spotify-data" }}
     currentTrackDisplay.innerHTML = "Pronto para buscar...";
   }
 
+  // ----------------------------------------------------------------------------------
+  // 2. LÓGICA DA BUSCA SEQUENCIAL (Nome da Música ou Artista)
+  // ----------------------------------------------------------------------------------
+
   async function startSearch() {
     if (isSearching || rawData.length === 0) return;
 
     isSearching = true;
     resetSearch();
 
-    const targetId = document.getElementById("target").value.trim();
+    // Limpa e normaliza a consulta
+    const query = document.getElementById("target").value.trim().toLowerCase();
+
+    if (query.length < 1) {
+      displayResult(
+        "Por favor, digite o nome de uma música ou artista para buscar.",
+        0,
+        false
+      );
+      isSearching = false;
+      return;
+    }
+
     const totalData = rawData.length;
     let found = false;
     let steps = 0;
     const startTime = performance.now();
     let endTime = 0;
 
-    currentTrackDisplay.innerHTML = "Iniciando varredura...";
-
     for (let i = 0; i < totalData; i++) {
       steps++;
+      const currentMusic = rawData[i];
 
-      if (steps % 100 === 0 || i === 0 || i === totalData - 1) {
-        const currentMusic = rawData[i];
+      // Normaliza o nome da música e artista para comparação
+      const trackName = currentMusic.track_name.toLowerCase();
+      const artistName = currentMusic.track_artist.toLowerCase();
 
+      // Condição de busca: a query é substring do nome da música OU do nome do artista
+      const isMatch = trackName.includes(query) || artistName.includes(query);
+
+      if (steps % 100 === 0 || i === 0 || i === totalData - 1 || isMatch) {
         currentTrackDisplay.innerHTML = `Verificando #${i}: <strong>${currentMusic.track_name}</strong> por ${currentMusic.track_artist}`;
 
         document.getElementById(
@@ -489,12 +432,16 @@ endblock %} {% block content %} {{ dados_para_js|json_script:"spotify-data" }}
         ).textContent = `Passo ${steps}: Verificando...`;
         updateProgressBar(steps, totalData);
 
-        await new Promise((resolve) => setTimeout(resolve, 5));
+        // Adiciona um pequeno delay para visualização do passo a passo
+        if (!isMatch) {
+          await new Promise((resolve) => setTimeout(resolve, 5));
+        }
       }
 
-      if (rawData[i].track_id === targetId) {
+      if (isMatch) {
+        // Regra da Busca Sequencial: Para no primeiro que der match
         endTime = performance.now();
-        const musica = rawData[i];
+        const musica = currentMusic;
         const duration = endTime - startTime;
 
         displayResult(
@@ -506,7 +453,7 @@ endblock %} {% block content %} {{ dados_para_js|json_script:"spotify-data" }}
         );
         currentTrackDisplay.innerHTML = `✅ ENCONTRADO em ${steps} passos: <strong>${musica.track_name}</strong>`;
         found = true;
-        break;
+        break; // Interrompe a busca sequencial
       }
     }
 
@@ -514,13 +461,15 @@ endblock %} {% block content %} {{ dados_para_js|json_script:"spotify-data" }}
       endTime = performance.now();
       const duration = endTime - startTime;
       displayResult(
-        `Música com ID "${targetId}" NÃO ENCONTRADA.`,
+        `"${document
+          .getElementById("target")
+          .value.trim()}" NÃO ENCONTRADO em todo o catálogo.`,
         steps,
         false,
         null,
         duration
       );
-      currentTrackDisplay.innerHTML = `❌ Varredura Completa: Música não encontrada após ${steps} passos.`;
+      currentTrackDisplay.innerHTML = `❌ Varredura Completa: Nada encontrado após ${steps} passos.`;
     }
 
     updateProgressBar(steps, totalData);

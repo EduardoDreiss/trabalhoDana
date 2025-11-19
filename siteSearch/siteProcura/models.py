@@ -14,6 +14,7 @@ class Musica(models.Model):
     # Campos que serão importantes para a demonstração e visualização
     track_name = models.CharField(max_length=255)
     track_artist = models.CharField(max_length=255)
+    duration_ms = models.IntegerField()
     track_popularity = models.IntegerField(
         help_text="Song Popularity (0-100)"
     )

@@ -14,20 +14,23 @@ def info(request):
 # --- VIEWS DE BUSCA ---
 
 def busca_sequencial(request):
-    # Nota: Não existe uma versão "vazia" da view busca_sequencial agora.
-    
-    data_queryset = Musica.objects.all().values('track_id', 'track_name', 'track_artist', 'track_popularity')
-    data_list = list(data_queryset) 
-    
-    # IMPORTANTE: Passa a lista Python pura (data_list)
-    # O template deve usar {{ dados_para_js|json_script:"spotify-data" }}
-    context = {
-        'dados_para_js': data_list, 
-        'total_registros': len(data_list)
-    }
-    
-    return render(request, 'siteProcura/busca_sequencial.html', context)
-
+  data_queryset = Musica.objects.all().values(
+        'track_id', 
+        'track_name', 
+        'track_artist', 
+        'playlist_genre',    # Correto
+        'track_popularity',  # Correto
+        'duration_ms',       # Correto
+        'danceability'       # Opcional
+    ).order_by('track_id')
+  data_list = list(data_queryset) 
+  
+  context = {
+    'dados_para_js': data_list, 
+    'total_registros': len(data_list)
+  }
+  
+  return render(request, 'siteProcura/busca_sequencial.html', context)
 
 def busca_indexada(request):
     # Se você usar |json_script no template, remova o json.dumps
