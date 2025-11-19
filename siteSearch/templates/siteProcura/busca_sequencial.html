@@ -1,20 +1,16 @@
 {% extends 'base.html' %} 
 
-{% block title %}Busca Sequencial por Nome/Artista | Músicas Spotify{%endblock %} 
-
-{% block content %} 
+{% block title %}Resultados da Busca | Música Spotify{%endblock %} {% block content %}
 
 {{dados_para_js|json_script:"spotify-data" }}
 
 <h1 style="color: #00b409">
-   🎵 Busca Sequencial (Dataset Spotify)
+   🔍 Buscar Músicas (Catálogo Spotify)
   <hr style="border-color: #282828" />
 </h1>
 <p>
-  Objetivo: Demonstração da complexidade <strong>O(N)</strong>, onde o sistema
-  busca sequencialmente pelo <strong>Nome da Música</strong> ou
-  <strong>Nome do Artista</strong>. A busca é interrompida no primeiro resultado
-  encontrado.
+  Digite o <strong>Nome da Música</strong> ou o <strong>Nome do Artista</strong> para encontrar
+  rapidamente sua faixa no nosso catálogo.
 </p>
 
 <style>
@@ -45,11 +41,11 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 
-   strong {
+  strong {
     color: #00b409;
   }
 
-   button {
+  button {
     background-color: #00b409;
     color: black;
     border: none;
@@ -60,7 +56,7 @@
     transition: background-color 0.3s;
     margin-top: 10px;
   }
-   button:hover {
+  button:hover {
     background-color: #1ed760;
   }
 
@@ -89,6 +85,7 @@
   }
 
   .track-number {
+    /* Usado para o ícone de Play/Música */
     font-weight: bold;
     font-size: 1.5em;
     color: #00b409;
@@ -110,49 +107,9 @@
     margin-bottom: 10px;
   }
 
-  #status-steps strong,
+  /* Reintroduzindo cor de destaque para o tempo */
   #time-elapsed strong {
     color: #00b409;
-  }
-
-  /* --- CSS PARA A BARRA DE PROGRESSO VISUAL --- */
-  .progress-visualizer {
-    width: 100%;
-    background-color: #282828;
-    border-radius: 4px;
-    overflow: hidden;
-    height: 25px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-    margin-bottom: 10px;
-  }
-
-  .progress-bar {
-    height: 100%;
-    width: 0;
-    background-color: #00b409;
-    transition: width 0.8s ease-out;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-
-  .progress-text {
-    color: black;
-    font-weight: bold;
-    font-size: 0.9em;
-    padding: 0 10px;
-  }
-
-  #current-track-display {
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #1a1a1a;
-    border: 1px solid #222222;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 0.9em;
-    color: #e0e0e0;
-    min-height: 20px;
   }
 
   /* responsividade */
@@ -197,7 +154,7 @@
   <div class="column-left">
     <div class="command-box">
       <p style="margin-top: 0">
-        <strong>Busca Sequencial por Nome/Artista (O(N))</strong>
+        <strong>Pesquisa Rápida no Catálogo</strong>
       </p>
       <div class="controls">
         <label for="target">Buscar por Nome da Música ou Artista:</label>
@@ -208,7 +165,7 @@
           style="width: 380px; padding: 5px"
           placeholder="Ex: nome da música ou artista"
         />
-        <button onclick="startSearch()">Iniciar Busca Sequencial</button>
+        <button onclick="startSearch()">Buscar</button>
       </div>
     </div>
 
@@ -216,28 +173,13 @@
   </div>
 
   <div class="column-right">
-    <h2>Resultado da Busca:</h2>
-    <p id="status-steps">Aguardando a busca...</p>
+    <h2>Resultados:</h2>
+
     <p id="time-elapsed">Tempo de Busca: <strong>0 ms</strong></p>
 
     <div id="resultBox" class="result-box">
-      <p id="status">Aguardando a busca...</p>
+      <p id="status">Aguardando sua busca...</p>
     </div>
-
-    <h3>Representação Visual (O(N)):</h3>
-    <p style="color: #b3b3b3; font-size: 0.9em">
-      A barra indica o percentual do catálogo que precisou ser varrido.
-    </p>
-    <div class="progress-visualizer">
-      <div id="progressBar" class="progress-bar">
-        <span id="progressText" class="progress-text">0%</span>
-      </div>
-    </div>
-
-    <p style="margin-top: 20px">
-      <strong>Música sendo Verificada (Passo a Passo):</strong>
-    </p>
-    <div id="current-track-display">Pronto para buscar...</div>
   </div>
 </div>
 <script>
@@ -258,25 +200,31 @@
 
   let isSearching = false;
 
-  // Referências
-  const currentTrackDisplay = document.getElementById("current-track-display");
+  // currentTrackDisplay (mock) mantido para evitar erros no JS que não foi totalmente removido
+  const currentTrackDisplay = { innerHTML: "Pronto para buscar..." };
 
   document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById(
-      "totalRegistros"
-    ).textContent = `Total de Músicas no Banco: ${rawData.length}`;
+    // CORREÇÃO PRINCIPAL: Declarar targetInput
+    const targetInput = document.getElementById("target");
+    const totalRecordsDisplay = document.getElementById("totalRegistros");
+
+    totalRecordsDisplay.innerHTML = `Total de Músicas no nosso Catálogo: <strong>${rawData.length}</strong>`;
 
     // Sugere um valor inicial para teste
     if (rawData.length > 0) {
-      document.getElementById("target").value = rawData[0].track_artist;
+      targetInput.value = rawData[0].track_artist;
     } else {
-      document.getElementById("target").value = "ERRO: Sem dados";
+      targetInput.value = "ERRO: Sem dados";
     }
-  });
 
-  // ----------------------------------------------------------------------------------
-  // FUNÇÕES DE DISPLAY
-  // ----------------------------------------------------------------------------------
+    // Adiciona o listener para a tecla Enter
+    targetInput.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.keyCode === 13) {
+        event.preventDefault();
+        startSearch();
+      }
+    });
+  });
 
   function displayResult(
     statusText,
@@ -286,10 +234,8 @@
     duration = 0
   ) {
     const resultBox = document.getElementById("resultBox");
-    const statusSteps = document.getElementById("status-steps");
-    const timeElapsed = document.getElementById("time-elapsed");
 
-    statusSteps.innerHTML = `Total de Comparações (Passos): <strong>${comparacoes}</strong>`;
+    const timeElapsed = document.getElementById("time-elapsed");
     timeElapsed.innerHTML = `Tempo de Busca: <strong>${duration.toFixed(
       3
     )} ms</strong>`;
@@ -304,11 +250,11 @@
       return;
     }
 
-    // Extrair campos corrigidos
-    const genero = musica.playlist_genre || "N/A";
+    // Extrair campos
+    const genero = musica.playlist_genre || "Gênero Desconhecido";
     const popularidade = musica.track_popularity || "N/A";
 
-    // NOVO: Lógica para formatar Duração (duration_ms) para MM:SS
+    // Lógica para formatar Duração (duration_ms) para MM:SS
     const duracaoMs = musica.duration_ms || 0;
     let duracaoFormatada = "N/A";
 
@@ -319,20 +265,20 @@
       duracaoFormatada = minutos + ":" + (segundos < 10 ? "0" : "") + segundos;
     }
 
-    // Construir o HTML com todos os detalhes
+    // Construir o HTML com todos os detalhes (Ícone de música em vez de número)
     if (success) {
       htmlContent = `
-<p class="result-title">✅ Música ENCONTRADA!</p>
+<p class="result-title">✅ Encontramos o resultado principal!</p>
 <div class="song-info">
-<span class="track-number">1</span>
+<span class="track-number">🎧</span>
 <div class="track-details">
 <p><strong>${musica.track_name}</strong></p>
-<p class="artist-name">${musica.track_artist}</p>
+<p class="artist-name">Artista: ${musica.track_artist}</p>
 <p class="artist-name">
-        Gênero: <strong>${genero}</strong> | 
-        Pop: ${popularidade} | 
-        Duração: ${duracaoFormatada} 
-    </p>
+    Gênero: <strong>${genero}</strong> | 
+    Popularidade: ${popularidade}% | 
+    Duração: ${duracaoFormatada} 
+  </p>
 </div>
 </div>
 `;
@@ -350,43 +296,19 @@
     }
   }
 
-  function updateProgressBar(steps, total) {
-    const progressBar = document.getElementById("progressBar");
-    const progressText = document.getElementById("progressText");
-
-    let percentage = total === 0 ? 0 : (steps / total) * 100;
-
-    if (
-      steps === total &&
-      !document.getElementById("resultBox").classList.contains("found")
-    ) {
-      percentage = 100;
-    }
-
-    percentage = Math.min(100, percentage);
-
-    progressBar.style.width = `${percentage.toFixed(2)}%`;
-    progressText.textContent = `${percentage.toFixed(0)}%`;
-  }
+  function updateProgressBar(steps, total) {}
 
   function resetSearch() {
     isSearching = false;
-    document.getElementById("status-steps").textContent =
-      "Aguardando a busca...";
+
     document.getElementById(
       "time-elapsed"
     ).innerHTML = `Tempo de Busca: <strong>0 ms</strong>`;
+
     document.getElementById("resultBox").innerHTML =
-      '<p id="status">Aguardando a busca...</p>';
+      '<p id="status">Aguardando sua busca...</p>';
     document.getElementById("resultBox").classList.remove("found", "not-found");
-
-    updateProgressBar(0, 1);
-    currentTrackDisplay.innerHTML = "Pronto para buscar...";
   }
-
-  // ----------------------------------------------------------------------------------
-  // 2. LÓGICA DA BUSCA SEQUENCIAL (Nome da Música ou Artista)
-  // ----------------------------------------------------------------------------------
 
   async function startSearch() {
     if (isSearching || rawData.length === 0) return;
@@ -424,19 +346,7 @@
       // Condição de busca: a query é substring do nome da música OU do nome do artista
       const isMatch = trackName.includes(query) || artistName.includes(query);
 
-      if (steps % 100 === 0 || i === 0 || i === totalData - 1 || isMatch) {
-        currentTrackDisplay.innerHTML = `Verificando #${i}: <strong>${currentMusic.track_name}</strong> por ${currentMusic.track_artist}`;
-
-        document.getElementById(
-          "status-steps"
-        ).textContent = `Passo ${steps}: Verificando...`;
-        updateProgressBar(steps, totalData);
-
-        // Adiciona um pequeno delay para visualização do passo a passo
-        if (!isMatch) {
-          await new Promise((resolve) => setTimeout(resolve, 5));
-        }
-      }
+      // Remoção da parte de atualização visual passo a passo (mantida)
 
       if (isMatch) {
         // Regra da Busca Sequencial: Para no primeiro que der match
@@ -444,14 +354,7 @@
         const musica = currentMusic;
         const duration = endTime - startTime;
 
-        displayResult(
-          `Música ENCONTRADA! (no índice ${i})`,
-          steps,
-          true,
-          musica,
-          duration
-        );
-        currentTrackDisplay.innerHTML = `✅ ENCONTRADO em ${steps} passos: <strong>${musica.track_name}</strong>`;
+        displayResult(`Música ENCONTRADA!`, steps, true, musica, duration);
         found = true;
         break; // Interrompe a busca sequencial
       }
@@ -461,18 +364,15 @@
       endTime = performance.now();
       const duration = endTime - startTime;
       displayResult(
-        `"${document
+        `Não encontramos resultados para "${document
           .getElementById("target")
-          .value.trim()}" NÃO ENCONTRADO em todo o catálogo.`,
+          .value.trim()}" no catálogo.`,
         steps,
         false,
         null,
         duration
       );
-      currentTrackDisplay.innerHTML = `❌ Varredura Completa: Nada encontrado após ${steps} passos.`;
     }
-
-    updateProgressBar(steps, totalData);
 
     isSearching = false;
   }
