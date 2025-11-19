@@ -3,7 +3,7 @@
 import requests
 import pandas as pd
 from django.core.management.base import BaseCommand
-from siteProcura.models import Musica # Usamos o novo modelo
+from siteProcura.models import Musica
 from django.db import transaction
 from io import StringIO
 
@@ -45,10 +45,10 @@ class Command(BaseCommand):
                     track_id=row['track_id'],
                     track_name=row['track_name'],
                     track_artist=row['track_artist'],
+                    duration_ms=row['duration_ms'], 
                     track_popularity=row['track_popularity'],
                     playlist_genre=row['playlist_genre'],
                     danceability=row['danceability']
-                    # Adicione outros campos do seu modelo se desejar
                 )
                 musicas_para_criar.append(musica)
             
