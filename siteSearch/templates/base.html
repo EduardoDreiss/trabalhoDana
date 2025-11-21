@@ -1,222 +1,244 @@
 <!DOCTYPE html>
 <html lang="pt-br">
- <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>
-   {% block title %}Site Estrutura de Dados e Busca{% endblock %}
-  </title>
-  <style>
-   /* --- TIPOGRAFIA E CORES GERAIS --- */
-   body {
-    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais moderna */
-    margin: 0;
-    background-color: #121212; /* Fundo escuro mantido */
-    color: #e0e0e0; /* Cor de texto padrão ligeiramente mais suave */
-    line-height: 1.6;
-   }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}Site Estrutura de Dados e Busca{% endblock %}
+    </title>
+    <style>
+      /* --- ANIMAÇÃO DE FUNDO (NOVO) --- */
+    @keyframes move-background {
+    0% {
+       background-position: 0 0;
+    }
+    100% {
+          /* Define o deslocamento para mover o padrão (diagonal para baixo/direita) */
+        background-position: 1000px 1000px;
+    }
+}
 
-   a {
-    text-decoration: none;
-   }
+      /* --- TIPOGRAFIA E CORES GERAIS --- */
+    body {
+        font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais moderna */
+        margin: 0;
+        background-color: #121212; /* Fundo escuro mantido */
+        color: #e0e0e0; /* Cor de texto padrão ligeiramente mais suave */
+        line-height: 1.6;
 
-   h1, h2, h3 {
-    color: #f4f4f9; /* Títulos em branco puro para alto contraste */
-    font-weight: 700;
-   }
-   
-   /* OBRIGATÓRIO: Cor de destaque verde mantida */
-   strong, .highlight-green {
-    color: #00b409 !important; 
-   }
+        /* ESTILOS DA ANIMAÇÃO */
+        background-image: radial-gradient(
+          circle,
+          #002712 1px,
+          transparent 1px
+        ); /* Cria pontinhos cinza */
+        background-size: 50px 50px; /* Define o espaçamento dos pontos */
+        animation: move-background 100s linear infinite; /* Aplica o movimento lento e infinito */
+      }
 
-   /* --- ESTILOS DA NAVBAR --- */
-   .navbar {
-    background-color: #1a1a1a;
-    border-bottom: 3px solid #00b409;
-    padding: 15px 40px; /* Mais preenchimento vertical */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7); /* Sombra mais forte */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-   }
+    a {
+        text-decoration: none;
+      }
 
-   .navbar .logo a {
-    color: #f4f4f9;
-    font-weight: 800; /* Mais negrito */
-    font-size: 1.6em;
-    transition: color 0.3s;
-   }
+    h1,h2,h3 {
+        color: #f4f4f9; /* Títulos em branco puro para alto contraste */
+        font-weight: 700;
+      }
 
-   .navbar .logo a:hover {
-    color: #1ed760;
-   }
+      /* OBRIGATÓRIO: Cor de destaque verde mantida */
+    strong, .highlight-green {
+        color: #00b409 !important;
+    }
 
-   .navbar .nav-links-container {
-    flex-grow: 1;
-    text-align: right; /* Links à direita no desktop */
-    padding-right: 0; 
-   }
+      /* --- ESTILOS DA NAVBAR --- */
+    .navbar {
+        background-color: #1a1a1a;
+        border-bottom: 3px solid #00b409;
+        padding: 15px 40px; /* Mais preenchimento vertical */
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7); /* Sombra mais forte */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
 
-   .navbar .nav-links-container a {
-    color: #b3b3b3;
-    margin-left: 25px; /* Menor espaçamento */
-    font-size: 1em;
-    padding: 5px 0;
-    border-bottom: 2px solid transparent;
-    transition: color 0.3s, border-bottom-color 0.3s;
-    font-weight: 600;
-    letter-spacing: 0.5px; /* Leve espaçamento entre letras */
-   }
+    .navbar .logo a {
+        color: #f4f4f9;
+        font-weight: 800; /* Mais negrito */
+        font-size: 1.6em;
+        transition: color 0.3s;
+      }
 
-   .navbar .nav-links-container a:hover {
-    color: #ffffff;
-    border-bottom-color: #1ed760; /* Verde mais claro no hover */
-   }
+    .navbar .logo a:hover {
+        color: #1ed760;
+      }
 
-   .navbar .nav-links-container a.active {
-    color: #1ed760;
-    border-bottom-color: #1ed760;
-    font-weight: 700;
-   }
+    .navbar .nav-links-container {
+        flex-grow: 1;
+        text-align: right; /* Links à direita no desktop */
+        padding-right: 0;
+      }
 
-   /* Botão Hambúrguer */
-   .nav-toggle {
-    display: none;
-    color: #f4f4f9;
-    font-size: 2em;
-    transition: transform 0.3s;
-   }
+    .navbar .nav-links-container a {
+        color: #b3b3b3;
+        margin-left: 25px; /* Menor espaçamento */
+        font-size: 1em;
+        padding: 5px 0;
+        border-bottom: 2px solid transparent;
+        transition: color 0.3s, border-bottom-color 0.3s;
+        font-weight: 600;
+        letter-spacing: 0.5px; /* Leve espaçamento entre letras */
+      }
 
-   .container {
-    padding: 40px; /* Mais preenchimento geral */
-    max-width: 1200px;
-    margin: 0 auto;
-   }
+    .navbar .nav-links-container a:hover {
+        color: #ffffff;
+        border-bottom-color: #1ed760; /* Verde mais claro no hover */
+      }
 
-   hr {
-    border: 0;
-    height: 1px;
-    background: #333333; /* Cinza mais escuro */
-    margin: 25px 0;
-   }
+    .navbar .nav-links-container a.active {
+        color: #1ed760;
+        border-bottom-color: #1ed760;
+        font-weight: 700;
+      }
 
-   footer {
-    background-color: #1a1a1a;
-    text-align: center;
-    color: #999999; /* Texto do footer mais suave */
-    padding: 30px;
-    font-size: 0.9em;
-   }
-
-   /* ----------------------------------------------- */
-   /* --- MEDIA QUERY PARA MOBILE (MAX-WIDTH: 768PX) --- */
-   /* ----------------------------------------------- */
-   @media (max-width: 768px) {
+      /* Botão Hambúrguer */
     .nav-toggle {
-     display: block;
+        display: none;
+        color: #f4f4f9;
+        font-size: 2em;
+        transition: transform 0.3s;
+      }
+
+    .container {
+        padding: 40px; /* Mais preenchimento geral */
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+    hr {
+        border: 0;
+        height: 1px;
+        background: #333333; /* Cinza mais escuro */
+        margin: 25px 0;
+      }
+
+    footer {
+        background-color: #1a1a1a;
+        text-align: center;
+        color: #999999; /* Texto do footer mais suave */
+        padding: 30px;
+        font-size: 0.9em;
+      }
+
+      /* ----------------------------------------------- */
+      /* --- MEDIA QUERY PARA MOBILE (MAX-WIDTH: 768PX) --- */
+      /* ----------------------------------------------- */
+    @media (max-width: 768px) {
+        .nav-toggle {
+          display: block;
     }
 
     .navbar {
-     padding: 15px 20px;
+          padding: 15px 20px;
     }
 
     .navbar .nav-links-container {
-     display: none;
-     width: 100%;
-     text-align: left;
-     flex-basis: 100%;
-     border-top: 1px solid #282828;
-     margin-top: 15px;
+          display: none;
+          width: 100%;
+          text-align: left;
+          flex-basis: 100%;
+          border-top: 1px solid #282828;
+          margin-top: 15px;
     }
 
     .navbar .nav-links-container.open {
-     display: flex;
-     flex-direction: column;
+          display: flex;
+          flex-direction: column;
     }
 
     .navbar .nav-links-container a {
-     margin: 0;
-     padding: 12px 0;
-     width: 100%;
-     border-bottom: 1px solid #282828;
+          margin: 0;
+          padding: 12px 0;
+          width: 100%;
+          border-bottom: 1px solid #282828;
     }
     .navbar .nav-links-container a:last-child {
-     border-bottom: none;
-    }
+          border-bottom: none;
+        }
 
-    .container {
-     padding: 20px;
-    }
-   }
-  </style>
- </head>
+        .container {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
 
- <body>
-  <nav class="navbar">
-   <div class="logo"><a href="{% url 'index' %}">Finder</a></div>
+  <body>
+    <nav class="navbar">
+      <div class="logo"><a href="{% url 'index' %}">Finder</a></div>
 
-   <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
-    &#9776;
-   </button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        &#9776;
+      </button>
 
-   <div class="nav-links-container" id="nav-links">
-    <a href="{% url 'info' %}">Sobre o Projeto</a>
-    <a href="{% url 'todas_as_musicas' %}"> Catálogo Completo</a>
-    <a href="{% url 'busca_sequencial' %}" class="active">Busca Sequencial</a>
-    <a href="{% url 'busca_indexada' %}">Busca Indexada</a>
-    <a href="{% url 'busca_por_hashmap' %}">Busca Hash</a>
-   </div>
-  </nav>
+      <div class="nav-links-container" id="nav-links">
+        <a href="{% url 'info' %}">Sobre o Projeto</a>
+        <a href="{% url 'todas_as_musicas' %}"> Catálogo Completo</a>
+        <a href="{% url 'busca_sequencial' %}">Busca Sequencial</a>
+        <a href="{% url 'busca_indexada' %}">Busca Indexada</a>
+        <a href="{% url 'busca_por_hashmap' %}">Busca Hash</a>
+      </div>
+    </nav>
 
-  <div class="container">{% block content %} {% endblock %}</div>
+    <div class="container">{% block content %} {% endblock %}</div>
 
-  <script>
-   document.addEventListener("DOMContentLoaded", () => {
-    const navToggle = document.getElementById("nav-toggle");
-    const navLinks = document.getElementById("nav-links");
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const navToggle = document.getElementById("nav-toggle");
+        const navLinks = document.getElementById("nav-links");
 
-    navToggle.addEventListener("click", () => {
-     navLinks.classList.toggle("open");
+        navToggle.addEventListener("click", () => {
+          navLinks.classList.toggle("open");
 
-     if (navLinks.classList.contains("open")) {
-      navToggle.innerHTML = "&times;";
-      navToggle.setAttribute("aria-expanded", "true");
-     } else {
-      navToggle.innerHTML = "&#9776;";
-      navToggle.setAttribute("aria-expanded", "false");
-     }
-    });
+          if (navLinks.classList.contains("open")) {
+            navToggle.innerHTML = "&times;";
+            navToggle.setAttribute("aria-expanded", "true");
+          } else {
+            navToggle.innerHTML = "&#9776;";
+            navToggle.setAttribute("aria-expanded", "false");
+          }
+        });
 
-    window.addEventListener("resize", () => {
-     if (window.innerWidth > 768) {
-      navLinks.classList.remove("open");
-      navToggle.innerHTML = "&#9776;";
-      navToggle.setAttribute("aria-expanded", "false");
-     }
-    });
+        window.addEventListener("resize", () => {
+          if (window.innerWidth > 768) {
+            navLinks.classList.remove("open");
+            navToggle.innerHTML = "&#9776;";
+            navToggle.setAttribute("aria-expanded", "false");
+          }
+        });
 
-    // Novo: Adiciona a classe 'active' dinamicamente (baseado na URL)
-    const currentPath = window.location.pathname;
-    const navLinksList = navLinks.querySelectorAll('a');
-    
-    navLinksList.forEach(link => {
-     link.classList.remove('active'); // Remove a classe 'active' do Django se houver
-     if (currentPath.includes(link.getAttribute('href').replace(/\//g, ''))) {
-      link.classList.add('active');
-     }
-    });
-   });
-  </script>
- </body>
- <footer>
-  <hr style="background: #282828;" />
-  <p>
-   <strong>&copy;</strong> 2025 Site de Demonstração de Algoritmos de Busca.
-   Desenvolvido para Estudos em Estrutura de Dados.
-  </p>
- </footer>
+        // Novo: Adiciona a classe 'active' dinamicamente (baseado na URL)
+        const currentPath = window.location.pathname;
+        const navLinksList = navLinks.querySelectorAll("a");
+
+        navLinksList.forEach((link) => {
+          link.classList.remove("active"); // Remove a classe 'active' do Django se houver
+          if (
+            currentPath.includes(link.getAttribute("href").replace(/\//g, ""))
+          ) {
+            link.classList.add("active");
+          }
+        });
+      });
+    </script>
+  </body>
+  <footer>
+    <hr style="background: #282828" />
+    <p>
+      <strong>&copy;</strong> 2025 Site de Demonstração de Algoritmos de Busca.
+       Desenvolvido para Estudos em Estrutura de Dados.
+    </p>
+  </footer>
 </html>
