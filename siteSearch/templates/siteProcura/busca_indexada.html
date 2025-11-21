@@ -31,6 +31,26 @@ strong{color:#00b409;}
 .youtube-link{color:inherit;text-decoration:none;cursor:pointer;transition:color .2s;display:inline-flex;align-items:center;gap:4px;}
 .youtube-link:hover{color:#1ed760;text-decoration:underline;}
 .youtube-icon{color:#FF0000;font-size:1.2em;}
+.result-box::-webkit-scrollbar {
+    width: 8px;
+    background-color: transparent;
+}
+
+.result-box::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 10px;
+    border: 2px solid #1e1e1e;
+}
+
+.result-box::-webkit-scrollbar-thumb:hover {
+    background-color: #777;
+}
+
+.result-box {
+    scrollbar-width: thin;
+    scrollbar-color: #555 #1e1e1e;
+}
+
 @media (max-width:768px){.container-main{flex-direction:column;gap:20px;margin-top:15px;}.column-left,.column-right{flex:1 1 auto;min-width:100%;}.command-box{padding:15px;}.controls{gap:10px;}}
 </style>
 
@@ -47,7 +67,7 @@ strong{color:#00b409;}
                 </div>
                 <div>
                     <label for="artist-input">Artista (Refinar - Digite ou Selecione):</label>
-                    <input type="text" id="artist-input" placeholder="(Opcional) Digite o nome do Artista..." disabled list="artist-options"/>
+                    <input type="text" id="artist-input" placeholder="Digite ou escolha o nome do Artista..." list="artist-options"/>
                     <datalist id="artist-options"></datalist> 
                 </div>
             </div>
@@ -62,22 +82,53 @@ strong{color:#00b409;}
 </div>
 
 <script>
-let rawData=[];const indexedData={};
-const genreSelect=document.getElementById("genre-select");const artistInput=document.getElementById("artist-input");const artistDatalist=document.getElementById("artist-options");const resultBox=document.getElementById("resultBox");
-try{const scriptElement=document.getElementById("spotify-data");if(scriptElement&&scriptElement.textContent.trim().length>0){rawData=JSON.parse(scriptElement.textContent);}}catch(e){console.error("Erro ao processar dados JSON:",e);}
+let rawData=[];
+// Índice para busca por Gênero/Artista
+const indexedData={};
+// Índice novo e simples para busca direta por Artista (Todos os Gêneros)
+const artistList = new Set(); 
+
+const genreSelect=document.getElementById("genre-select");
+const artistInput=document.getElementById("artist-input");
+const artistDatalist=document.getElementById("artist-options");
+const resultBox=document.getElementById("resultBox");
+
+try{
+    const scriptElement=document.getElementById("spotify-data");
+    if(scriptElement&&scriptElement.textContent.trim().length>0){
+        rawData=JSON.parse(scriptElement.textContent);
+    }
+}catch(e){
+    console.error("Erro ao processar dados JSON:",e);
+}
+
 function buildIndexes(){
-    if(rawData.length===0){console.warn("⚠️ Indexação não iniciada: rawData está vazio.");return;}
+    if(rawData.length===0){
+        console.warn("⚠️ Indexação não iniciada: rawData está vazio.");
+        return;
+    }
     rawData.forEach(music=>{
         const genre=music.playlist_genre?music.playlist_genre.trim():"Gênero Desconhecido";
         const artist=music.track_artist?music.track_artist.trim():"Artista Desconhecido";
-        if(genre==="Gênero Desconhecido"&&artist==="Artista Desconhecido"){return;}
+        
+        if(genre==="Gênero Desconhecido"&&artist==="Artista Desconhecido"){
+            return;
+        }
+
+        // 1. Construir o índice Gênero -> Artista -> Músicas
         if(!indexedData[genre]){indexedData[genre]={};}
         if(!indexedData[genre][artist]){indexedData[genre][artist]=[];}
         indexedData[genre][artist].push(music);
+
+        // 2. Construir a lista simples de Artistas únicos (para o datalist geral)
+        if(artist !== "Artista Desconhecido") {
+            artistList.add(artist);
+        }
     });
 }
+
 function populateGenres(){
-    genreSelect.innerHTML='<option value="">Selecione um Gênero...</option>';
+    genreSelect.innerHTML='<option value="">Buscar por Gêneros</option>'; // Opção para busca geral
     if(Object.keys(indexedData).length===0)return;
     const sortedGenres=Object.keys(indexedData).sort();
     sortedGenres.forEach(genre=>{
@@ -87,7 +138,19 @@ function populateGenres(){
     });
     genreSelect.disabled=false;
 }
+
+// NOVO: Função para popular o datalist com todos os artistas
+function populateArtistDatalist(artists) {
+    artistDatalist.innerHTML = "";
+    artists.forEach(artist => {
+        const option = document.createElement("option");
+        option.value = artist;
+        artistDatalist.appendChild(option);
+    });
+}
+
 function displayArtists(genre){
+    // Exibe a lista de artistas para o gênero selecionado
     if(!genre||!indexedData[genre]){
         resultBox.innerHTML='<p class="status-message">Selecione um Gênero para listar artistas.</p>';return;
     }
@@ -101,39 +164,81 @@ function displayArtists(genre){
     htmlContent+="</div>";
     resultBox.innerHTML=htmlContent;
 }
+
 window.selectArtistFromList=function(artistName){artistInput.value=artistName;handleArtistChange();};
+
 function handleGenreChange(){
     const selectedGenre=genreSelect.value;
-    artistInput.value="";artistDatalist.innerHTML="";artistInput.disabled=true;
+    artistInput.value="";
+    // O input do artista NUNCA mais será desabilitado
+
     if(selectedGenre){
+        // Gênero selecionado: popular datalist apenas com artistas daquele gênero
         const artists=Object.keys(indexedData[selectedGenre]).sort();
-        artists.forEach(artist=>{const option=document.createElement("option");option.value=artist;artistDatalist.appendChild(option);});
-        artistInput.disabled=false;
+        populateArtistDatalist(artists);
         displayArtists(selectedGenre);
     }else{
-        displaySongs(rawData);
+        // Nenhum gênero selecionado: popular datalist com TODOS os artistas
+        populateArtistDatalist(Array.from(artistList).sort());
+        
+        // Se a busca geral estiver vazia, exibe todos
+        if (artistInput.value.trim() === "") {
+             displaySongs(rawData, "Todas as Faixas do Catálogo (Busca Geral)");
+        } else {
+             // Se o input de artista estiver preenchido, dispara a busca geral
+             handleArtistChange();
+        }
     }
 }
+
 function handleArtistChange(){
     const selectedGenre=genreSelect.value;
     const selectedArtist=artistInput.value.trim();
+    
+    // Se não há gênero E não há artista, volta para todas as músicas
+    if(!selectedGenre && !selectedArtist) {
+        displaySongs(rawData, "Todas as Faixas do Catálogo");
+        return;
+    }
+
     resultBox.innerHTML='<p class="status-message">Carregando...</p>';
-    if(selectedGenre&&selectedArtist){
+
+    // Caso 1: Gênero e Artista selecionados (Busca Refinada)
+    if(selectedGenre && selectedArtist){
         const songs=indexedData[selectedGenre][selectedArtist];
-        if(songs){displaySongs(songs,`Faixas de ${selectedArtist} em ${selectedGenre}`);}
-        else{resultBox.innerHTML=`<p class="status-message">Artista "${selectedArtist}" não encontrado no gênero ${selectedGenre}.</p>`;}
+        if(songs){
+            displaySongs(songs,`Faixas de ${selectedArtist} em ${selectedGenre}`);
+        } else {
+            resultBox.innerHTML=`<p class="status-message">Artista "${selectedArtist}" não encontrado no gênero ${selectedGenre}.</p>`;
+        }
         return;
-    }else if(!selectedGenre&&selectedArtist){
-        const matchedSongs=rawData.filter(song=>song.track_artist&&song.track_artist.trim().toLowerCase()===selectedArtist.toLowerCase());
-        if(matchedSongs.length>0){displaySongs(matchedSongs,`Faixas encontradas de ${selectedArtist} (Busca Geral)`);}
-        else{resultBox.innerHTML=`<p class="status-message">Artista "${selectedArtist}" não encontrado em nenhum gênero.</p>`;}
+    } 
+    
+    // Caso 2: Somente Artista selecionado (Busca Geral em todos os Gêneros)
+    else if(!selectedGenre && selectedArtist){
+        const artistLower = selectedArtist.toLowerCase();
+        const matchedSongs = rawData.filter(song => 
+            song.track_artist && song.track_artist.trim().toLowerCase() === artistLower
+        );
+        
+        if(matchedSongs.length>0){
+            displaySongs(matchedSongs,`Faixas encontradas de ${selectedArtist} (Busca em todos os Gêneros)`);
+        } else {
+            resultBox.innerHTML=`<p class="status-message">Artista "${selectedArtist}" não encontrado no catálogo.</p>`;
+        }
         return;
-    }else if(selectedGenre&&!selectedArtist){
+    } 
+    
+    // Caso 3: Somente Gênero selecionado (Exibe lista de Artistas daquele Gênero)
+    else if(selectedGenre && !selectedArtist){
         displayArtists(selectedGenre);
         return;
     }
+    
+    // Fallback: Se algo deu errado, mostra o catálogo completo
     displaySongs(rawData);
 }
+
 function displaySongs(songs,title="Todas as Faixas do Catálogo"){
     if(!songs||songs.length===0){resultBox.innerHTML='<p class="status-message">Nenhuma faixa encontrada para essa seleção.</p>';return;}
     let htmlContent=`<p style="color:#b3b3b3;font-weight:bold;">${title}: ${songs.length}</p>`;
@@ -149,7 +254,18 @@ function displaySongs(songs,title="Todas as Faixas do Catálogo"){
     });
     resultBox.innerHTML=htmlContent;
 }
-document.addEventListener("DOMContentLoaded",()=>{buildIndexes();populateGenres();displaySongs(rawData);genreSelect.addEventListener("change",handleGenreChange);artistInput.addEventListener("input",handleArtistChange);});
+
+document.addEventListener("DOMContentLoaded",()=>{
+    buildIndexes();
+    populateGenres();
+    
+    // NOVO: Popula o datalist com todos os artistas na carga inicial (Geral)
+    populateArtistDatalist(Array.from(artistList).sort());
+
+    displaySongs(rawData);
+    genreSelect.addEventListener("change",handleGenreChange);
+    artistInput.addEventListener("input",handleArtistChange);
+});
 </script>
 
 {% endblock content %}
