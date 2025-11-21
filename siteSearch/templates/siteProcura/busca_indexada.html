@@ -28,64 +28,72 @@ strong{color:#00b409;}
 .track-artist{color:#b3b3b3;font-size:.9em;}
 .track-meta{font-size:.8em;color:#999;margin-top:4px;}
 .status-message{color:#b3b3b3;font-style:italic;}
-.youtube-link{color:inherit;text-decoration:none;cursor:pointer;transition:color .2s;display:inline-flex;align-items:center;gap:4px;}
+/* Ajuste no .youtube-link para se parecer mais com o formato desejado */
+.youtube-link{
+    color:#fff; /* Cor do texto do link */
+    text-decoration:none;
+    cursor:pointer;
+    transition:color .2s;
+    display:inline-flex;
+    align-items:center;
+    /* Removido o gap aqui, pois o espaçamento será feito na tag span */
+}
 .youtube-link:hover{color:#1ed760;text-decoration:underline;}
-.youtube-icon{color:#FF0000;font-size:1.2em;}
+/* O ícone não precisa ter cor vermelha se o estilo for como o de busca, mas vamos manter o estilo anterior como fallback */
+.youtube-icon{color:#FF0000;font-size:1.2em;} 
 .result-box::-webkit-scrollbar {
-    width: 8px;
-    background-color: transparent;
+width: 8px;
+background-color: transparent;
 }
 
 .result-box::-webkit-scrollbar-thumb {
-    background-color: #555;
-    border-radius: 10px;
-    border: 2px solid #1e1e1e;
+  background-color: #555;
+  border-radius: 10px;
+  border: 2px solid #1e1e1e;
 }
 
 .result-box::-webkit-scrollbar-thumb:hover {
-    background-color: #777;
+  background-color: #777;
 }
 
 .result-box {
-    scrollbar-width: thin;
-    scrollbar-color: #555 #1e1e1e;
+  scrollbar-width: thin;
+  scrollbar-color: #555 #1e1e1e;
 }
 
 @media (max-width:768px){.container-main{flex-direction:column;gap:20px;margin-top:15px;}.column-left,.column-right{flex:1 1 auto;min-width:100%;}.command-box{padding:15px;}.controls{gap:10px;}}
 </style>
 
 <div class="container-main">
-    <div class="column-left">
-        <div class="command-box">
-            <p style="margin-top: 0; font-weight: bold">1. Escolha a Categoria</p>
-            <div class="controls">
-                <div>
-                    <label for="genre-select">Gênero Principal:</label>
-                    <select id="genre-select">
-                        <option value="">Selecione um Gênero...</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="artist-input">Artista (Refinar - Digite ou Selecione):</label>
-                    <input type="text" id="artist-input" placeholder="Digite ou escolha o nome do Artista..." list="artist-options"/>
-                    <datalist id="artist-options"></datalist> 
-                </div>
-            </div>
+  <div class="column-left">
+    <div class="command-box">
+      <p style="margin-top: 0; font-weight: bold">1. Escolha a Categoria</p>
+      <div class="controls">
+        <div>
+          <label for="genre-select">Gênero Principal:</label>
+          <select id="genre-select">
+            <option value="">Buscar por Gêneros</option>
+          </select>
         </div>
-    </div>
-    <div class="column-right">
-        <h2>Resultados da Classificação:</h2>
-        <div id="resultBox" class="result-box">
-            <p class="status-message">Carregando...</p>
+        <div>
+          <label for="artist-input">Artista (Refinar - Digite ou Selecione):</label>
+          <input type="text" id="artist-input" placeholder="Digite ou escolha o nome do Artista..." list="artist-options"/>
+          <datalist id="artist-options"></datalist> 
         </div>
+      </div>
     </div>
+  </div>
+  <div class="column-right">
+    <h2>Resultados da Classificação:</h2>
+    <div id="resultBox" class="result-box">
+      <p class="status-message">Carregando...</p>
+    </div>
+  </div>
 </div>
 
 <script>
 let rawData=[];
-// Índice para busca por Gênero/Artista
 const indexedData={};
-// Índice novo e simples para busca direta por Artista (Todos os Gêneros)
 const artistList = new Set(); 
 
 const genreSelect=document.getElementById("genre-select");
@@ -94,177 +102,173 @@ const artistDatalist=document.getElementById("artist-options");
 const resultBox=document.getElementById("resultBox");
 
 try{
-    const scriptElement=document.getElementById("spotify-data");
-    if(scriptElement&&scriptElement.textContent.trim().length>0){
-        rawData=JSON.parse(scriptElement.textContent);
-    }
+  const scriptElement=document.getElementById("spotify-data");
+  if(scriptElement&&scriptElement.textContent.trim().length>0){
+    rawData=JSON.parse(scriptElement.textContent);
+  }
 }catch(e){
-    console.error("Erro ao processar dados JSON:",e);
+  console.error("Erro ao processar dados JSON:",e);
 }
 
 function buildIndexes(){
-    if(rawData.length===0){
-        console.warn("⚠️ Indexação não iniciada: rawData está vazio.");
-        return;
+  if(rawData.length===0){
+    console.warn("⚠️ Indexação não iniciada: rawData está vazio.");
+    return;
+  }
+  rawData.forEach(music=>{
+    const genre=music.playlist_genre?music.playlist_genre.trim():"Gênero Desconhecido";
+    const artist=music.track_artist?music.track_artist.trim():"Artista Desconhecido";
+    
+    if(genre==="Gênero Desconhecido"&&artist==="Artista Desconhecido"){
+      return;
     }
-    rawData.forEach(music=>{
-        const genre=music.playlist_genre?music.playlist_genre.trim():"Gênero Desconhecido";
-        const artist=music.track_artist?music.track_artist.trim():"Artista Desconhecido";
-        
-        if(genre==="Gênero Desconhecido"&&artist==="Artista Desconhecido"){
-            return;
-        }
 
-        // 1. Construir o índice Gênero -> Artista -> Músicas
-        if(!indexedData[genre]){indexedData[genre]={};}
-        if(!indexedData[genre][artist]){indexedData[genre][artist]=[];}
-        indexedData[genre][artist].push(music);
+    // 1. Construir o índice Gênero -> Artista -> Músicas
+    if(!indexedData[genre]){indexedData[genre]={};}
+    if(!indexedData[genre][artist]){indexedData[genre][artist]=[];}
+    indexedData[genre][artist].push(music);
 
-        // 2. Construir a lista simples de Artistas únicos (para o datalist geral)
-        if(artist !== "Artista Desconhecido") {
-            artistList.add(artist);
-        }
-    });
+    // 2. Construir a lista simples de Artistas únicos (para o datalist geral)
+    if(artist !== "Artista Desconhecido") {
+      artistList.add(artist);
+    }
+  });
 }
 
 function populateGenres(){
-    genreSelect.innerHTML='<option value="">Buscar por Gêneros</option>'; // Opção para busca geral
-    if(Object.keys(indexedData).length===0)return;
-    const sortedGenres=Object.keys(indexedData).sort();
-    sortedGenres.forEach(genre=>{
-        const artistCount=Object.keys(indexedData[genre]).length;
-        const option=new Option(`${genre} (${artistCount} Artistas)`,genre);
-        genreSelect.add(option);
-    });
-    genreSelect.disabled=false;
+  genreSelect.innerHTML='<option value="">Buscar por Gêneros</option>';
+  if(Object.keys(indexedData).length===0)return;
+  const sortedGenres=Object.keys(indexedData).sort();
+  sortedGenres.forEach(genre=>{
+    const artistCount=Object.keys(indexedData[genre]).length;
+    const option=new Option(`${genre} (${artistCount} Artistas)`,genre);
+    genreSelect.add(option);
+  });
+  genreSelect.disabled=false;
 }
 
-// NOVO: Função para popular o datalist com todos os artistas
 function populateArtistDatalist(artists) {
-    artistDatalist.innerHTML = "";
-    artists.forEach(artist => {
-        const option = document.createElement("option");
-        option.value = artist;
-        artistDatalist.appendChild(option);
-    });
+  artistDatalist.innerHTML = "";
+  artists.forEach(artist => {
+    const option = document.createElement("option");
+    option.value = artist;
+    artistDatalist.appendChild(option);
+  });
 }
 
 function displayArtists(genre){
-    // Exibe a lista de artistas para o gênero selecionado
-    if(!genre||!indexedData[genre]){
-        resultBox.innerHTML='<p class="status-message">Selecione um Gênero para listar artistas.</p>';return;
-    }
-    const artistsData=indexedData[genre];
-    const artists=Object.keys(artistsData).sort((a,b)=>a.localeCompare(b));
-    let htmlContent=`<p style="color:#00b409;font-weight:bold;">Artistas em ${genre}: ${artists.length}</p><div style="height:350px;overflow-y:auto;padding:5px;">`;
-    artists.forEach(artist=>{
-        const musicCount=artistsData[artist].length;
-        htmlContent+=`<div class="music-list-item" style="cursor:pointer;" onclick="selectArtistFromList('${artist.replace(/'/g,"\\'")}')"><div class="track-info-left"><div class="track-name">${artist}</div><div class="track-artist">${musicCount} Faixas</div></div><div class="track-meta">Clique para Filtrar</div></div>`;
-    });
-    htmlContent+="</div>";
-    resultBox.innerHTML=htmlContent;
+  if(!genre||!indexedData[genre]){
+    resultBox.innerHTML='<p class="status-message">Selecione um Gênero para listar artistas.</p>';return;
+  }
+  const artistsData=indexedData[genre];
+  const artists=Object.keys(artistsData).sort((a,b)=>a.localeCompare(b));
+  let htmlContent=`<p style="color:#00b409;font-weight:bold;">Artistas em ${genre}: ${artists.length}</p><div style="height:350px;overflow-y:auto;padding:5px;">`;
+  artists.forEach(artist=>{
+    const musicCount=artistsData[artist].length;
+    htmlContent+=`<div class="music-list-item" style="cursor:pointer;" onclick="selectArtistFromList('${artist.replace(/'/g,"\\'")}')"><div class="track-info-left"><div class="track-name">${artist}</div><div class="track-artist">${musicCount} Faixas</div></div><div class="track-meta">Clique para Filtrar</div></div>`;
+  });
+  htmlContent+="</div>";
+  resultBox.innerHTML=htmlContent;
 }
 
 window.selectArtistFromList=function(artistName){artistInput.value=artistName;handleArtistChange();};
 
 function handleGenreChange(){
-    const selectedGenre=genreSelect.value;
-    artistInput.value="";
-    // O input do artista NUNCA mais será desabilitado
+  const selectedGenre=genreSelect.value;
+  artistInput.value="";
 
-    if(selectedGenre){
-        // Gênero selecionado: popular datalist apenas com artistas daquele gênero
-        const artists=Object.keys(indexedData[selectedGenre]).sort();
-        populateArtistDatalist(artists);
-        displayArtists(selectedGenre);
-    }else{
-        // Nenhum gênero selecionado: popular datalist com TODOS os artistas
-        populateArtistDatalist(Array.from(artistList).sort());
-        
-        // Se a busca geral estiver vazia, exibe todos
-        if (artistInput.value.trim() === "") {
-             displaySongs(rawData, "Todas as Faixas do Catálogo (Busca Geral)");
-        } else {
-             // Se o input de artista estiver preenchido, dispara a busca geral
-             handleArtistChange();
-        }
+  if(selectedGenre){
+    const artists=Object.keys(indexedData[selectedGenre]).sort();
+    populateArtistDatalist(artists);
+    displayArtists(selectedGenre);
+  }else{
+    populateArtistDatalist(Array.from(artistList).sort());
+    
+    if (artistInput.value.trim() === "") {
+      displaySongs(rawData, "Todas as Faixas do Catálogo (Busca Geral)");
+    } else {
+      handleArtistChange();
     }
+  }
 }
 
 function handleArtistChange(){
-    const selectedGenre=genreSelect.value;
-    const selectedArtist=artistInput.value.trim();
-    
-    // Se não há gênero E não há artista, volta para todas as músicas
-    if(!selectedGenre && !selectedArtist) {
-        displaySongs(rawData, "Todas as Faixas do Catálogo");
-        return;
-    }
+  const selectedGenre=genreSelect.value;
+  const selectedArtist=artistInput.value.trim();
+  
+  if(!selectedGenre && !selectedArtist) {
+    displaySongs(rawData, "Todas as Faixas do Catálogo");
+    return;
+  }
 
-    resultBox.innerHTML='<p class="status-message">Carregando...</p>';
+  resultBox.innerHTML='<p class="status-message">Carregando...</p>';
 
-    // Caso 1: Gênero e Artista selecionados (Busca Refinada)
-    if(selectedGenre && selectedArtist){
-        const songs=indexedData[selectedGenre][selectedArtist];
-        if(songs){
-            displaySongs(songs,`Faixas de ${selectedArtist} em ${selectedGenre}`);
-        } else {
-            resultBox.innerHTML=`<p class="status-message">Artista "${selectedArtist}" não encontrado no gênero ${selectedGenre}.</p>`;
-        }
-        return;
-    } 
-    
-    // Caso 2: Somente Artista selecionado (Busca Geral em todos os Gêneros)
-    else if(!selectedGenre && selectedArtist){
-        const artistLower = selectedArtist.toLowerCase();
-        const matchedSongs = rawData.filter(song => 
-            song.track_artist && song.track_artist.trim().toLowerCase() === artistLower
-        );
-        
-        if(matchedSongs.length>0){
-            displaySongs(matchedSongs,`Faixas encontradas de ${selectedArtist} (Busca em todos os Gêneros)`);
-        } else {
-            resultBox.innerHTML=`<p class="status-message">Artista "${selectedArtist}" não encontrado no catálogo.</p>`;
-        }
-        return;
-    } 
-    
-    // Caso 3: Somente Gênero selecionado (Exibe lista de Artistas daquele Gênero)
-    else if(selectedGenre && !selectedArtist){
-        displayArtists(selectedGenre);
-        return;
+  if(selectedGenre && selectedArtist){
+    const songs=indexedData[selectedGenre][selectedArtist];
+    if(songs){
+      displaySongs(songs,`Faixas de ${selectedArtist} em ${selectedGenre}`);
+    } else {
+      resultBox.innerHTML=`<p class="status-message">Artista "${selectedArtist}" não encontrado no gênero ${selectedGenre}.</p>`;
     }
+    return;
+  } 
+  
+  else if(!selectedGenre && selectedArtist){
+    const artistLower = selectedArtist.toLowerCase();
+    const matchedSongs = rawData.filter(song => 
+      song.track_artist && song.track_artist.trim().toLowerCase() === artistLower
+    );
     
-    // Fallback: Se algo deu errado, mostra o catálogo completo
-    displaySongs(rawData);
+    if(matchedSongs.length>0){
+      displaySongs(matchedSongs,`Faixas encontradas de ${selectedArtist} (Busca em todos os Gêneros)`);
+    } else {
+      resultBox.innerHTML=`<p class="status-message">Artista "${selectedArtist}" não encontrado no catálogo.</p>`;
+    }
+    return;
+  } 
+  
+  else if(selectedGenre && !selectedArtist){
+    displayArtists(selectedGenre);
+    return;
+  }
+  
+  displaySongs(rawData);
 }
 
 function displaySongs(songs,title="Todas as Faixas do Catálogo"){
-    if(!songs||songs.length===0){resultBox.innerHTML='<p class="status-message">Nenhuma faixa encontrada para essa seleção.</p>';return;}
-    let htmlContent=`<p style="color:#b3b3b3;font-weight:bold;">${title}: ${songs.length}</p>`;
-    songs.forEach(song=>{
-        const popularity=song.track_popularity||"N/A";
-        const trackName=song.track_name||"Nome Desconhecido";
-        const artistName=song.track_artist||"Artista Desconhecido";
-        const genre=song.playlist_genre||"Gênero Desconhecido";
-        const searchTerm=`${trackName} ${artistName}`;
-        const encodedSearch=encodeURIComponent(searchTerm);
-        const youtubeUrl=`https://www.youtube.com/results?search_query=${encodedSearch}`;
-        htmlContent+=`<div class="music-list-item"><div class="track-info-left"><a href="${youtubeUrl}" target="_blank" class="youtube-link track-name"><span class="youtube-icon">▶</span>${trackName}</a><div class="track-artist">${artistName}</div><div class="track-meta">Gênero: ${genre} | Pop: ${popularity}%</div></div></div>`;
-    });
-    resultBox.innerHTML=htmlContent;
+  if(!songs||songs.length===0){resultBox.innerHTML='<p class="status-message">Nenhuma faixa encontrada para essa seleção.</p>';return;}
+  let htmlContent=`<p style="color:#b3b3b3;font-weight:bold;">${title}: ${songs.length}</p>`;
+  songs.forEach(song=>{
+    const popularity=song.track_popularity||"N/A";
+    const trackName=song.track_name||"Nome Desconhecido";
+    const artistName=song.track_artist||"Artista Desconhecido";
+    const genre=song.playlist_genre||"Gênero Desconhecido";
+    const searchTerm=`${trackName} ${artistName}`;
+    const encodedSearch=encodeURIComponent(searchTerm);
+    const youtubeUrl=`https://www.youtube.com/results?search_query=${encodedSearch}`;
+    
+    // ALTERAÇÃO AQUI: Ícone depois do nome da faixa, e cor ajustada para #00b409 (verde)
+    htmlContent+=`<div class="music-list-item"><div class="track-info-left">
+      <a href="${youtubeUrl}" target="_blank" class="youtube-link track-name">
+        ${trackName}
+        <span class="youtube-icon" style="color: #00b409; font-size: 0.9em; margin-left: 5px;">🔗</span>
+      </a>
+      <div class="track-artist">${artistName}</div>
+      <div class="track-meta">Gênero: ${genre} | Pop: ${popularity}%</div>
+    </div></div>`;
+  });
+  resultBox.innerHTML=htmlContent;
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
-    buildIndexes();
-    populateGenres();
-    
-    // NOVO: Popula o datalist com todos os artistas na carga inicial (Geral)
-    populateArtistDatalist(Array.from(artistList).sort());
+  buildIndexes();
+  populateGenres();
+  
+  populateArtistDatalist(Array.from(artistList).sort());
 
-    displaySongs(rawData);
-    genreSelect.addEventListener("change",handleGenreChange);
-    artistInput.addEventListener("input",handleArtistChange);
+  displaySongs(rawData);
+  genreSelect.addEventListener("change",handleGenreChange);
+  artistInput.addEventListener("input",handleArtistChange);
 });
 </script>
 
