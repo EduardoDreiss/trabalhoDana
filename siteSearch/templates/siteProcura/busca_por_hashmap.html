@@ -1,6 +1,10 @@
-{% extends 'base.html' %} {% block title %}Busca por Hash Map | Músicas
-Spotify{% endblock %} {% block content %} {{
-dados_para_js|json_script:"spotify-data" }}
+{% extends 'base.html' %}
+
+{% block title %}Busca por Hash Map | Músicas
+Spotify{% endblock %}
+
+{% block content %}
+{{ dados_para_js|json_script:"spotify-data" }}
 
 <h1 style="color: #00b409">
     ⚡ Busca por Hash (O(1)) no Dataset Spotify
@@ -13,29 +17,21 @@ dados_para_js|json_script:"spotify-data" }}
 </p>
 
 <style>
-    /* --------------------------------------------- */
-    /* --- ESTILOS DE INPUT PERSONALIZADOS (NOVO) --- */
-    /* --------------------------------------------- */
-
     @keyframes spin {
         to {
             transform: rotate(360deg);
         }
     }
 
-    /* 1. Contêiner Principal do Efeito */
     .input-wrapper {
         position: relative;
         border-radius: 8px;
-        /* Padding define a espessura da borda animada */
         padding: 3px;
         background: #333;
-        /* Cor da borda estática (não focada) */
         overflow: hidden;
         transition: background 0.3s;
     }
 
-    /* 3. Pseudo-Elemento (O GRADIENTE ROTATIVO) */
     .input-wrapper::before {
         content: "";
         position: absolute;
@@ -47,26 +43,22 @@ dados_para_js|json_script:"spotify-data" }}
         opacity: 0;
         z-index: 1;
 
-        /* Gradiente Cônico: Preto/Verde/Preto para o efeito de rastro */
         background: conic-gradient(from 0deg, #121212, #00b409, #121212);
 
         transition: opacity 0.4s;
     }
 
-    /* 4. Animação Ativada pela Classe JavaScript */
     .input-wrapper.is-focused::before {
         opacity: 1;
         animation: spin 4s linear infinite;
     }
 
-    /* 5. O Input Físico */
     .controls input {
         width: 100%;
         box-sizing: border-box;
         padding: 14px 18px;
         border-radius: 5px;
         border: none;
-        /* Sem borda própria */
         background-color: #242424;
         color: #ffffff;
         font-size: 1.1em;
@@ -75,12 +67,8 @@ dados_para_js|json_script:"spotify-data" }}
         transition: background-color 0.3s;
         box-shadow: none;
         outline: none;
-        /* Remove o outline padrão do navegador */
     }
 
-    /* --------------------------------------------- */
-    /* --- ESTILOS GERAIS (EXISTENTES) --- */
-    /* --------------------------------------------- */
     .container-main {
         display: flex;
         gap: 40px;
@@ -159,10 +147,8 @@ dados_para_js|json_script:"spotify-data" }}
         line-height: 1.4;
     }
 
-    /* --- NOVO ESTILO: Garante que o link seja visualmente igual ao da busca sequencial --- */
     .track-details a {
         color: #ffffff !important;
-        /* Cor inicial branca */
         text-decoration: none;
         cursor: pointer;
         transition: color 0.2s;
@@ -170,16 +156,12 @@ dados_para_js|json_script:"spotify-data" }}
 
     .track-details a:hover {
         color: #1ed760 !important;
-        /* Cor verde Spotify no hover */
         text-decoration: underline;
     }
 
     .track-details strong {
-        /* Garante que o texto do título (que envolve o link) se destaque */
         font-size: 1.3em;
     }
-
-    /* --- FIM DOS NOVOS ESTILOS --- */
 
     .data-warning {
         color: #b3b3b3;
@@ -227,7 +209,6 @@ dados_para_js|json_script:"spotify-data" }}
         font-size: 2em;
         color: #00b409;
         animation: none;
-        /* Reset */
         transition: color 0.1s;
     }
 
@@ -252,8 +233,6 @@ dados_para_js|json_script:"spotify-data" }}
         animation: flash-green 0.15s ease-out;
     }
 
-    /*responsividade*/
-
     @media (max-width: 768px) {
         .container-main {
             flex-direction: column;
@@ -276,7 +255,6 @@ dados_para_js|json_script:"spotify-data" }}
             margin-bottom: 5px;
         }
 
-        /* O input agora tem 100% dentro do input-wrapper */
         .input-wrapper {
             width: 100% !important;
             box-sizing: border-box;
@@ -293,7 +271,6 @@ dados_para_js|json_script:"spotify-data" }}
             padding: 15px 10px;
         }
 
-        /* Blocos de Hash */
         .hash-box {
             min-width: 100%;
             padding: 15px 10px;
@@ -439,7 +416,6 @@ dados_para_js|json_script:"spotify-data" }}
         let htmlContent = "";
 
         if (success && musica) {
-            // Geração do Link do YouTube
             const youtubeLink = generateYoutubeLink(
                 musica.track_name,
                 musica.track_artist
@@ -448,17 +424,17 @@ dados_para_js|json_script:"spotify-data" }}
             htmlContent = `
 <p class="result-title">✅ Música ENCONTRADA!</p>
 <div class="track-details">
-    <p>
-        <strong>
-            <a href="${youtubeLink}" target="_blank" class="youtube-link">
-                ${musica.track_name} 
-                <span style="color: #00b409; font-size: 0.7em;">🔗</span>
-            </a>
-        </strong>
-    </p>
+  <p>
+    <strong>
+      <a href="${youtubeLink}" target="_blank" class="youtube-link">
+        ${musica.track_name} 
+        <span style="color: #00b409; font-size: 0.7em;">🔗</span>
+      </a>
+    </strong>
+  </p>
 <p><strong>Artista:</strong> ${musica.track_artist}</p>
 <p><strong>Popularidade:</strong> ${musica.track_popularity}</p>
-    <p style="font-size: 0.8em; color: #b3b3b3;">ID: ${musica.track_id}</p>
+  <p style="font-size: 0.8em; color: #b3b3b3;">ID: ${musica.track_id}</p>
 </div>
 `;
         } else {
