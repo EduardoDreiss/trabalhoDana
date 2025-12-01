@@ -14,194 +14,176 @@ Acesse nosso catálogo exclusivo. Digite o <strong>Título da Música</strong> o
 </p>
 
 <style>
-/* --------------------------------------------- */
-/* --- ANIMAÇÃO DE BORDA (SOLUÇÃO FINAL) --- */
-/* --------------------------------------------- */
-
 @keyframes spin {
-to {
-transform: rotate(360deg);
-}
+    to {
+        transform: rotate(360deg);
+    }
 }
 
-/* Layout Flexível */
 .container-main {
-display: flex;
-gap: 50px;
-margin-top: 30px;
+    display: flex;
+    gap: 50px;
+    margin-top: 30px;
 }
 
 .column-left {
-flex: 0 0 400px;
+    flex: 0 0 400px;
 }
 
 .column-right {
-flex: 1;
+    flex: 1;
 }
 
-/* Estilos da Caixa de Comando (Busca) */
 .command-box {
-border: 1px solid #282828;
-border-radius: 12px;
-padding: 30px;
-margin-bottom: 25px;
-background-color: #1a1a1a;
-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    border: 1px solid #282828;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 25px;
+    background-color: #1a1a1a;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 }
 strong {
-color: #00b409;
+    color: #00b409;
 }
 
 .controls {
-margin-top: 15px;
-display: flex;
-flex-direction: column;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 .controls label {
-color: #e0e0e0;
-margin-bottom: 5px;
+    color: #e0e0e0;
+    margin-bottom: 5px;
 }
 
-/* 1. Contêiner Principal do Efeito */
 .input-wrapper {
-position: relative;
-border-radius: 8px;
-/* Padding define a espessura da borda animada */
-padding: 3px;
-background: #333; /* Cor da borda estática (não focada) */
-overflow: hidden;
-transition: background 0.3s;
+    position: relative;
+    border-radius: 8px;
+    padding: 3px;
+    background: #333;
+    overflow: hidden;
+    transition: background 0.3s;
 }
 
-/* 3. Pseudo-Elemento (O GRADIENTE ROTATIVO) */
 .input-wrapper::before {
-content: "";
-position: absolute;
-top: -100%;
-left: -100%;
-width: 300%;
-height: 300%;
-border-radius: 8px;
-opacity: 0;
-z-index: 1;
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    border-radius: 8px;
+    opacity: 0;
+    z-index: 1;
 
-/* Gradiente Cônico: Preto/Verde/Preto para o efeito de rastro */
-background: conic-gradient(from 0deg, #121212, #00b409, #121212);
+    background: conic-gradient(from 0deg, #121212, #00b409, #121212);
 
-transition: opacity 0.40s;
+    transition: opacity 0.40s;
 }
 
-/* 4. Animação Ativada pela Classe JavaScript */
 .input-wrapper.is-focused::before {
-opacity: 1;
-animation: spin 40s linear infinite;
+    opacity: 1;
+    animation: spin 40s linear infinite;
 }
 
-/* 5. O Input Físico */
 .controls input {
-width: 100%;
-box-sizing: border-box;
-padding: 14px 18px;
-border-radius: 5px;
-border: none; /* Sem borda própria */
-background-color: #242424;
-color: #ffffff;
-font-size: 1.1em;
-position: relative;
-z-index: 3;
-transition: background-color 0.3s;
-box-shadow: none;
-outline: none; /* Remove o outline padrão do navegador */
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 18px;
+    border-radius: 5px;
+    border: none;
+    background-color: #242424;
+    color: #ffffff;
+    font-size: 1.1em;
+    position: relative;
+    z-index: 3;
+    transition: background-color 0.3s;
+    box-shadow: none;
+    outline: none;
 }
 
-/* Estilos do Botão (Mantidos) */
 button {
-background-color: #00b409;
-color: black;
-font-weight: 700;
-border: none;
-padding: 14px 25px;
-border-radius: 50px;
-cursor: pointer;
-transition: background-color 0.3s, transform 0.1s;
-margin-top: 20px;
-font-size: 1.1em;
-letter-spacing: 0.5px;
+    background-color: #00b409;
+    color: black;
+    font-weight: 700;
+    border: none;
+    padding: 14px 25px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    margin-top: 20px;
+    font-size: 1.1em;
+    letter-spacing: 0.5px;
 }
 button:hover {
-background-color: #1ed760;
-transform: translateY(-2px);
-box-shadow: 0 4px 8px rgba(0, 180, 9, 0.5);
+    background-color: #1ed760;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 180, 9, 0.5);
 }
 button:disabled {
-background-color: #444;
-color: #aaa;
-cursor: not-allowed;
-transform: none;
-box-shadow: none;
+    background-color: #444;
+    color: #aaa;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
-/* Status de Registros */
 #totalRegistros {
-color: #999999;
-font-size: 0.95em;
-padding-left: 5px;
+    color: #999999;
+    font-size: 0.95em;
+    padding-left: 5px;
 }
 
-/* Status e Tempo de Busca */
 #time-elapsed {
-font-size: 0.9em;
-color: #999999;
-text-align: right;
-margin-top: 10px;
-font-style: italic;
+    font-size: 0.9em;
+    color: #999999;
+    text-align: right;
+    margin-top: 10px;
+    font-style: italic;
 }
 
-/* Estilos da Caixa de Resultado */
 .result-box {
-border: 1px solid #282828;
-border-radius: 12px;
-padding: 25px;
-background-color: #1a1a1a;
-color: #ffffff;
-box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-margin-top: 15px;
-min-height: 100px;
-display: flex;
-align-items: center;
-transition: border-color 0.4s;
+    border: 1px solid #282828;
+    border-radius: 12px;
+    padding: 25px;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    margin-top: 15px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    transition: border-color 0.4s;
 }
 
 .found {
-border: 2px solid #1db954;
-background-color: #151515;
+    border: 2px solid #1db954;
+    background-color: #151515;
 }
 
 .not-found {
-border: 2px solid #ff4d4d;
-background-color: #1a1a1a;
+    border: 2px solid #ff4d4d;
+    background-color: #1a1a1a;
 }
 
-/* Informações da Música (CORRIGIDO) */
 .song-info {
-display: flex;
-align-items: flex-start;
-gap: 20px;
-width: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
 }
 .track-number {
-color: #1ed760;
-font-size: 2.5em;
-line-height: 1;
-flex-shrink: 0;
+    color: #1ed760;
+    font-size: 2.5em;
+    line-height: 1;
+    flex-shrink: 0;
 }
 .track-details p {
-margin: 2px 0;
-line-height: 1.5;
+    margin: 2px 0;
+    line-height: 1.5;
 }
 
-/* NOVO ESTILO: Garante que o STRONG que envolve o link se comporte como texto inline */
 .track-details p:nth-child(2) strong {
     display: inline;
 }
@@ -209,28 +191,26 @@ line-height: 1.5;
 .track-details strong {
     color: #ffffff;
     font-size: 1.3em;
-    /* O display: block foi removido desta regra geral */
 }
 
 .track-details .artist-name {
-color: #b3b3b3;
-font-size: 1em;
-margin-bottom: 8px;
+    color: #b3b3b3;
+    font-size: 1em;
+    margin-bottom: 8px;
 }
 .track-details .metadata {
-color: #999999;
-font-size: 0.9em;
+    color: #999999;
+    font-size: 0.9em;
 }
 .result-title {
-color: #1db954;
-font-size: 0.9em;
-font-weight: 600;
-margin-bottom: 5px !important;
+    color: #1db954;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-bottom: 5px !important;
 }
 
-/* --- ESTILOS DO LINK DO YOUTUBE (Essenciais) --- */
 .youtube-link {
-    color: #ffffff; /* Garante que o link tenha cor branca inicialmente */
+    color: #ffffff;
     text-decoration: none;
     cursor: pointer;
     transition: color 0.2s;
@@ -240,77 +220,72 @@ margin-bottom: 5px !important;
     color: #1ed760;
     text-decoration: underline;
 }
-/* --- FIM DOS ESTILOS DO LINK --- */
 
-
-/* Indicador de Loading */
 .loading-status {
-color: #1ed760;
-font-style: italic;
-font-size: 1.1em;
+    color: #1ed760;
+    font-style: italic;
+    font-size: 1.1em;
 }
 
-/* responsividade */
 @media (max-width: 768px) {
-.container-main {
-flex-direction: column;
-gap: 30px;
-}
-.column-left {
-flex: 1;
-min-width: 100%;
-}
-.controls input,
-.controls button {
-width: 100% !important;
-box-sizing: border-box;
-}
-.command-box {
-padding: 20px;
-}
+    .container-main {
+        flex-direction: column;
+        gap: 30px;
+    }
+    .column-left {
+        flex: 1;
+        min-width: 100%;
+    }
+    .controls input,
+    .controls button {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    .command-box {
+        padding: 20px;
+    }
 }
 </style>
 
 <div class="container-main">
-<div class="column-left">
-    <div class="command-box">
-        <p style="margin-top: 0">
-            <strong>Busca Direta</strong>
-        </p>
-        <div class="controls">
-            <label for="target">Nome da Música ou Artista:</label>
+    <div class="column-left">
+        <div class="command-box">
+            <p style="margin-top: 0">
+                <strong>Busca Direta</strong>
+            </p>
+            <div class="controls">
+                <label for="target">Nome da Música ou Artista:</label>
 
-            <div class="input-wrapper">
-                <input
-                    type="text"
-                    id="target"
-                    value=""
-                    placeholder="Ex: Do I Wanna Know? ou Arctic Monkeys"
-                />
+                <div class="input-wrapper">
+                    <input
+                        type="text"
+                        id="target"
+                        value=""
+                        placeholder="Ex: Do I Wanna Know? ou Arctic Monkeys"
+                    />
+                </div>
+
+                <button id="searchButton" onclick="startSearch()">
+                    Encontrar Agora
+                </button>
             </div>
+        </div>
 
-            <button id="searchButton" onclick="startSearch()">
-                Encontrar Agora
-            </button>
+        <p id="totalRegistros">Carregando dados...</p>
+    </div>
+    <div class="column-right">
+        <h2>Seu Resultado:</h2>
+
+        <p id="time-elapsed" style="display: none">
+            Análise de Tempo: <strong>0 ms</strong>
+        </p>
+
+        <div id="resultBox" class="result-box">
+            <p id="status">Use a busca para ver os detalhes da faixa.</p>
         </div>
     </div>
-
-    <p id="totalRegistros">Carregando dados...</p>
-</div>
-<div class="column-right">
-    <h2>Seu Resultado:</h2>
-
-    <p id="time-elapsed" style="display: none">
-        Análise de Tempo: <strong>0 ms</strong>
-    </p>
-
-    <div id="resultBox" class="result-box">
-        <p id="status">Use a busca para ver os detalhes da faixa.</p>
-    </div>
-</div>
 </div>
 <script>
-// LEITURA DE DADOS SEGURA
 let rawData = [];
 const scriptElement = document.getElementById("spotify-data");
 
@@ -327,20 +302,17 @@ if (scriptElement && scriptElement.textContent.trim().length > 0) {
 
 let isSearching = false;
 
-// Referências de elementos DOM
 const targetInput = document.getElementById("target");
 const searchButton = document.getElementById("searchButton");
 const totalRecordsDisplay = document.getElementById("totalRegistros");
 const timeElapsedDisplay = document.getElementById("time-elapsed");
 const resultBox = document.getElementById("resultBox");
 
-// Referência ao wrapper do input para gerenciar a classe de foco
 const inputWrapper = document.querySelector(".input-wrapper");
 
 document.addEventListener("DOMContentLoaded", () => {
     totalRecordsDisplay.innerHTML = `Catálogo de Músicas: <strong>${rawData.length} Faixas</strong>`;
 
-    // Adiciona o listener para a tecla Enter
     targetInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter" || event.keyCode === 13) {
             event.preventDefault();
@@ -348,7 +320,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Lógica para ativar a animação no foco via JavaScript
     if (targetInput && inputWrapper) {
         targetInput.addEventListener("focus", () => {
             inputWrapper.classList.add("is-focused");
@@ -359,17 +330,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// ----------------------------------------------------------------------------------
-// FUNÇÕES DE DISPLAY (COM LINK DO YOUTUBE)
-// ----------------------------------------------------------------------------------
-
 function displayResult(
     statusText,
     success = true,
     musica = null,
     duration = 0
 ) {
-    // Mostrar o tempo de busca
     timeElapsedDisplay.innerHTML = `Busca concluída em: <strong>${duration.toFixed(
         3
     )} ms</strong>`;
@@ -378,7 +344,6 @@ function displayResult(
     let htmlContent = "";
 
     if (!musica) {
-        // Tratamento de Música Não Encontrada
         htmlContent = `<p class="not-found">❌ Ops! ${statusText}</p>`;
         resultBox.classList.remove("found");
         resultBox.classList.add("not-found");
@@ -386,55 +351,46 @@ function displayResult(
         return;
     }
 
-    // Extrair campos
     const genero = musica.playlist_genre || "Gênero Desconhecido";
     const popularidade = musica.track_popularity || "N/A";
     const trackName = musica.track_name || 'Nome Desconhecido';
     const artistName = musica.track_artist || 'Artista Desconhecido';
-
-    // Lógica para formatar Duração (duration_ms) para MM:SS
     const duracaoMs = musica.duration_ms || 0;
     let duracaoFormatada = "N/A";
 
     if (duracaoMs > 0) {
         const minutos = Math.floor(duracaoMs / 60000);
         const segundos = Math.round((duracaoMs % 60000) / 1000);
-        // Garante formato MM:SS
         duracaoFormatada = minutos + ":" + (segundos < 10 ? "0" : "") + segundos;
     }
-     
-    // ----------------------------------------------------
-    // CONSTRUÇÃO DO LINK DO YOUTUBE
-    // ----------------------------------------------------
+
     const searchTerm = `${trackName} ${artistName}`;
     const encodedSearch = encodeURIComponent(searchTerm);
     const youtubeUrl = `https://www.youtube.com/results?search_query=${encodedSearch}`;
-    // ----------------------------------------------------
-
-    // Construir o HTML
+    
     if (success) {
         htmlContent = `
-<div class="song-info">
-<span class="track-number">🎧</span>
-<div class="track-details">
-<p class="result-title">Encontramos a faixa no catálogo!</p>
-<p>
-    <strong>
-        <a href="${youtubeUrl}" target="_blank" class="youtube-link">
-            ${trackName} 
-            <span style="color: #00b409; font-size: 0.7em;">🔗</span>
-        </a>
-    </strong>
-</p>
-<p class="artist-name">Artista: ${artistName}</p>
-<p class="metadata">
-Gênero: <strong class="highlight-green">${genero}</strong> | 
-Popularidade: ${popularidade}% | 
-Duração: ${duracaoFormatada} 
-</p>
-</div>
-</div>
-`;
+            <div class="song-info">
+                <span class="track-number">🎧</span>
+                <div class="track-details">
+                    <p class="result-title">Encontramos a faixa no catálogo!</p>
+                    <p>
+                        <strong>
+                            <a href="${youtubeUrl}" target="_blank" class="youtube-link">
+                                ${trackName} 
+                                <span style="color: #00b409; font-size: 0.7em;">🔗</span>
+                            </a>
+                        </strong>
+                    </p>
+                    <p class="artist-name">Artista: ${artistName}</p>
+                    <p class="metadata">
+                        Gênero: <strong class="highlight-green">${genero}</strong> | 
+                        Popularidade: ${popularidade}% | 
+                        Duração: ${duracaoFormatada} 
+                    </p>
+                </div>
+            </div>
+        `;
     }
 
     resultBox.innerHTML = htmlContent;
@@ -463,10 +419,6 @@ function resetSearch() {
     resultBox.classList.remove("found", "not-found");
 }
 
-// ----------------------------------------------------------------------------------
-// LÓGICA DA BUSCA SEQUENCIAL (Mantida)
-// ----------------------------------------------------------------------------------
-
 async function startSearch() {
     if (isSearching || rawData.length === 0) return;
 
@@ -491,7 +443,6 @@ async function startSearch() {
     const startTime = performance.now();
     let endTime = 0;
 
-    // Adiciona um pequeno delay para que o status "Procurando..." seja visível
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     for (let i = 0; i < totalData; i++) {
@@ -510,7 +461,7 @@ async function startSearch() {
 
             displayResult(`Música ENCONTRADA!`, true, musica, duration);
             found = true;
-            break; // Interrompe a busca sequencial
+            break;
         }
     }
 

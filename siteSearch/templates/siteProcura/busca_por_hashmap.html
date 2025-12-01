@@ -1,424 +1,451 @@
-{% extends 'base.html' %} 
-
-{% block title %}Busca por Hash Map | Músicas Spotify{% endblock %}
-
-{% block content %}
-
-{{ dados_para_js|json_script:"spotify-data" }}
+{% extends 'base.html' %} {% block title %}Busca por Hash Map | Músicas
+Spotify{% endblock %} {% block content %} {{
+dados_para_js|json_script:"spotify-data" }}
 
 <h1 style="color: #00b409">
-⚡ Busca por Hash (O(1)) no Dataset Spotify
-<hr style="border-color: #282828;">
+    ⚡ Busca por Hash (O(1)) no Dataset Spotify
+    <hr style="border-color: #282828" />
 </h1>
 <p>
-Objetivo: Demonstração da complexidade ideal <strong>O(1)</strong> (tempo constante). A busca é instantânea após o
-<strong>pré-processamento</strong> dos dados em um Mapa Hash.
+    Objetivo: Demonstração da complexidade ideal <strong>O(1)</strong> (tempo
+    constante). A busca é instantânea após o
+    <strong>pré-processamento</strong> dos dados em um Mapa Hash.
 </p>
 
 <style>
-/* --------------------------------------------- */
-/* --- ESTILOS DE INPUT PERSONALIZADOS (NOVO) --- */
-/* --------------------------------------------- */
+    /* --------------------------------------------- */
+    /* --- ESTILOS DE INPUT PERSONALIZADOS (NOVO) --- */
+    /* --------------------------------------------- */
 
-@keyframes spin {
-to {
-transform: rotate(360deg);
-}
-}
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
 
-/* 1. Contêiner Principal do Efeito */
-.input-wrapper {
-position: relative;
-border-radius: 8px;
-/* Padding define a espessura da borda animada */
-padding: 3px;
-background: #333; /* Cor da borda estática (não focada) */
-overflow: hidden;
-transition: background 0.3s;
-}
+    /* 1. Contêiner Principal do Efeito */
+    .input-wrapper {
+        position: relative;
+        border-radius: 8px;
+        /* Padding define a espessura da borda animada */
+        padding: 3px;
+        background: #333;
+        /* Cor da borda estática (não focada) */
+        overflow: hidden;
+        transition: background 0.3s;
+    }
 
-/* 3. Pseudo-Elemento (O GRADIENTE ROTATIVO) */
-.input-wrapper::before {
-content: "";
-position: absolute;
-top: -100%;
-left: -100%;
-width: 300%;
-height: 300%;
-border-radius: 8px;
-opacity: 0;
-z-index: 1;
+    /* 3. Pseudo-Elemento (O GRADIENTE ROTATIVO) */
+    .input-wrapper::before {
+        content: "";
+        position: absolute;
+        top: -100%;
+        left: -100%;
+        width: 300%;
+        height: 300%;
+        border-radius: 8px;
+        opacity: 0;
+        z-index: 1;
 
-/* Gradiente Cônico: Preto/Verde/Preto para o efeito de rastro */
-background: conic-gradient(from 0deg, #121212, #00b409, #121212);
+        /* Gradiente Cônico: Preto/Verde/Preto para o efeito de rastro */
+        background: conic-gradient(from 0deg, #121212, #00b409, #121212);
 
-transition: opacity 0.40s;
-}
+        transition: opacity 0.4s;
+    }
 
-/* 4. Animação Ativada pela Classe JavaScript */
-.input-wrapper.is-focused::before {
-opacity: 1;
-animation: spin 4s linear infinite;
-}
+    /* 4. Animação Ativada pela Classe JavaScript */
+    .input-wrapper.is-focused::before {
+        opacity: 1;
+        animation: spin 4s linear infinite;
+    }
 
-/* 5. O Input Físico */
-.controls input {
-width: 100%;
-box-sizing: border-box;
-padding: 14px 18px;
-border-radius: 5px;
-border: none; /* Sem borda própria */
-background-color: #242424;
-color: #ffffff;
-font-size: 1.1em;
-position: relative;
-z-index: 3;
-transition: background-color 0.3s;
-box-shadow: none;
-outline: none; /* Remove o outline padrão do navegador */
-}
+    /* 5. O Input Físico */
+    .controls input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 14px 18px;
+        border-radius: 5px;
+        border: none;
+        /* Sem borda própria */
+        background-color: #242424;
+        color: #ffffff;
+        font-size: 1.1em;
+        position: relative;
+        z-index: 3;
+        transition: background-color 0.3s;
+        box-shadow: none;
+        outline: none;
+        /* Remove o outline padrão do navegador */
+    }
 
-/* --------------------------------------------- */
-/* --- ESTILOS GERAIS (EXISTENTES) --- */
-/* --------------------------------------------- */
-.container-main {
-display: flex;
-gap: 40px;
-margin-top: 30px;
-}
+    /* --------------------------------------------- */
+    /* --- ESTILOS GERAIS (EXISTENTES) --- */
+    /* --------------------------------------------- */
+    .container-main {
+        display: flex;
+        gap: 40px;
+        margin-top: 30px;
+    }
 
-.column-left {
-flex: 0 0 350px;
-}
+    .column-left {
+        flex: 0 0 350px;
+    }
 
-.column-right {
-flex: 1;
-}
+    .column-right {
+        flex: 1;
+    }
 
+    .command-box {
+        border: 1px solid #222222;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: #1a1a1a;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
 
-.command-box {
-border: 1px solid #222222;
-border-radius: 8px;
-padding: 20px;
-margin-bottom: 20px;
-background-color: #1a1a1a;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
+    .controls {
+        margin-bottom: 20px;
+    }
 
-.controls {
-margin-bottom: 20px;
-}
+    strong {
+        color: #00b409;
+    }
 
-strong {
-color: #00b409;
-}
+    button {
+        background-color: #00b409;
+        color: black;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        border: 1px solid #000000;
+        margin-top: 10px;
+    }
 
-button {
-background-color: #00b409;
-color: black;
-border: none;
-padding: 10px 15px;
-border-radius: 5px;
-cursor: pointer;
-font-weight: bold;
-transition: background-color 0.3s;
-border: 1px solid #000000;
-margin-top: 10px;
-}
+    button:hover {
+        background-color: #1ed760;
+    }
 
-button:hover {
-background-color: #1ed760;
-}
+    .result-box {
+        border: 1px solid #222222;
+        border-radius: 8px;
+        padding: 20px;
+        background-color: #121212;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        margin-top: 15px;
+        margin-bottom: 30px;
+    }
 
-.result-box {
-border: 1px solid #222222;
-border-radius: 8px;
-padding: 20px;
-background-color: #121212;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-margin-top: 15px;
-margin-bottom: 30px;
-}
+    .found {
+        border-color: #00b409;
+    }
 
-.found {
-border-color: #00b409;
-}
+    .not-found {
+        border-color: #f44336;
+    }
 
-.not-found {
-border-color: #f44336;
-}
+    .result-title {
+        color: #00b409;
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
 
-.result-title {
-color: #00b409;
-font-size: 1.3em;
-font-weight: bold;
-margin-bottom: 10px;
-}
+    .track-details p {
+        margin: 5px 0;
+        line-height: 1.4;
+    }
 
-.track-details p {
-margin: 5px 0;
-line-height: 1.4;
-}
-    
-/* --- NOVO ESTILO: Garante que o link seja visualmente igual ao da busca sequencial --- */
-.track-details a {
-    color: #ffffff !important; /* Cor inicial branca */
-    text-decoration: none;
-    cursor: pointer;
-    transition: color 0.2s;
-}
+    /* --- NOVO ESTILO: Garante que o link seja visualmente igual ao da busca sequencial --- */
+    .track-details a {
+        color: #ffffff !important;
+        /* Cor inicial branca */
+        text-decoration: none;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
 
-.track-details a:hover {
-    color: #1ed760 !important; /* Cor verde Spotify no hover */
-    text-decoration: underline;
-}
+    .track-details a:hover {
+        color: #1ed760 !important;
+        /* Cor verde Spotify no hover */
+        text-decoration: underline;
+    }
 
-.track-details strong {
-    /* Garante que o texto do título (que envolve o link) se destaque */
-    font-size: 1.3em; 
-}
-/* --- FIM DOS NOVOS ESTILOS --- */
+    .track-details strong {
+        /* Garante que o texto do título (que envolve o link) se destaque */
+        font-size: 1.3em;
+    }
 
+    /* --- FIM DOS NOVOS ESTILOS --- */
 
-.data-warning {
-color: #b3b3b3;
-font-size: 0.9em;
-margin-top: 10px;
-}
+    .data-warning {
+        color: #b3b3b3;
+        font-size: 0.9em;
+        margin-top: 10px;
+    }
 
-.hash-visualizer {
-display: flex;
-align-items: center;
-justify-content: space-around;
-padding: 20px 0;
-background-color: #1a1a1a;
-border-radius: 8px;
-margin-top: 20px;
-border: 1px solid #222222;
-}
+    .hash-visualizer {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 20px 0;
+        background-color: #1a1a1a;
+        border-radius: 8px;
+        margin-top: 20px;
+        border: 1px solid #222222;
+    }
 
-.hash-box {
-padding: 10px 15px;
-border: 2px solid #00b409;
-background-color: #0d0d0d;
-color: white;
-border-radius: 5px;
-font-size: 1.1em;
-font-weight: bold;
-text-align: center;
-min-width: 150px;
-transition: transform 0.1s, border-color 0.1s;
-}
+    .hash-box {
+        padding: 10px 15px;
+        border: 2px solid #00b409;
+        background-color: #0d0d0d;
+        color: white;
+        border-radius: 5px;
+        font-size: 1.1em;
+        font-weight: bold;
+        text-align: center;
+        min-width: 150px;
+        transition: transform 0.1s, border-color 0.1s;
+    }
 
-#input-key, #output-result {
-background-color: #282828;
-border: 1px solid #444;
-padding: 8px;
-font-family: monospace;
-min-height: 20px;
-font-size: 0.9em;
-color: #f4f4f9;
-}
+    #input-key,
+    #output-result {
+        background-color: #282828;
+        border: 1px solid #444;
+        padding: 8px;
+        font-family: monospace;
+        min-height: 20px;
+        font-size: 0.9em;
+        color: #f4f4f9;
+    }
 
-#arrow-symbol, #arrow-symbol-2 {
-font-size: 2em;
-color: #00b409;
-animation: none; /* Reset */
-transition: color 0.1s;
-}
+    #arrow-symbol,
+    #arrow-symbol-2 {
+        font-size: 2em;
+        color: #00b409;
+        animation: none;
+        /* Reset */
+        transition: color 0.1s;
+    }
 
-@keyframes flash-green {
-0% { color: #fff; transform: scale(1.0); }
-50% { color: #1ed760; transform: scale(1.1); }
-100% { color: #00b409; transform: scale(1.0); }
-}
+    @keyframes flash-green {
+        0% {
+            color: #fff;
+            transform: scale(1);
+        }
 
-.animate-hash {
-animation: flash-green 0.15s ease-out;
-}
-/*responsividade*/
+        50% {
+            color: #1ed760;
+            transform: scale(1.1);
+        }
 
-@media (max-width: 768px) {
-    
-    
-.container-main {
-flex-direction: column; 
-gap: 20px;
-margin-top: 15px;
-}
+        100% {
+            color: #00b409;
+            transform: scale(1);
+        }
+    }
 
-.column-left,
-.column-right {
-flex: 1 1 auto; 
-min-width: 100%;
-}
+    .animate-hash {
+        animation: flash-green 0.15s ease-out;
+    }
 
-    
-.controls {
-display: flex;
-flex-direction: column; 
-}
+    /*responsividade*/
 
-.controls label {
-margin-bottom: 5px;
-}
+    @media (max-width: 768px) {
+        .container-main {
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 15px;
+        }
 
-/* O input agora tem 100% dentro do input-wrapper */
-.input-wrapper {
-width: 100% !important; 
-box-sizing: border-box;
-}
+        .column-left,
+        .column-right {
+            flex: 1 1 auto;
+            min-width: 100%;
+        }
 
-#startButton {
-width: 100%;
-margin-top: 15px; 
-}
+        .controls {
+            display: flex;
+            flex-direction: column;
+        }
 
-    
-.hash-visualizer {
-flex-direction: column; 
-gap: 10px; 
-padding: 15px 10px;
-}
+        .controls label {
+            margin-bottom: 5px;
+        }
 
-/* Blocos de Hash */
-.hash-box {
-min-width: 100%; 
-padding: 15px 10px;
-font-size: 1em; 
-}
+        /* O input agora tem 100% dentro do input-wrapper */
+        .input-wrapper {
+            width: 100% !important;
+            box-sizing: border-box;
+        }
 
-#arrow-symbol, #arrow-symbol-2 {
-display: block; 
-font-size: 1.5em;
-transform: rotate(90deg); 
-margin: 5px 0;
-}
+        #startButton {
+            width: 100%;
+            margin-top: 15px;
+        }
 
-#buildTime, .data-warning {
-font-size: 0.85em;
-}
-}
+        .hash-visualizer {
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px 10px;
+        }
+
+        /* Blocos de Hash */
+        .hash-box {
+            min-width: 100%;
+            padding: 15px 10px;
+            font-size: 1em;
+        }
+
+        #arrow-symbol,
+        #arrow-symbol-2 {
+            display: block;
+            font-size: 1.5em;
+            transform: rotate(90deg);
+            margin: 5px 0;
+        }
+
+        #buildTime,
+        .data-warning {
+            font-size: 0.85em;
+        }
+    }
 </style>
 
 <div class="container-main">
+    <div class="column-left">
+        <div class="command-box">
+            <p style="margin-top: 0; font-weight: bold">
+                Configuração <strong>O(1)</strong>
+            </p>
+            <div class="controls">
+                <label for="target">Buscar Música por ID:</label>
+                <div class="input-wrapper" id="input-wrapper-target" style="width: 300px">
+                    <input type="text" id="target" value="" placeholder="Ex: ID da Música" />
+                </div>
+                <button id="startButton">Iniciar Busca Instantânea</button>
+            </div>
+        </div>
 
-<div class="column-left">
-<div class="command-box">
-<p style="margin-top: 0; font-weight: bold;">Configuração <strong>O(1)</strong></p>
-<div class="controls">
-<label for="target">Buscar Música por ID:</label>
-<div class="input-wrapper" id="input-wrapper-target" style="width: 300px;">
-<input type="text" id="target" value="" placeholder="Ex: ID da Música">
-</div>
-<button id="startButton">Iniciar Busca Instantânea</button>
-</div>
-</div>
+        <p id="totalRegistros">Carregando dados...</p>
+        <p id="buildTime" class="data-warning">Construindo Hash Map...</p>
+    </div>
 
-<p id="totalRegistros">Carregando dados...</p>
-<p id="buildTime" class="data-warning">Construindo Hash Map...</p>
-</div>
+    <div class="column-right">
+        <h2>Resultado da Busca:</h2>
+        <p id="time-elapsed">Tempo de Busca: <strong>0 ms</strong></p>
+        <p id="status-steps">
+            Passos de Comparação: <strong>1</strong> (O(1) ideal)
+        </p>
 
+        <div id="resultBox" class="result-box">
+            <p id="status">Aguardando a busca...</p>
+        </div>
 
-<div class="column-right">
-<h2>Resultado da Busca:</h2>
-<p id="time-elapsed">Tempo de Busca: <strong>0 ms</strong></p>
-<p id="status-steps">Passos de Comparação: <strong>1</strong> (O(1) ideal)</p>
+        <h3>Representação Visual (O(1)):</h3>
+        <p style="color: #b3b3b3; font-size: 0.9em">
+            O Hash Map mapeia a chave (ID) diretamente para o resultado em um único
+            passo.
+        </p>
 
-<div id="resultBox" class="result-box">
-<p id="status">Aguardando a busca...</p>
-</div>
+        <div class="hash-visualizer">
+            <div class="hash-box" id="input-key">ID da Música</div>
 
-<h3>Representação Visual (O(1)):</h3>
-<p style="color: #b3b3b3; font-size: 0.9em;">O Hash Map mapeia a chave (ID) diretamente para o resultado em um único passo.</p>
+            <div id="arrow-symbol">➡️</div>
 
-<div class="hash-visualizer">
-<div class="hash-box" id="input-key">ID da Música</div>
+            <div class="hash-box" id="hash-function">FUNÇÃO HASH</div>
 
-<div id="arrow-symbol">➡️</div>
+            <div id="arrow-symbol-2">➡️</div>
 
-<div class="hash-box" id="hash-function">FUNÇÃO HASH</div>
-
-<div id="arrow-symbol-2">➡️</div>
-
-<div class="hash-box" id="output-result">Resultado: Música</div>
-</div>
-</div>
-
+            <div class="hash-box" id="output-result">Resultado: Música</div>
+        </div>
+    </div>
 </div>
 
 <script>
+    let rawData = [];
+    let musicHashMap = {};
+    let isSearching = false;
 
-let rawData = [];
-let musicHashMap = {};
-let isSearching = false;
+    const inputKeyElement = document.getElementById("input-key");
+    const hashFunctionElement = document.getElementById("hash-function");
+    const outputResultElement = document.getElementById("output-result");
+    const arrowSymbol1 = document.getElementById("arrow-symbol");
+    const arrowSymbol2 = document.getElementById("arrow-symbol-2");
+    const targetInput = document.getElementById("target");
+    const inputWrapper = document.getElementById("input-wrapper-target");
+    function handleFocus() {
+        inputWrapper.classList.add("is-focused");
+    }
 
-const inputKeyElement = document.getElementById('input-key');
-const hashFunctionElement = document.getElementById('hash-function');
-const outputResultElement = document.getElementById('output-result');
-const arrowSymbol1 = document.getElementById('arrow-symbol');
-const arrowSymbol2 = document.getElementById('arrow-symbol-2');
+    function handleBlur() {
+        inputWrapper.classList.remove("is-focused");
+    }
 
-// Elementos para o novo efeito de input
-const targetInput = document.getElementById('target');
-const inputWrapper = document.getElementById('input-wrapper-target');
+    const scriptElement = document.getElementById("spotify-data");
+    if (scriptElement && scriptElement.textContent.trim().length > 0) {
+        try {
+            rawData = JSON.parse(scriptElement.textContent);
+        } catch (e) {
+            console.error(
+                "Erro fatal: Não foi possível processar os dados do servidor. Verifique o console.",
+                e
+            );
+        }
+    }
 
-// Função para gerenciar a classe de foco e ativar a animação
-function handleFocus() {
-inputWrapper.classList.add('is-focused');
-}
+    function generateYoutubeLink(trackName, artistName) {
+        const query = `${trackName} ${artistName}`;
+        const encodedQuery = encodeURIComponent(query);
+        return `https://www.youtube.com/results?search_query=${encodedQuery}`;
+    }
 
-function handleBlur() {
-inputWrapper.classList.remove('is-focused');
-}
+    function buildHashMap() {
+        if (rawData.length === 0) {
+            document.getElementById("buildTime").innerHTML =
+                "Hash Map não construído: dados ausentes.";
+            return;
+        }
+        const startTime = performance.now();
 
+        rawData.forEach((musica) => {
+            musicHashMap[musica.track_id] = musica;
+        });
 
-const scriptElement = document.getElementById('spotify-data');
-if (scriptElement && scriptElement.textContent.trim().length > 0) {
-try {
-rawData = JSON.parse(scriptElement.textContent);
-} catch (e) {
-console.error("Erro fatal: Não foi possível processar os dados do servidor. Verifique o console.", e);
-}
-}
+        const endTime = performance.now();
+        const buildDuration = (endTime - startTime).toFixed(3);
 
-function generateYoutubeLink(trackName, artistName) {
-    const query = `${trackName} ${artistName}`;
-    const encodedQuery = encodeURIComponent(query);
-    return `https://www.youtube.com/results?search_query=${encodedQuery}`;
-}
+        document.getElementById(
+            "buildTime"
+        ).innerHTML = `Pré-processamento concluído. Tempo para construir o Hash Map: <strong>${buildDuration} ms</strong>`;
+    }
 
-function buildHashMap() {
-if (rawData.length === 0) {
-document.getElementById('buildTime').innerHTML = "Hash Map não construído: dados ausentes.";
-return;
-}
-const startTime = performance.now();
+    function displayResult(
+        statusText,
+        success = true,
+        musica = null,
+        duration = 0
+    ) {
+        const resultBox = document.getElementById("resultBox");
+        const timeElapsed = document.getElementById("time-elapsed");
 
-rawData.forEach(musica => {
-musicHashMap[musica.track_id] = musica;
-});
+        timeElapsed.innerHTML = `Tempo de Busca: <strong>${duration.toFixed(
+            6
+        )} ms</strong>`;
 
-const endTime = performance.now();
-const buildDuration = (endTime - startTime).toFixed(3); 
+        let htmlContent = "";
 
-document.getElementById('buildTime').innerHTML =
-`Pré-processamento concluído. Tempo para construir o Hash Map: <strong>${buildDuration} ms</strong>`;
-}
+        if (success && musica) {
+            // Geração do Link do YouTube
+            const youtubeLink = generateYoutubeLink(
+                musica.track_name,
+                musica.track_artist
+            );
 
-function displayResult(statusText, success = true, musica = null, duration = 0) {
-const resultBox = document.getElementById('resultBox');
-const timeElapsed = document.getElementById('time-elapsed');
-
-timeElapsed.innerHTML = `Tempo de Busca: <strong>${duration.toFixed(6)} ms</strong>`; 
-
-let htmlContent = '';
-
-if (success && musica) {
-    // Geração do Link do YouTube
-    const youtubeLink = generateYoutubeLink(musica.track_name, musica.track_artist);
-
-htmlContent = `
+            htmlContent = `
 <p class="result-title">✅ Música ENCONTRADA!</p>
 <div class="track-details">
     <p>
@@ -434,101 +461,109 @@ htmlContent = `
     <p style="font-size: 0.8em; color: #b3b3b3;">ID: ${musica.track_id}</p>
 </div>
 `;
-} else {
-htmlContent = `<p class="not-found">❌ ${statusText}</p>`;
-}
+        } else {
+            htmlContent = `<p class="not-found">❌ ${statusText}</p>`;
+        }
 
-resultBox.innerHTML = htmlContent;
+        resultBox.innerHTML = htmlContent;
 
-resultBox.classList.remove('found', 'not-found');
-resultBox.classList.add(success ? 'found' : 'not-found');
-}
+        resultBox.classList.remove("found", "not-found");
+        resultBox.classList.add(success ? "found" : "not-found");
+    }
 
-function resetVisualizer() {
-hashFunctionElement.classList.remove('animate-hash');
-outputResultElement.classList.remove('animate-hash');
+    function resetVisualizer() {
+        hashFunctionElement.classList.remove("animate-hash");
+        outputResultElement.classList.remove("animate-hash");
 
-inputKeyElement.textContent = "ID da Música";
-outputResultElement.textContent = "Resultado: Música";
-hashFunctionElement.textContent = "FUNÇÃO HASH";
-outputResultElement.style.borderColor = '#00b409';
-}
+        inputKeyElement.textContent = "ID da Música";
+        outputResultElement.textContent = "Resultado: Música";
+        hashFunctionElement.textContent = "FUNÇÃO HASH";
+        outputResultElement.style.borderColor = "#00b409";
+    }
 
-function resetSearch() {
-isSearching = false;
-document.getElementById('time-elapsed').innerHTML = `Tempo de Busca: <strong>0 ms</strong>`;
-document.getElementById('status-steps').innerHTML = `Passos de Comparação: <strong>1</strong> (O(1) ideal)`;
-document.getElementById('resultBox').innerHTML = '<p id="status">Aguardando a busca...</p>';
-document.getElementById('resultBox').classList.remove('found', 'not-found');
-resetVisualizer();
-}
+    function resetSearch() {
+        isSearching = false;
+        document.getElementById(
+            "time-elapsed"
+        ).innerHTML = `Tempo de Busca: <strong>0 ms</strong>`;
+        document.getElementById(
+            "status-steps"
+        ).innerHTML = `Passos de Comparação: <strong>1</strong> (O(1) ideal)`;
+        document.getElementById("resultBox").innerHTML =
+            '<p id="status">Aguardando a busca...</p>';
+        document.getElementById("resultBox").classList.remove("found", "not-found");
+        resetVisualizer();
+    }
 
-async function animateHash(found) {
-hashFunctionElement.classList.add('animate-hash');
-await new Promise(resolve => setTimeout(resolve, 150)); 
+    async function animateHash(found) {
+        hashFunctionElement.classList.add("animate-hash");
+        await new Promise((resolve) => setTimeout(resolve, 150));
 
-hashFunctionElement.classList.remove('animate-hash');
-outputResultElement.classList.add('animate-hash');
-outputResultElement.style.borderColor = found ? '#1ed760' : '#f44336';
-await new Promise(resolve => setTimeout(resolve, 150));
-outputResultElement.classList.remove('animate-hash');
-outputResultElement.style.borderColor = '#00b409'; 
-}
+        hashFunctionElement.classList.remove("animate-hash");
+        outputResultElement.classList.add("animate-hash");
+        outputResultElement.style.borderColor = found ? "#1ed760" : "#f44336";
+        await new Promise((resolve) => setTimeout(resolve, 150));
+        outputResultElement.classList.remove("animate-hash");
+        outputResultElement.style.borderColor = "#00b409";
+    }
 
-async function startSearch() {
-if (isSearching) return;
+    async function startSearch() {
+        if (isSearching) return;
 
-isSearching = true;
-resetSearch();
+        isSearching = true;
+        resetSearch();
 
-const targetId = document.getElementById('target').value.trim();
+        const targetId = document.getElementById("target").value.trim();
 
-inputKeyElement.textContent = `Chave: ${targetId}`;
-outputResultElement.textContent = "Buscando...";
+        inputKeyElement.textContent = `Chave: ${targetId}`;
+        outputResultElement.textContent = "Buscando...";
 
-await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
-const startTime = performance.now();
-const music = musicHashMap[targetId];
-const endTime = performance.now();
-const duration = endTime - startTime;
+        const startTime = performance.now();
+        const music = musicHashMap[targetId];
+        const endTime = performance.now();
+        const duration = endTime - startTime;
 
-await animateHash(!!music);
+        await animateHash(!!music);
 
-if (music) {
-displayResult(`Música ENCONTRADA!`, true, music, duration);
-outputResultElement.textContent = `Sucesso: ${music.track_name}`;
-} else {
-displayResult(`Música com ID "${targetId}" NÃO ENCONTRADA.`, false, null, duration);
-outputResultElement.textContent = `Falha: Key não encontrada`;
-}
+        if (music) {
+            displayResult(`Música ENCONTRADA!`, true, music, duration);
+            outputResultElement.textContent = `Sucesso: ${music.track_name}`;
+        } else {
+            displayResult(
+                `Música com ID "${targetId}" NÃO ENCONTRADA.`,
+                false,
+                null,
+                duration
+            );
+            outputResultElement.textContent = `Falha: Key não encontrada`;
+        }
 
-isSearching = false;
-}
+        isSearching = false;
+    }
 
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById(
+            "totalRegistros"
+        ).textContent = `Total de Músicas no Banco: ${rawData.length}`;
 
-document.addEventListener('DOMContentLoaded', () => {
-document.getElementById('totalRegistros').textContent = `Total de Músicas no Banco: ${rawData.length}`;
+        buildHashMap();
 
-buildHashMap();
+        targetInput.addEventListener("focus", handleFocus);
+        targetInput.addEventListener("blur", handleBlur);
 
-// Adiciona listeners para a animação do input
-targetInput.addEventListener('focus', handleFocus);
-targetInput.addEventListener('blur', handleBlur);
+        if (rawData.length > 0) {
+            document.getElementById("target").value = rawData[0].track_id;
+        } else {
+            document.getElementById("target").value = "Sem dados para busca";
+        }
 
-
-if (rawData.length > 0) {
-document.getElementById('target').value = rawData[0].track_id; 
-} else {
-document.getElementById('target').value = 'Sem dados para busca';
-}
-
-const startButton = document.getElementById('startButton');
-if (startButton) {
-startButton.addEventListener('click', startSearch);
-}
-});
-
+        const startButton = document.getElementById("startButton");
+        if (startButton) {
+            startButton.addEventListener("click", startSearch);
+        }
+    });
 </script>
 
 {% endblock content %}

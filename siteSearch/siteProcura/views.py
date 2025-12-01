@@ -1,9 +1,6 @@
 from django.shortcuts import render
 from .models import Musica
-# Removendo import json, pois não será usado se você utilizar |json_script nos templates
-# import json # Mantenha se ainda usar json.dumps em alguma view antiga sem |json_script
 
-# Create your views here.
 
 def index(request):
     return render(request, 'siteProcura/index.html', {})
@@ -11,17 +8,16 @@ def index(request):
 def info(request):
     return render(request, 'siteProcura/info.html', {})
 
-# --- VIEWS DE BUSCA ---
 
 def busca_sequencial(request):
   data_queryset = Musica.objects.all().values(
         'track_id', 
         'track_name', 
         'track_artist', 
-        'playlist_genre',    # Correto
-        'track_popularity',  # Correto
-        'duration_ms',       # Correto
-        'danceability'       # Opcional
+        'playlist_genre',    
+        'track_popularity',  
+        'duration_ms',       
+        'danceability'       
     ).order_by('track_id')
   data_list = list(data_queryset) 
   
@@ -32,22 +28,20 @@ def busca_sequencial(request):
   
   return render(request, 'siteProcura/busca_sequencial.html', context)
 
-# views.py (CORRIGIDO)
 
 def busca_indexada(request):
-    # Adicionando 'playlist_genre' e 'track_popularity'
     data_queryset = Musica.objects.all().values(
         'track_id', 
         'track_name', 
         'track_artist', 
-        'playlist_genre', # ADICIONADO: Essencial para indexação de Gênero
-        'track_popularity'  # ADICIONADO: Essencial para exibir a Pop.
+        'playlist_genre', 
+        'track_popularity'  
     ).order_by('track_id')
     
     data_list = list(data_queryset) 
     
     context = {
-        'dados_para_js': data_list,  # Lista Python pura
+        'dados_para_js': data_list,  
         'total_registros': len(data_list)
     }
     
@@ -56,28 +50,23 @@ def busca_indexada(request):
 def busca_por_hashmap(request):
     """ Envia o dataset de músicas (desordenado) como lista Python pura. """
     
-    # Busca os campos importantes
     data_queryset = Musica.objects.all().values('track_id', 'track_name', 'track_artist', 'track_popularity')
     data_list = list(data_queryset) 
     
-    # Passa a lista Python pura (data_list)
-    # O template deve usar {{ dados_para_js|json_script:"spotify-data" }}
     context = {
         'dados_para_js': data_list, 
         'total_registros': len(data_list)
     }
-    # O nome do template no seu sistema de arquivos é busca_por_hashmap.html
     return render(request, 'siteProcura/busca_por_hashmap.html', context)
 
 def todas_as_musicas(request):
     """ Envia o dataset completo e desordenado para o template. """
     
-    # Busca todos os campos importantes de todas as músicas
     data_queryset = Musica.objects.all().values('track_id', 'track_name', 'track_artist', 'track_popularity')
     data_list = list(data_queryset) 
     
     context = {
-        'dados_para_js': data_list, # Lista Python pura
+        'dados_para_js': data_list, 
         'total_registros': len(data_list)
     }
     

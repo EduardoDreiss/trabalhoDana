@@ -5,239 +5,231 @@
 {% block content %}
 
 <style>
- /* ... O CSS permanece o mesmo do último código ... */
- body {
-  background-color: #121212;
-  color: #ffffff;
- }
+    body {
+        background-color: #121212;
+        color: #ffffff;
+    }
 
- a {
-  color: #00b409;
-  text-decoration: none;
- }
+    a {
+        color: #00b409;
+        text-decoration: none;
+    }
 
- a:hover {
-  color: #1ed760;
- }
+    a:hover {
+        color: #1ed760;
+    }
 
- .main-header {
-  text-align: center;
-  padding: 50px 0;
-  background-color: #181818;
-  border-radius: 12px;
-  margin-bottom: 40px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-  border: 1px solid #00b409;
- }
+    .main-header {
+        text-align: center;
+        padding: 50px 0;
+        background-color: #181818;
+        border-radius: 12px;
+        margin-bottom: 40px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+        border: 1px solid #00b409;
+    }
 
- .main-header h1 {
-  color: #00b409;
-  margin-bottom: 5px;
-  font-size: 2.8em;
-  font-weight: 900;
-  letter-spacing: 1px;
-  text-shadow: 0 0 10px #000000;
- }
+    .main-header h1 {
+        color: #00b409;
+        margin-bottom: 5px;
+        font-size: 2.8em;
+        font-weight: 900;
+        letter-spacing: 1px;
+        text-shadow: 0 0 10px #000000;
+    }
 
- .main-header p {
-  font-size: 1.2em;
-  color: #b3b3b3;
-  margin-top: 10px;
- }
+    .main-header p {
+        font-size: 1.2em;
+        color: #b3b3b3;
+        margin-top: 10px;
+    }
 
- .card-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 30px;
- }
+    .card-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
 
- .card {
-  width: 300px;
-  min-width: 250px;
-  background-color: #181818;
-  border: 1px solid #282828;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease,
-   border-color 0.3s ease;
-  position: relative;
- }
+    .card {
+        width: 300px;
+        min-width: 250px;
+        background-color: #181818;
+        border: 1px solid #282828;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease,
+            border-color 0.3s ease;
+        position: relative;
+    }
 
- .card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
-  border-color: #00b409;
- }
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+        border-color: #00b409;
+    }
 
- .card-content {
-  padding: 25px;
- }
+    .card-content {
+        padding: 25px;
+    }
 
- .card-content h3 {
-  color: #00b409;
-  font-size: 1.6em;
-  margin-top: 0;
-  margin-bottom: 15px;
-  border-bottom: 2px solid #282828;
-  padding-bottom: 8px;
- }
+    .card-content h3 {
+        color: #00b409;
+        font-size: 1.6em;
+        margin-top: 0;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #282828;
+        padding-bottom: 8px;
+    }
 
- .card-content p {
-  font-size: 1em;
-  color: #e0e0e0;
-  margin-bottom: 20px;
-  line-height: 1.5;
- }
+    .card-content p {
+        font-size: 1em;
+        color: #e0e0e0;
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
 
- /* Botão de Link */
- .btn-link {
-  display: block;
-  background-color: #00b409;
-  color: #000000;
-  font-weight: bold;
-  text-align: center;
-  padding: 14px 15px;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
- }
+    .btn-link {
+        display: block;
+        background-color: #00b409;
+        color: #000000;
+        font-weight: bold;
+        text-align: center;
+        padding: 14px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
 
- .link_unico {
-  text-decoration: underline;
- }
+    .link_unico {
+        text-decoration: underline;
+    }
 
- .btn-link:hover {
-  background-color: #79e200;
-  /* Verde mais claro no hover */
-  color: #000000;
- }
+    .btn-link:hover {
+        background-color: #79e200;
+        color: #000000;
+    }
 
- strong {
-  color: #00b409;
- }
+    strong {
+        color: #00b409;
+    }
 
- /* ----------------------------------------------- */
- /* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
- /* ----------------------------------------------- */
+    @media (max-width: 768px) {
+        .main-header {
+            padding: 30px 15px;
+            margin-bottom: 20px;
+            border: none;
+            box-shadow: none;
+            background-color: transparent;
+        }
 
- @media (max-width: 768px) {
-  /* ... Media queries mantidas ... */
-  .main-header {
-   padding: 30px 15px; 
-   margin-bottom: 20px;
-   border: none;
-   box-shadow: none;
-   background-color: transparent; 
-  }
+        .main-header h1 {
+            font-size: 1.8em;
+        }
 
-  .main-header h1 {
-   font-size: 1.8em; 
-  }
+        .main-header p {
+            font-size: 1em;
+            padding: 0 5px;
+        }
 
-  .main-header p {
-   font-size: 1em; 
-   padding: 0 5px;
-  }
+        .card-container {
+            gap: 20px;
+        }
 
-  .card-container {
-   gap: 20px; 
-  }
+        .card {
+            width: 100%;
+            max-width: 400px;
+            min-width: 100%;
+            margin: 0 auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
 
-  .card {
-   width: 100%;
-   max-width: 400px; 
-   min-width: 100%; 
-   margin: 0 auto; 
-   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); 
-  }
+        .card:hover {
+            transform: translateY(-5px);
+        }
 
-  .card:hover {
-   transform: translateY(-5px);
-  }
+        .card-content h3 {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
 
-  .card-content h3 {
-   font-size: 1.4em; 
-   margin-bottom: 10px;
-  }
+        .card-content {
+            padding: 20px;
+        }
 
-  .card-content {
-   padding: 20px; 
-  }
-
-  .btn-link {
-   padding: 12px 15px; 
-   font-size: 0.9em;
-  }
- }
+        .btn-link {
+            padding: 12px 15px;
+            font-size: 0.9em;
+        }
+    }
 </style>
 
 <header class="main-header">
- <h1>🎧 SPOTIFIND: O Maior Catálogo de Músicas da Web</h1>
- <p>
-  Escolha seu modo de busca e encontre qualquer faixa em nossa biblioteca de milhões de músicas, usando a plataforma mais rápida do mercado.
-  Dados fornecidos pelo 
-  <a
-   href="https://www.kaggle.com/datasets/joebeachcapital/30000-spotify-songs/"
-   class="link_unico"
-   target="_blank"
-   rel="noopener noreferrer"
-   ><strong>Spotify</strong></a
-  >.
- </p>
+    <h1>🎧 SPOTIFIND: O Maior Catálogo de Músicas da Web</h1>
+    <p>
+        Escolha seu modo de busca e encontre qualquer faixa em nossa biblioteca de milhões de músicas, usando a plataforma mais rápida do mercado.
+        Dados fornecidos pelo 
+        <a
+            href="https://www.kaggle.com/datasets/joebeachcapital/30000-spotify-songs/"
+            class="link_unico"
+            target="_blank"
+            rel="noopener noreferrer"
+        ><strong>Spotify</strong></a
+        >.
+    </p>
 </header>
 
 <div class="card-container">
- <div class="card">
-  <div class="card-content">
-   <h3>🗂️ Explore a Biblioteca</h3>
-   <p>
-    Navegue por todos os artistas, álbuns e faixas disponíveis. Perfeito para descobrir novas músicas.
-   </p>
-   <a href="{% url 'todas_as_musicas' %}" class="btn-link">
-    Ver a Coleção Completa
-   </a>
-  </div>
- </div>
+    <div class="card">
+        <div class="card-content">
+            <h3>🗂️ Explore a Biblioteca</h3>
+            <p>
+                Navegue por todos os artistas, álbuns e faixas disponíveis. Perfeito para descobrir novas músicas.
+            </p>
+            <a href="{% url 'todas_as_musicas' %}" class="btn-link">
+                Ver a Coleção Completa
+            </a>
+        </div>
+    </div>
 
- <div class="card">
-  <div class="card-content">
-   <h3>🔎 Busca por Nome (Padrão)</h3>
-   <p>
-    Digite o nome da música ou do artista e encontre a faixa exata na nossa biblioteca completa.
-   </p>
-   <a href="{% url 'busca_sequencial' %}" class="btn-link">
-    Começar a Pesquisa
-   </a>
-  </div>
-  </div>
+    <div class="card">
+        <div class="card-content">
+            <h3>🔎 Busca por Nome (Padrão)</h3>
+            <p>
+                Digite o nome da música ou do artista e encontre a faixa exata na nossa biblioteca completa.
+            </p>
+            <a href="{% url 'busca_sequencial' %}" class="btn-link">
+                Começar a Pesquisa
+            </a>
+        </div>
+    </div>
 
- <div class="card">
-  <div class="card-content">
-   <h3>📊 Filtragem por Classificação</h3>
-   <p>
-    Quer descobrir? Filtre por Gênero, depois por Artista e explore todas as faixas disponíveis.
-   </p>
-   <a href="{% url 'busca_indexada' %}" class="btn-link">
-    Iniciar a Descoberta
-   </a>
-  </div>
- </div>
+    <div class="card">
+        <div class="card-content">
+            <h3>📊 Filtragem por Classificação</h3>
+            <p>
+                Quer descobrir? Filtre por Gênero, depois por Artista e explore todas as faixas disponíveis.
+            </p>
+            <a href="{% url 'busca_indexada' %}" class="btn-link">
+                Iniciar a Descoberta
+            </a>
+        </div>
+    </div>
 
- <div class="card">
-  <div class="card-content">
-   <h3>⚡ Busca Instantânea (Código)</h3>
-   <p>
-    Se você tem o código único da faixa, use este método para encontrar sua música em tempo recorde.
-   </p>
-   <a href="{% url 'busca_por_hashmap' %}" class="btn-link">
-    Acessar Busca Ultra-Rápida
-   </a>
-  </div>
- </div>
+    <div class="card">
+        <div class="card-content">
+            <h3>⚡ Busca Instantânea (Código)</h3>
+            <p>
+                Se você tem o código único da faixa, use este método para encontrar sua música em tempo recorde.
+            </p>
+            <a href="{% url 'busca_por_hashmap' %}" class="btn-link">
+                Acessar Busca Ultra-Rápida
+            </a>
+        </div>
+    </div>
 </div>
 
 {% endblock content %}
