@@ -7,55 +7,47 @@
       {% block title %}Site Estrutura de Dados e Busca{% endblock %}
     </title>
     <style>
-      /* --- ANIMAÇÃO DE FUNDO (NOVO) --- */
-    @keyframes move-background {
-    0% {
-       background-position: 0 0;
-    }
-    100% {
-          /* Define o deslocamento para mover o padrão (diagonal para baixo/direita) */
-        background-position: 1000px 1000px;
-    }
-}
-
-      /* --- TIPOGRAFIA E CORES GERAIS --- */
-    body {
-        font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais moderna */
-        margin: 0;
-        background-color: #121212; /* Fundo escuro mantido */
-        color: #e0e0e0; /* Cor de texto padrão ligeiramente mais suave */
-        line-height: 1.6;
-
-        /* ESTILOS DA ANIMAÇÃO */
-        background-image: radial-gradient(
-          circle,
-          #004721 1px,
-          transparent 1px
-        ); /* Cria pontinhos cinza */
-        background-size: 50px 50px; /* Define o espaçamento dos pontos */
-        animation: move-background 100s linear infinite; /* Aplica o movimento lento e infinito */
+      @keyframes move-background {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 1000px 1000px;
+        }
       }
 
-    a {
+      body {
+        font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        background-color: #121212;
+        color: #e0e0e0;
+        line-height: 1.6;
+        background-image: radial-gradient(circle, #004721 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: move-background 100s linear infinite;
+      }
+
+      a {
         text-decoration: none;
       }
 
-    h1,h2,h3 {
-        color: #f4f4f9; /* Títulos em branco puro para alto contraste */
+      h1,
+      h2,
+      h3 {
+        color: #f4f4f9;
         font-weight: 700;
       }
 
-      /* OBRIGATÓRIO: Cor de destaque verde mantida */
-    strong, .highlight-green {
+      strong,
+      .highlight-green {
         color: #00b409 !important;
-    }
+      }
 
-      /* --- ESTILOS DA NAVBAR --- */
-    .navbar {
+      .navbar {
         background-color: #1a1a1a;
         border-bottom: 3px solid #00b409;
-        padding: 15px 40px; /* Mais preenchimento vertical */
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7); /* Sombra mais forte */
+        padding: 15px 40px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -64,107 +56,103 @@
         z-index: 1000;
       }
 
-    .navbar .logo a {
+      .navbar .logo a {
         color: #f4f4f9;
-        font-weight: 800; /* Mais negrito */
+        font-weight: 800;
         font-size: 1.6em;
         transition: color 0.3s;
       }
 
-    .navbar .logo a:hover {
+      .navbar .logo a:hover {
         color: #1ed760;
       }
 
-    .navbar .nav-links-container {
+      .navbar .nav-links-container {
         flex-grow: 1;
-        text-align: right; /* Links à direita no desktop */
+        text-align: right;
         padding-right: 0;
       }
 
-    .navbar .nav-links-container a {
+      .navbar .nav-links-container a {
         color: #b3b3b3;
-        margin-left: 25px; /* Menor espaçamento */
+        margin-left: 25px;
         font-size: 1em;
         padding: 5px 0;
         border-bottom: 2px solid transparent;
         transition: color 0.3s, border-bottom-color 0.3s;
         font-weight: 600;
-        letter-spacing: 0.5px; /* Leve espaçamento entre letras */
+        letter-spacing: 0.5px;
       }
 
-    .navbar .nav-links-container a:hover {
+      .navbar .nav-links-container a:hover {
         color: #ffffff;
-        border-bottom-color: #1ed760; /* Verde mais claro no hover */
+        border-bottom-color: #1ed760;
       }
 
-    .navbar .nav-links-container a.active {
+      .navbar .nav-links-container a.active {
         color: #1ed760;
         border-bottom-color: #1ed760;
         font-weight: 700;
       }
 
-      /* Botão Hambúrguer */
-    .nav-toggle {
+      .nav-toggle {
         display: none;
         color: #f4f4f9;
         font-size: 2em;
         transition: transform 0.3s;
       }
 
-    .container {
-        padding: 40px; /* Mais preenchimento geral */
+      .container {
+        padding: 40px;
         max-width: 1200px;
         margin: 0 auto;
       }
 
-    hr {
+      hr {
         border: 0;
         height: 1px;
-        background: #333333; /* Cinza mais escuro */
+        background: #333333;
         margin: 25px 0;
       }
 
-    footer {
+      footer {
         background-color: #1a1a1a;
         text-align: center;
-        color: #999999; /* Texto do footer mais suave */
+        color: #999999;
         padding: 30px;
         font-size: 0.9em;
       }
 
-      /* ----------------------------------------------- */
-      /* --- MEDIA QUERY PARA MOBILE (MAX-WIDTH: 768PX) --- */
-      /* ----------------------------------------------- */
-    @media (max-width: 768px) {
+      @media (max-width: 768px) {
         .nav-toggle {
           display: block;
-    }
+        }
 
-    .navbar {
+        .navbar {
           padding: 15px 20px;
-    }
+        }
 
-    .navbar .nav-links-container {
+        .navbar .nav-links-container {
           display: none;
           width: 100%;
           text-align: left;
           flex-basis: 100%;
           border-top: 1px solid #282828;
           margin-top: 15px;
-    }
+        }
 
-    .navbar .nav-links-container.open {
+        .navbar .nav-links-container.open {
           display: flex;
           flex-direction: column;
-    }
+        }
 
-    .navbar .nav-links-container a {
+        .navbar .nav-links-container a {
           margin: 0;
           padding: 12px 0;
           width: 100%;
           border-bottom: 1px solid #282828;
-    }
-    .navbar .nav-links-container a:last-child {
+        }
+        .navbar .nav-links-container a:last-child {
           border-bottom: none;
         }
 
@@ -219,12 +207,11 @@
           }
         });
 
-        // Novo: Adiciona a classe 'active' dinamicamente (baseado na URL)
         const currentPath = window.location.pathname;
         const navLinksList = navLinks.querySelectorAll("a");
 
         navLinksList.forEach((link) => {
-          link.classList.remove("active"); // Remove a classe 'active' do Django se houver
+          link.classList.remove("active");
           if (
             currentPath.includes(link.getAttribute("href").replace(/\//g, ""))
           ) {
@@ -238,7 +225,7 @@
     <hr style="background: #282828" />
     <p>
       <strong>&copy;</strong> 2025 Site de Demonstração de Algoritmos de Busca.
-       Desenvolvido para Estudos em Estrutura de Dados.
+      Desenvolvido para Estudos em Estrutura de Dados.
     </p>
   </footer>
 </html>
